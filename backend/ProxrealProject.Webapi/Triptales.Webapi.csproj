@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	  <RootNamespace>proxreal_backend</RootNamespace>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.*" />
+		<PackageReference Include="Bogus" Version="34.*" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.*" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.*" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SQLServer" Version="6.*" />
+		<PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="2.*" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="6.*" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProxrealProject.Application\Triptales.Application.csproj" />
+  </ItemGroup>
+
+</Project>
