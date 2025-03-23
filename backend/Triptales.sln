@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProxrealProject.Webapi", "ProxrealProject.Webapi\ProxrealProject.Webapi.csproj", "{CB4279D1-C13E-476D-A6AC-7B9B48977377}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Triptales.Webapi", "ProxrealProject.Webapi\Triptales.Webapi.csproj", "{CB4279D1-C13E-476D-A6AC-7B9B48977377}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProxrealProject.Application", "ProxrealProject.Application\ProxrealProject.Application.csproj", "{377D7D2E-A5A8-4205-9083-0204377AB92D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Triptales.Application", "ProxrealProject.Application\Triptales.Application.csproj", "{377D7D2E-A5A8-4205-9083-0204377AB92D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
