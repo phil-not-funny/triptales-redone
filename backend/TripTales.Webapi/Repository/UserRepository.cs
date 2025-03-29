@@ -7,11 +7,12 @@ using Triptales.Webapi.Model;
 
 namespace proxreal_backend.Repository
 {
+
     public class UserRepository : ICrudRepository<User>
     {
-        private readonly ProxrealContext _db;
+        private readonly TriptalesContext _db;
 
-        public UserRepository(ProxrealContext db)
+        public UserRepository(TriptalesContext db)
         {
             _db = db;
         }

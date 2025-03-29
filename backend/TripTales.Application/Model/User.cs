@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+using Triptales.Application.Model;
 
 namespace Triptales.Webapi.Model
 {
@@ -52,5 +53,7 @@ namespace Triptales.Webapi.Model
 
         public bool Verified { get; set; } = false;
         public List<User> Following { get; } = new();
+
+        public List<Post> Posts { get; } = new();
     }
 }

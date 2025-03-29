@@ -20,11 +20,11 @@ namespace Triptales.Webapi.Controllers
     [Route("/api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly ProxrealContext _db;
+        private readonly TriptalesContext _db;
         private readonly UserService _service;
         private readonly UserRepository _repo;
 
-        public UserController(ProxrealContext db)
+        public UserController(TriptalesContext db)
         {
             _db = db;
             _repo = new UserRepository(db);
