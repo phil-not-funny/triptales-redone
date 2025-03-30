@@ -23,6 +23,7 @@ const CardPageTransistion: React.FC<Props> = ({
         initial={{ x: deltaX, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: -deltaX, opacity: 0 }}
+        transition={{ease: "easeInOut", duration: 0.3}}
         className={className}
       >
         {children}

@@ -5,9 +5,9 @@ import {
   UserPrivateResponse,
 } from "@/types/ReqeuestTypes";
 import api from "../api";
-import axios, { AxiosError, HttpStatusCode } from "axios";
+import axios, { HttpStatusCode } from "axios";
 
-export const register = async (
+const register = async (
   data: RegisterRequest,
 ): Promise<RegisterClientResponse> => {
   try {
@@ -28,9 +28,7 @@ type RegisterClientResponse = {
   message: string;
 };
 
-export const login = async (
-  data: LoginRequest,
-): Promise<LoginClientResponse> => {
+const login = async (data: LoginRequest): Promise<LoginClientResponse> => {
   try {
     const response = await api.post("/User/login", data);
     if (
@@ -63,7 +61,7 @@ type LoginClientResponse = {
   data?: UserPrivateResponse;
 };
 
-export const me = async (): Promise<UserPrivateResponse | null> => {
+const me = async (): Promise<UserPrivateResponse | null> => {
   try {
     const response = await api.get("/User/me");
     if (
@@ -77,3 +75,5 @@ export const me = async (): Promise<UserPrivateResponse | null> => {
     return null;
   }
 };
+
+export default { register, login, me };

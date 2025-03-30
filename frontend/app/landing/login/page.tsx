@@ -1,5 +1,5 @@
-import { MotionDiv } from "@/components/Motion";
-import { AnimatedButton, Button } from "@/components/ui/button";
+import { LoginForm } from "@/components/landing/LoginForm";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -22,12 +22,13 @@ export default function Login() {
             Login to an existing TripTales account
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex w-full justify-center gap-4">
+        <CardContent className="flex flex-col w-full justify-center items-center max-w-md gap-4">
           <Link href={"/landing"}>
             <Button variant={"outline"}>
               <ArrowLeftIcon /> Back
             </Button>
           </Link>
+          <LoginForm />
         </CardContent>
       </Card>
     </div>

@@ -26,8 +26,9 @@ export default function Landing() {
           <Link href={"/landing/login"}>
             <AnimatedButton variant={"default"}>Log In</AnimatedButton>
           </Link>
-          <Link href={"/landing/signup"}></Link>
-          <AnimatedButton variant={"outline"}>Sign Up</AnimatedButton>
+          <Link href={"/landing/signup"}>
+            <AnimatedButton variant={"outline"}>Sign Up</AnimatedButton>
+          </Link>
         </CardContent>
       </Card>
     </div>
