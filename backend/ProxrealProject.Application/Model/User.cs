@@ -1,27 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 
 namespace Triptales.Webapi.Model
 {
     [Index(nameof(Email), IsUnique = true)]
     [Index(nameof(Username), IsUnique = true)]
-    [Index(nameof(AuthKey), IsUnique = true)]
     public class User : BaseEntity
     {
-        public User(
-            string username,
-            string email,
-            string password,
-            string displayName,
-            string? authKey = null
-        )
+        public User(string username, string email, string password, string displayName, string? authKey = null)
         {
             Username = username;
             Email = email;
-            Password = password;
-            AuthKey = authKey;
+            SetPassword(password);
             DisplayName = displayName;
         }
 
@@ -34,16 +27,10 @@ namespace Triptales.Webapi.Model
         [MaxLength(25, ErrorMessage = "Username does not meet Requirements. Max Length = 25")]
         [RegularExpression(@"^[a-z0-9._]+$", ErrorMessage = "Username may only conatin lower case letters, numbers, dots and underscores.")]
         public string Username { get; set; }
-        
-        [DataType(DataType.Password)]
-        [MinLength(6, ErrorMessage = "Password does not meet Requirements. Min Length = 6")]
-        public string Password { get; set; }
 
         [DataType(DataType.EmailAddress)]
         [EmailAddress(ErrorMessage = "Email is not a valid Address.")]
         public string Email { get; set; }
-        
-        public string? AuthKey { get; set; }
 
         [DataType(DataType.Text)]
         [MinLength(1, ErrorMessage = "Display Name does not meet Requirements. Min Length = 1")]
@@ -51,6 +38,43 @@ namespace Triptales.Webapi.Model
         public string DisplayName { get; set; }
 
         public bool Verified { get; set; } = false;
+
+        public string? Salt { get; set; }
+        public string? PasswordHash { get; set; }
+
         public List<User> Following { get; } = new();
+
+        [MemberNotNull(nameof(Salt), nameof(PasswordHash))]
+        public void SetPassword(string password)
+        {
+            Salt = GenerateRandomSalt();
+            PasswordHash = CalculateHash(password, Salt);
+        }
+
+        private string GenerateRandomSalt(int length = 128)
+        {
+            byte[] salt = new byte[length / 8];
+            using (System.Security.Cryptography.RandomNumberGenerator rnd =
+                System.Security.Cryptography.RandomNumberGenerator.Create())
+            {
+                rnd.GetBytes(salt);
+            }
+            return Convert.ToBase64String(salt);
+        }
+
+        private string CalculateHash(string password, string salt)
+        {
+            byte[] saltBytes = Convert.FromBase64String(salt);
+            byte[] passwordBytes = System.Text.Encoding.UTF8.GetBytes(password);
+
+            System.Security.Cryptography.HMACSHA256 myHash =
+                new System.Security.Cryptography.HMACSHA256(saltBytes);
+
+            byte[] hashedData = myHash.ComputeHash(passwordBytes);
+
+            // Das Bytearray wird als Hexstring zurückgegeben.
+            return Convert.ToBase64String(hashedData);
+        }
+
     }
 }
