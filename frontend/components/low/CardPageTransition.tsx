@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { PropsWithClassNameAndChildren } from "@/types/ComponentTypes";
 
 interface Props extends PropsWithClassNameAndChildren {
-    deltaX: number;
+    deltaX?: number;
 }
 
 const CardPageTransistion: React.FC<Props> = ({
