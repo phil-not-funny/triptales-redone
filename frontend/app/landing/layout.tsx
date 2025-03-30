@@ -1,3 +1,6 @@
+import CardPageTransistion from "@/components/low/CardPageTransition";
+import { MotionDiv } from "@/components/Motion";
+import { AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment } from "react";
@@ -38,7 +41,9 @@ export default function LandingLayout({
           </Link>
         </p>
       </div>
-      <div className="absolute z-10 h-full w-full">{children}</div>
+      <CardPageTransistion className="absolute z-10 h-full w-full">
+        {children}
+      </CardPageTransistion>
     </Fragment>
   );
 }

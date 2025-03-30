@@ -4,30 +4,30 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 
-export default function Landing() {
+export default function Login() {
   return (
     <div className="z-20 flex h-full w-full items-center justify-center">
       <Card className="flex basis-1/2 items-center justify-center bg-neutral-100 p-4 py-8">
         <CardHeader className="w-full">
           <CardTitle className="font-title !text-primary-saturated border-primary-light border-b text-center text-3xl uppercase">
-            Welcome back
+            Login to an account
           </CardTitle>
           <CardDescription className="text-center">
-            Choose whether to log in or register
+            Login to an existing TripTales account
           </CardDescription>
         </CardHeader>
         <CardContent className="flex w-full justify-center gap-4">
-          <Link href={"/landing/login"}>
-            <AnimatedButton variant={"default"}>Log In</AnimatedButton>
+          <Link href={"/landing"}>
+            <Button variant={"outline"}>
+              <ArrowLeftIcon /> Back
+            </Button>
           </Link>
-          <Link href={"/landing/signup"}></Link>
-          <AnimatedButton variant={"outline"}>Sign Up</AnimatedButton>
         </CardContent>
       </Card>
     </div>

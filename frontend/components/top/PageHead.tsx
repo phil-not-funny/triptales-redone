@@ -14,7 +14,7 @@ export const PageHead: React.FC<Props> = ({ children, className }) => {
       initial={{ opacity: 0, scale: 1 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 1, type: "spring", stiffness: 20 }}
-      className={`w-full flex flex-col items-center min-h-screen px-8  ${className}`}
+      className={`w-full flex flex-col items-center min-h-screen px-8 ${className}`}
     >
       {children}
     </m.div>
