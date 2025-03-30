@@ -41,9 +41,11 @@ export default function LandingLayout({
           </Link>
         </p>
       </div>
-      <CardPageTransistion className="absolute z-10 h-full w-full">
-        {children}
-      </CardPageTransistion>
+      <div className="absolute z-10 h-full w-full max-w-screen overflow-hidden">
+        <CardPageTransistion className="h-full w-full">
+          {children}
+        </CardPageTransistion>
+      </div>
     </Fragment>
   );
 }

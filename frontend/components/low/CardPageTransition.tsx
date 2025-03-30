@@ -17,7 +17,7 @@ const CardPageTransistion: React.FC<Props> = ({
   const path = usePathname();
 
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="popLayout">
       <MotionDiv
         key={path}
         initial={{ x: deltaX, opacity: 0 }}
