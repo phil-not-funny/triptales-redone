@@ -1,3 +1,4 @@
+import CardPageTransistion from "@/components/low/CardPageTransition";
 import { Button } from "@/components/ui/button";
 import {
   Card,
