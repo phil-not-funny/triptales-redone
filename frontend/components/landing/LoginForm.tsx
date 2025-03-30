@@ -86,7 +86,6 @@ export function LoginForm() {
       console.log("Login Success");
       router.push("/");
     } else {
-      console.error("Login Failed", response.message);
       toast("Login failed: " + response.status)
     }
   }
