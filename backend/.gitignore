@@ -44,7 +44,7 @@ x64/
 *.vspscc
 *.vssscc
 .builds
-*.db
+*.db*
 *.db-wal
 *.db-shm
 
