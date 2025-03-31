@@ -18,8 +18,10 @@
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ProxrealProject.Application\Triptales.Application.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\TripTales.Application\Triptales.Application.csproj" />
+	</ItemGroup>
+  
+  
 
 </Project>
