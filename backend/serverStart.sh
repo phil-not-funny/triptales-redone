@@ -1,13 +1,13 @@
 #!/bin/sh
 
 rm -rf .vs
-rm -rf ProxrealProject.Application/.vs
-rm -rf ProxrealProject.Application/bin
-rm -rf ProxrealProject.Application/obj
-rm -rf ProxrealProject.Webapi/.vs
-rm -rf ProxrealProject.Webapi/bin
-rm -rf ProxrealProject.Webapi/obj
+rm -rf TripTales.Application/.vs
+rm -rf TripTales.Application/bin
+rm -rf TripTales.Application/obj
+rm -rf TripTales.Webapi/.vs
+rm -rf TripTales.Webapi/bin
+rm -rf TripTales.Webapi/obj
 
 
-cd ProxrealProject.Webapi
+cd TripTales.Webapi
 dotnet watch run -c Debug
