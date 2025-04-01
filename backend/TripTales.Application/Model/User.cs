@@ -10,7 +10,7 @@ namespace Triptales.Webapi.Model
     [Index(nameof(Username), IsUnique = true)]
     public class User : BaseEntity
     {
-        public User(string username, string email, string password, string displayName, string? authKey = null)
+        public User(string username, string email, string password, string displayName)
         {
             Username = username;
             Email = email;
@@ -43,6 +43,8 @@ namespace Triptales.Webapi.Model
         public string? PasswordHash { get; set; }
 
         public List<User> Following { get; } = new();
+
+        public bool CheckPassword(string password) => PasswordHash == CalculateHash(password, Salt!);
 
         [MemberNotNull(nameof(Salt), nameof(PasswordHash))]
         public void SetPassword(string password)
