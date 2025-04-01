@@ -13,7 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
-builder.Services.AddDbContext<ProxrealContext>(opt => opt.UseSqlite("DataSource=Proxreal.db"));
+builder.Services.AddDbContext<TripTalesContext>(opt => opt.UseSqlite("DataSource=Proxreal.db"));
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(
@@ -53,7 +53,7 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    using (var db = scope.ServiceProvider.GetRequiredService<ProxrealContext>())
+    using (var db = scope.ServiceProvider.GetRequiredService<TripTalesContext>())
     {
         if (app.Environment.IsDevelopment())
             db.Database.EnsureDeleted();

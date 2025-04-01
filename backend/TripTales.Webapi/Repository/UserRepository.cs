@@ -9,9 +9,9 @@ namespace proxreal_backend.Repository
 {
     public class UserRepository : ICrudRepository<User>
     {
-        private readonly ProxrealContext _db;
+        private readonly TripTalesContext _db;
 
-        public UserRepository(ProxrealContext db)
+        public UserRepository(TripTalesContext db)
         {
             _db = db;
         }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Castle.Core.Internal;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,11 +20,11 @@ namespace Triptales.Webapi.Controllers
     [Route("/api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly ProxrealContext _db;
+        private readonly TripTalesContext _db;
         private readonly UserService _service;
         private readonly UserRepository _repo;
 
-        public UserController(ProxrealContext db)
+        public UserController(TripTalesContext db)
         {
             _db = db;
             _repo = new UserRepository(db);
@@ -68,7 +67,7 @@ namespace Triptales.Webapi.Controllers
         public async Task<IActionResult> Login([FromBody] UserLoginDto credentials)
         {
             var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == credentials.Username);
-            if (user is null || !user.CheckPassword(credentials.Password)) return BadRequest("Password falsch oder User gibt es nicht");
+            if (user is null || !user.CheckPassword(credentials.Password)) return BadRequest("The given password and username combination does not exist.");
             var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Name, credentials.Username),
