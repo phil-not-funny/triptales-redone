@@ -17,6 +17,8 @@ import { Input } from "../ui/input";
 import userService from "@/lib/services/userService";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   username: z
@@ -35,6 +37,7 @@ const formSchema = z.object({
 
 export function LoginForm() {
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -74,19 +77,27 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" disabled={loading}>
+          {loading && <Loader2 className="animate-spin" />} Submit
+        </Button>
       </form>
     </Form>
   );
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
     const response = await userService.login(values);
+    setLoading(false);
     if (response.status === 200) {
-      console.log("Login Success");
+      toast.success("Login Success!");
       router.push("/");
+    } else if (response.status === undefined) {
+      toast.error(
+        "No connection could be established. Please try again later.",
+      );
     } else {
-      toast("Login failed: " + response.status)
+      toast.error("Login failed: " + response.message);
     }
   }
 }

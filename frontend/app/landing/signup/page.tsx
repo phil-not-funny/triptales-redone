@@ -1,3 +1,4 @@
+import { RegisterForm } from "@/components/forms/RegisterForm";
 import CardPageTransistion from "@/components/low/CardPageTransition";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,12 +23,13 @@ export default function Signup() {
             Register a new TripTales account
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex w-full justify-center gap-4">
+        <CardContent className="flex flex-col w-full items-center justify-center gap-4">
           <Link href={"/landing"}>
             <Button variant={"outline"}>
               <ArrowLeftIcon /> Back
             </Button>
           </Link>
+          <RegisterForm />
         </CardContent>
       </Card>
     </div>

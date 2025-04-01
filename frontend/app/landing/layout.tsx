@@ -18,7 +18,7 @@ export default function LandingLayout({
           width={1920}
           height={1080}
           alt="Picture by Claudio Testa on Unsplash"
-          className="z-0 h-screen w-auto object-cover blur-xs 2xl:h-auto 2xl:w-screen"
+          className="z-0 lg:w-screen lg:h-auto h-screen w-auto object-cover blur-xs 2xl:h-auto 2xl:w-screen"
         />
       </div>
       <div className="absolute bottom-0 left-0 z-10 p-2">

@@ -23,7 +23,7 @@ export default function Landing() {
             Choose whether to log in or register
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex items-center justify-center gap-3">
+        <CardContent className="flex items-center flex-col justify-center gap-3">
           <Link href={"/landing/login"}>
             <AnimatedButton variant={"default"}>Log In</AnimatedButton>
           </Link>
