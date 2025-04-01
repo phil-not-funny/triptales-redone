@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using proxreal_backend.Repository;
+using Triptales.Application.Cmd;
 using Triptales.Application.Dtos;
 using Triptales.Application.Services;
 using Triptales.Webapi.Infrastructure;
@@ -33,10 +34,12 @@ namespace Triptales.Webapi.Controllers
 
         private async Task<User?> getAuthenticatedOrDefault()
         {
-            if (HttpContext.User.Identity is not { IsAuthenticated: true })
-                return null;
+            var authenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
+            if (!authenticated) return null;
+            var username = HttpContext.User.Identity?.Name;
+            if (username is null) return null;
 
-            return await _service.GetUserByUsername(HttpContext.User.Identity!.Name!)!;
+            return await _service.GetUserByUsername(username);
         }
 
         [HttpPost("register")]
@@ -54,19 +57,26 @@ namespace Triptales.Webapi.Controllers
             return Ok();
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] UserLoginDto user)
+        [HttpGet("logout")]
+        public async Task<IActionResult> Logout()
         {
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Username) };
+            await HttpContext.SignOutAsync();
+            return NoContent();
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] UserLoginDto credentials)
+        {
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == credentials.Username);
+            if (user is null || !user.CheckPassword(credentials.Password)) return BadRequest("Password falsch oder User gibt es nicht");
+            var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, credentials.Username),
+                        //new Claim(ClaimTypes.Role, "admin")
+                    };
             var claimsIdentity = new ClaimsIdentity(
                 claims,
-                Microsoft
-                    .AspNetCore
-                    .Authentication
-                    .Cookies
-                    .CookieAuthenticationDefaults
-                    .AuthenticationScheme
-            );
+                Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme);
 
             var authProperties = new AuthenticationProperties
             {
@@ -75,33 +85,21 @@ namespace Triptales.Webapi.Controllers
             };
 
             await HttpContext.SignInAsync(
-                Microsoft
-                    .AspNetCore
-                    .Authentication
-                    .Cookies
-                    .CookieAuthenticationDefaults
-                    .AuthenticationScheme,
+                Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity),
-                authProperties
-            );
-
-            if ((await getAuthenticatedOrDefault()) == null)
-                return Unauthorized();
-
-            return Ok(_service.ConvertToPrivate(
-                (await getAuthenticatedOrDefault())!
-                ));
+                authProperties);
+            return Ok(_service.ConvertToPrivate(user));
         }
 
         [Authorize]
         [HttpGet("me")]
-        public async Task<IActionResult> Me()
+        public async Task<ActionResult<UserPrivateCmd>> Me()
         {
-            var authenticated = await getAuthenticatedOrDefault();
-            if (authenticated is null)
+            var user = await getAuthenticatedOrDefault();
+            if (user is null)
                 return Unauthorized();
             else
-                return Ok(_service.ConvertToPrivate(authenticated));
+                return Ok(_service.ConvertToPrivate(user));
         }
 
         [HttpGet]

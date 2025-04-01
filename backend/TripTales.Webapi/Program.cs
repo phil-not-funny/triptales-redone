@@ -31,7 +31,7 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 {
     options.OnAppendCookie = cookieContext =>
     {
-        cookieContext.CookieOptions.Secure = true;
+        cookieContext.CookieOptions.Secure = builder.Environment.IsDevelopment() ? true : false;
         cookieContext.CookieOptions.SameSite = builder.Environment.IsDevelopment()
             ? SameSiteMode.None
             : SameSiteMode.Strict;
@@ -62,6 +62,8 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+app.UseHttpsRedirection();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -69,7 +71,6 @@ if (app.Environment.IsDevelopment())
     app.UseCors("AllowDevServer");
 }
 
-app.UseHttpsRedirection();
 app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
