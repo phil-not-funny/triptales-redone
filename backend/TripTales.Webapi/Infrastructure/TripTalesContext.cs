@@ -6,9 +6,9 @@ using Triptales.Webapi.Model;
 
 namespace Triptales.Webapi.Infrastructure
 {
-    public class ProxrealContext : DbContext
+    public class TripTalesContext : DbContext
     {
-        public ProxrealContext(DbContextOptions<ProxrealContext> options)
+        public TripTalesContext(DbContextOptions<TripTalesContext> options)
             : base(options) { }
 
         public DbSet<User> Users => Set<User>();

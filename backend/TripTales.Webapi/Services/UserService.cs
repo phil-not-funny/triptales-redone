@@ -13,9 +13,9 @@ namespace Triptales.Application.Services
 {
     public class UserService
     {
-        private readonly ProxrealContext _db;
+        private readonly TripTalesContext _db;
 
-        public UserService(ProxrealContext db)
+        public UserService(TripTalesContext db)
         {
             _db = db;
         }
