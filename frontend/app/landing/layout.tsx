@@ -1,6 +1,4 @@
 import CardPageTransistion from "@/components/low/CardPageTransition";
-import { MotionDiv } from "@/components/Motion";
-import { AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment } from "react";

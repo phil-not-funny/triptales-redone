@@ -1,5 +1,4 @@
 import { RegisterForm } from "@/components/forms/RegisterForm";
-import CardPageTransistion from "@/components/low/CardPageTransition";
 import { Button } from "@/components/ui/button";
 import {
   Card,
