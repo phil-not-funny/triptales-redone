@@ -90,14 +90,10 @@ export function LoginForm() {
     const response = await userService.login(values);
     setLoading(false);
     if (response.status === 200) {
-      toast.success("Login Success!");
+      toast.success(response.message);
       router.push("/");
-    } else if (response.status === undefined) {
-      toast.error(
-        "No connection could be established. Please try again later.",
-      );
     } else {
-      toast.error("Login failed: " + response.message);
+      toast.error(response.message);
     }
   }
 }

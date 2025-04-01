@@ -150,10 +150,6 @@ export function RegisterForm() {
     if (response.status === 200) {
       toast.success("Account created successfully!");
       router.push("/landing/login");
-    } else if (response.status === undefined) {
-      toast.error(
-        "No connection could be established. Please try again later.",
-      );
     } else {
       toast.error(response.message);
     }

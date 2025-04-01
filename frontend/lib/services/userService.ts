@@ -12,14 +12,12 @@ const register = async (
 ): Promise<RegisterClientResponse> => {
   try {
     const response = await api.post("/User/register", data);
-    return { status: response.status, message: "Registration successful" };
+    return {
+      status: response.status,
+      message: "Account created successfully!",
+    };
   } catch (error) {
-    return axios.isAxiosError(error)
-      ? { status: error.response?.status!, message: error.response?.data }
-      : {
-          status: HttpStatusCode.InternalServerError,
-          message: "An unknown error occurred",
-        };
+    return toFormattedErrorMessage(error);
   }
 };
 
@@ -37,21 +35,12 @@ const login = async (data: LoginRequest): Promise<LoginClientResponse> => {
     )
       return {
         status: response.status,
-        message: "Login successful",
+        message: "Login successful!",
         data: response.data,
       };
     else throw new Error("Invalid response structure");
   } catch (error) {
-    if (axios.isAxiosError(error))
-      return {
-        status: error.response?.status!,
-        message: error.response?.data,
-      };
-    else
-      return {
-        status: HttpStatusCode.InternalServerError,
-        message: "An unknown error occurred",
-      };
+    return toFormattedErrorMessage(error);
   }
 };
 
@@ -74,6 +63,32 @@ const me = async (): Promise<UserPrivateResponse | null> => {
     console.error(error);
     return null;
   }
+};
+
+const toFormattedErrorMessage = (
+  error: unknown,
+): { status: HttpStatusCode; message: string } => {
+  if (axios.isAxiosError(error) && error.response) {
+    const { status, data } = error.response;
+    return {
+      status: status ?? HttpStatusCode.InternalServerError,
+      message: formatErrorMessage(data),
+    };
+  } else
+    return {
+      status: HttpStatusCode.InternalServerError,
+      message: "An unknown error occurred",
+    };
+};
+
+const formatErrorMessage = (data: unknown): string => {
+  if (Array.isArray(data)) {
+    return data
+      .map((member) => (member as { errorMessage?: string })?.errorMessage)
+      .filter(Boolean)
+      .join(" AND ");
+  }
+  return String(data);
 };
 
 export default { register, login, me };
