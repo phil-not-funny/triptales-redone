@@ -1,34 +1,33 @@
-import { MotionDiv } from "@/components/Motion";
-import { AnimatedButton, Button } from "@/components/ui/button";
+import { RegisterForm } from "@/components/forms/RegisterForm";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Image from "next/image";
+import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 
-export default function Landing() {
+export default function Signup() {
   return (
     <div className="z-20 flex h-full w-full items-center justify-center">
       <Card className="flex items-center justify-center bg-neutral-100 p-4 py-8 md:basis-1/2">
         <CardHeader className="w-full">
           <CardTitle className="font-title !text-primary-saturated border-primary-light border-b text-center text-3xl uppercase">
-            Welcome back
+            Register a new account
           </CardTitle>
           <CardDescription className="text-center">
-            Choose whether to log in or register
+            Register a new TripTales account
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex items-center flex-col justify-center gap-3">
-          <Link href={"/landing/login"}>
-            <AnimatedButton variant={"default"}>Log In</AnimatedButton>
-          </Link>
-          <Link href={"/landing/signup"}>
-            <AnimatedButton variant={"outline"}>Sign Up</AnimatedButton>
+        <CardContent className="flex w-full flex-col items-center justify-center gap-4">
+          <RegisterForm />
+          <Link href={"/landing"}>
+            <Button variant={"outline"}>
+              <ArrowLeftIcon /> Back
+            </Button>
           </Link>
         </CardContent>
       </Card>

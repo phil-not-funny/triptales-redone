@@ -5,14 +5,14 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-primary: #59d97b;
+  --color-primary-main: #59d97b;
   --color-primary-saturated: #3ddb67;
   --color-primary-hover: #96e3aa;
   --color-primary-light: #b1e3be;
-  --font-title: "Oswald", "sans-serif";
+  --font-title-oswald: "Oswald", "sans-serif";
   --font-body: "Nunito Sans", "sans-serif";
   --font-body-libre: "Libre Franklin", "sans-serif";
-  --font-title-inter: "Inter", "sans-serif";
+  --font-title: "Inter", "sans-serif";
 }
 
 @font-face {
