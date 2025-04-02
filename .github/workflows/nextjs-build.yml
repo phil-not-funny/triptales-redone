@@ -32,8 +32,8 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./backend
+        working-directory: ./frontend
 
       - name: Build Next.js
         run: npm run build
-        working-directory: ./backend
+        working-directory: ./frontend
