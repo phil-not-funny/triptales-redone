@@ -1,12 +1,12 @@
 "use client";
 
-import { Fragment, PropsWithChildren, useEffect, useState } from "react";
+import { Fragment, PropsWithChildren, useEffect } from "react";
 import { useUser } from "../provider/UserProvider";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 const Authenticated: React.FC<PropsWithChildren> = ({ children }) => {
-  const { user, isLoggedIn, logout } = useUser();
+  const { isLoggedIn } = useUser();
   const router = useRouter();
 
   const init = async () => {
@@ -17,7 +17,7 @@ const Authenticated: React.FC<PropsWithChildren> = ({ children }) => {
   };
 
   useEffect(() => {
-    init();
+    init(); 
   }, []);
 
   return <Fragment>{children}</Fragment>;
