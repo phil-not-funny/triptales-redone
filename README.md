@@ -37,5 +37,5 @@ To use swagger, go to [http://localhost:5001/swagger/index.html](http://localhos
 ---
 
 ## Technologies
-- **Frontend**: Next.js / TailwindCSS / material-tailwind
+- **Frontend**: Next.js / TailwindCSS / shadcn
 - **Backend**: C#
