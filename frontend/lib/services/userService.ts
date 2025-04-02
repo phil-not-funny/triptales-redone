@@ -101,4 +101,6 @@ const logout = async (): Promise<boolean> => {
   }
 };
 
-export default { register, login, me, logout };
+const UserService = { register, login, me, logout };
+
+export default UserService;
