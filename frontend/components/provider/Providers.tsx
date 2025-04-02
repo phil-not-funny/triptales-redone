@@ -2,12 +2,11 @@
 
 import { PropsWithChildren } from "react";
 import { UserProvider } from "./UserProvider";
-import { SidebarProvider } from "../ui/sidebar";
 
 const Providers: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <UserProvider>
-      <SidebarProvider>{children}</SidebarProvider>
+      {children}
     </UserProvider>
   );
 };

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "../globals.css";
 import { Toaster } from "sonner";
 import Providers from "@/components/provider/Providers";
 import { AppSidebar } from "@/components/top/AppSidebar";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 export const metadata: Metadata = {
   title: "Triptales",
@@ -18,13 +18,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`font-body relative min-h-screen antialiased w-full`}>
-        <Providers>
-          <main className="h-full w-full">{children}</main>
-          <Toaster />
-        </Providers>
-      </body>
-    </html>
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarTrigger />
+      {children}
+      <Toaster />
+    </SidebarProvider>
   );
 }
