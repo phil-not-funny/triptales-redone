@@ -65,6 +65,16 @@ const me = async (): Promise<UserPrivateResponse | null> => {
   }
 };
 
+const logout = async (): Promise<boolean> => {
+  try {
+    const response = await api.get("/User/logout");
+    return response.status === HttpStatusCode.NoContent;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
 const toFormattedErrorMessage = (
   error: unknown,
 ): { status: HttpStatusCode; message: string } => {
@@ -91,4 +101,4 @@ const formatErrorMessage = (data: unknown): string => {
   return String(data);
 };
 
-export default { register, login, me };
+export default { register, login, logout, me };
