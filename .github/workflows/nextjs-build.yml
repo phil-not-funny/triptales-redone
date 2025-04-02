@@ -22,14 +22,18 @@ jobs:
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node_modules-
+          working-directory: ./frontend
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: "22"
+          working-directory: ./frontend
 
       - name: Install dependencies
         run: npm install
+        working-directory: ./backend
 
       - name: Build Next.js
         run: npm run build
+        working-directory: ./backend
