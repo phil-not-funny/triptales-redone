@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "../globals.css";
 import { Toaster } from "sonner";
-import Providers from "@/components/provider/Providers";
 import { AppSidebar } from "@/components/top/AppSidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import Footer from "@/components/top/Footer";
 
 export const metadata: Metadata = {
   title: "Triptales",
@@ -20,8 +20,11 @@ export default function RootLayout({
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarTrigger />
-      {children}
+      <div className="min-h-screen w-full">
+        <SidebarTrigger />
+        <div className="min-h-screen w-full">{children}</div>
+        <Footer />
+      </div>
       <Toaster />
     </SidebarProvider>
   );

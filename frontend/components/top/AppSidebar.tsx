@@ -52,7 +52,7 @@ export const AppSidebar: React.FC = () => {
           TripTales
         </h1>
       </SidebarHeader>
-      <SidebarContent className="!bg-primary-light">
+      <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>

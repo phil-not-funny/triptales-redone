@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "sonner";
 import Providers from "@/components/provider/Providers";
-import { AppSidebar } from "@/components/top/AppSidebar";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export const metadata: Metadata = {
   title: "Triptales",
@@ -19,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`font-body relative min-h-screen antialiased w-full`}>
+      <body className={`font-body relative min-h-screen antialiased`}>
         <Providers>
           <main className="h-full w-full">{children}</main>
           <Toaster />
