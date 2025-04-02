@@ -91,4 +91,12 @@ const me = async (): Promise<UserPrivateResponse | null> => {
   }
 };
 
-export default { register, login, me };
+const logout = async (): Promise<boolean> => {
+  try {
+    const response = await api.get("/User/logout");
+    return response.status === HttpStatusCode.NoContent;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
