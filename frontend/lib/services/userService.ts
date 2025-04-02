@@ -7,6 +7,32 @@ import {
 import api from "../api";
 import axios, { HttpStatusCode } from "axios";
 
+const toFormattedErrorMessage = (
+  error: unknown,
+): { status: HttpStatusCode; message: string } => {
+  if (axios.isAxiosError(error) && error.response) {
+    const { status, data } = error.response;
+    return {
+      status: status ?? HttpStatusCode.InternalServerError,
+      message: formatErrorMessage(data),
+    };
+  } else
+    return {
+      status: HttpStatusCode.InternalServerError,
+      message: "An unknown error occurred",
+    };
+};
+
+const formatErrorMessage = (data: unknown): string => {
+  if (Array.isArray(data)) {
+    return data
+      .map((member) => (member as { errorMessage?: string })?.errorMessage)
+      .filter(Boolean)
+      .join(" AND ");
+  }
+  return String(data);
+};
+
 const register = async (
   data: RegisterRequest,
 ): Promise<RegisterClientResponse> => {
@@ -74,31 +100,3 @@ const logout = async (): Promise<boolean> => {
     return false;
   }
 };
-
-const toFormattedErrorMessage = (
-  error: unknown,
-): { status: HttpStatusCode; message: string } => {
-  if (axios.isAxiosError(error) && error.response) {
-    const { status, data } = error.response;
-    return {
-      status: status ?? HttpStatusCode.InternalServerError,
-      message: formatErrorMessage(data),
-    };
-  } else
-    return {
-      status: HttpStatusCode.InternalServerError,
-      message: "An unknown error occurred",
-    };
-};
-
-const formatErrorMessage = (data: unknown): string => {
-  if (Array.isArray(data)) {
-    return data
-      .map((member) => (member as { errorMessage?: string })?.errorMessage)
-      .filter(Boolean)
-      .join(" AND ");
-  }
-  return String(data);
-};
-
-export default { register, login, logout, me };
