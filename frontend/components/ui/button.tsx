@@ -61,10 +61,8 @@ function AnimatedButton({
   variant,
   size,
   onClick,
-  children
-}: React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants>) {
-
+  children,
+}: React.ComponentProps<"button"> & VariantProps<typeof buttonVariants>) {
   return (
     <MotionButton
       initial={{ scale: 1 }}
@@ -74,8 +72,9 @@ function AnimatedButton({
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
       onClick={onClick}
-      children={children}
-    />
+    >
+      {children}
+    </MotionButton>
   );
 }
 
