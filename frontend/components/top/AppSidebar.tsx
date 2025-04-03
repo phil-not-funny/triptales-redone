@@ -13,6 +13,7 @@ import {
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -34,8 +35,6 @@ type Item = {
 };
 
 export const AppSidebar: React.FC = () => {
-  const { loggedIn, refreshUser, logout } = useUser();
-
   const navItems: Item[] = [
     {
       title: "Home",
@@ -82,6 +81,8 @@ export const AppSidebar: React.FC = () => {
       },
     },
   ];
+
+  const { loggedIn, refreshUser, logout, user } = useUser();
 
   useEffect(() => {
     refreshUser();
@@ -141,6 +142,12 @@ export const AppSidebar: React.FC = () => {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      {loggedIn && user && (
+        <SidebarFooter className="flex flex-row items-center justify-around border-t border-t-neutral-400/60 text-sm py-6">
+          <span>{user.displayName}</span>
+          <span className="text-gray-700 italic">@{user.username}</span>
+        </SidebarFooter>
+      )}
     </Sidebar>
   );
 };
