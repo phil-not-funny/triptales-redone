@@ -90,7 +90,7 @@ export const AppSidebar: React.FC = () => {
 
   return (
     <Sidebar>
-      <SidebarHeader className="flex flex-row items-center justify-between">
+      <SidebarHeader className="flex flex-row items-center justify-between border-b border-b-neutral-400/30 md:py-6">
         <Image
           src={"/images/triptales_logo.png"}
           width={200}
@@ -143,7 +143,7 @@ export const AppSidebar: React.FC = () => {
         </SidebarGroup>
       </SidebarContent>
       {loggedIn && user && (
-        <SidebarFooter className="flex flex-row items-center justify-around border-t border-t-neutral-400/60 text-sm py-6">
+        <SidebarFooter className="flex flex-row items-center justify-around border-t border-t-neutral-400/30 text-sm md:py-6">
           <span>{user.displayName}</span>
           <span className="text-gray-700 italic">@{user.username}</span>
         </SidebarFooter>
