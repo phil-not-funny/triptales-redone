@@ -86,7 +86,7 @@ export const AppSidebar: React.FC = () => {
 
   useEffect(() => {
     refreshUser();
-  });
+  }, []);
 
   return (
     <Sidebar>
