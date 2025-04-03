@@ -85,8 +85,7 @@ const me = async (): Promise<UserPrivateResponse | null> => {
     )
       return response.data;
     else throw new Error("Invalid response structure");
-  } catch (error) {
-    console.error(error);
+  } catch {
     return null;
   }
 };

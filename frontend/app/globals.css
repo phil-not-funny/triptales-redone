@@ -1,5 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Libre+Franklin:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Oswald:wght@200..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Libre+Franklin:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Oswald:wght@200..700&display=swap");
 @import "tailwindcss";
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -8,10 +9,12 @@
   --color-primary-saturated: #3ddb67;
   --color-primary-hover: #96e3aa;
   --color-primary-light: #b1e3be;
+  --color-primary-dark: #29801f;
   --font-title-oswald: "Oswald", "sans-serif";
   --font-body: "Nunito Sans", "sans-serif";
   --font-body-libre: "Libre Franklin", "sans-serif";
   --font-title: "Inter", "sans-serif";
+  --font-title-plax: "IBM Plex Serif", "serif";
 }
 
 @font-face {
@@ -42,6 +45,12 @@
   font-family: "Libre Franklin", sans-serif;
   font-optical-sizing: auto;
   font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "IBM Plex Serif", serif;
+  font-weight: 400;
   font-style: normal;
 }
 
@@ -158,5 +167,29 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer base {
+  :root {
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
