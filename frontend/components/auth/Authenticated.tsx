@@ -6,18 +6,18 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 const Authenticated: React.FC<PropsWithChildren> = ({ children }) => {
-  const { isLoggedIn } = useUser();
+  const { loggedIn } = useUser();
   const router = useRouter();
 
   const init = async () => {
-    if (!(await isLoggedIn())) {
-        toast.error("Please log in to continue.");
+    if (!loggedIn) {
+      toast.error("Please log in to continue.");
       router.push("/landing");
     }
   };
 
   useEffect(() => {
-    init(); 
+    init();
   }, []);
 
   return <Fragment>{children}</Fragment>;
