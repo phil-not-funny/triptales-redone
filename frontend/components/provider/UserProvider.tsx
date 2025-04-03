@@ -6,7 +6,14 @@ import {
   RegisterRequest,
   UserPrivateResponse,
 } from "@/types/ReqeuestTypes";
-import { createContext, PropsWithChildren, useContext, useState } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import Loading from "../top/Loading";
 
 export type LoginContextResponse = {
   user?: UserPrivateResponse;
@@ -22,14 +29,39 @@ type UserContextType = {
   user: UserPrivateResponse | null;
   register: (values: RegisterRequest) => Promise<RegisterContextResponse>;
   login: (values: LoginRequest) => Promise<LoginContextResponse>;
-  isLoggedIn: () => Promise<boolean>;
+  loggedIn: boolean;
   logout: () => Promise<void>;
+  refreshUser: () => Promise<void>;
 };
 
 const UserContext = createContext<UserContextType | null>(null); // error here! Problem: the classes are defined down there
 
 export const UserProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [user, setUser] = useState<UserPrivateResponse | null>(null);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const refreshUser = async () => {
+    try {
+      const response = await userService.me();
+      if (response) {
+        setUser(response);
+      } else {
+        setUser(null);
+      }
+      setLoggedIn(!!response);
+    } catch (error) {
+      console.error("Failed to refresh user:", error);
+      setUser(null);
+      setLoggedIn(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    refreshUser();
+  });
 
   const register = async (
     values: RegisterRequest,
@@ -40,29 +72,30 @@ export const UserProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
   const login = async (values: LoginRequest): Promise<LoginContextResponse> => {
     const response = await userService.login(values);
-    if (response.status === 200) setUser(response.data!);
+    if (response.status === 200) {
+      setUser(response.data!);
+      setLoggedIn(true);
+    }
     return { user: response.data, message: response.message };
   };
 
   const logout = async () => {
-    if (await userService.logout()) setUser(null);
-    else console.error("Logout failed");
-  };
-
-  const isLoggedIn = async (): Promise<boolean> => {
-    const response = await userService.me();
-    if (response) setUser(response);
-    return !!response;
+    if (await userService.logout()) {
+      setUser(null);
+      setLoggedIn(false);
+    } else console.error("Logout failed");
   };
 
   const context: UserContextType = {
     user,
     register,
     login,
-    isLoggedIn,
+    loggedIn,
     logout,
+    refreshUser,
   };
 
+  if (isLoading) return <Loading />;
   return (
     <UserContext.Provider value={context}>{children}</UserContext.Provider>
   );
