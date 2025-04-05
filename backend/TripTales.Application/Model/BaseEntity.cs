@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Triptales.Webapi.Model
+namespace Triptales.Application.Model
 {
     public abstract class BaseEntity
     {
