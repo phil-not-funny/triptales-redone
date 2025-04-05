@@ -13,7 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
-builder.Services.AddDbContext<TripTalesContext>(opt => opt.UseSqlite("DataSource=Proxreal.db"));
+builder.Services.AddDbContext<TripTalesContext>(opt => opt.UseSqlite("DataSource=TripTales.db"));
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(
