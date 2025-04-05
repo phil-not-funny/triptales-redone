@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Triptales.Webapi.Infrastructure;
-using Triptales.Webapi.Model;
+using Triptales.Application.Model;
 
 namespace proxreal_backend.Repository
 {

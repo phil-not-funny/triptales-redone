@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Triptales.Webapi.Model;
+using Triptales.Application.Model;
 
 namespace proxreal_backend.Repository
 {

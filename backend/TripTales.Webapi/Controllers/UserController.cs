@@ -12,7 +12,7 @@ using Triptales.Application.Cmd;
 using Triptales.Application.Dtos;
 using Triptales.Application.Services;
 using Triptales.Webapi.Infrastructure;
-using Triptales.Webapi.Model;
+using Triptales.Application.Model;
 
 namespace Triptales.Webapi.Controllers
 {

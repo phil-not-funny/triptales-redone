@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 
-namespace Triptales.Webapi.Model
+namespace Triptales.Application.Model
 {
     [Index(nameof(Email), IsUnique = true)]
     [Index(nameof(Username), IsUnique = true)]
@@ -25,7 +25,7 @@ namespace Triptales.Webapi.Model
         [DataType(DataType.Text)]
         [MinLength(4, ErrorMessage = "Username does not meet Requirements. Min Length = 4")]
         [MaxLength(25, ErrorMessage = "Username does not meet Requirements. Max Length = 25")]
-        [RegularExpression(@"^[a-z0-9._]+$", ErrorMessage = "Username may only conatin lower case letters, numbers, dots and underscores.")]
+        [RegularExpression(@"^[a-z0-9._]+$", ErrorMessage = "Username may only contain lower case letters, numbers, dots and underscores.")]
         public string Username { get; set; }
 
         [DataType(DataType.EmailAddress)]
