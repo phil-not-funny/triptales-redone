@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Triptales.Application", "Tr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Triptales.Webapi", "TripTales.Webapi\Triptales.Webapi.csproj", "{DEE30E1D-5156-4A04-B443-026B83F59545}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TripTales.Application.Tests", "TripTales.Application.Tests\TripTales.Application.Tests.csproj", "{87688374-5F69-4880-8C79-781154C7DDCC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{DEE30E1D-5156-4A04-B443-026B83F59545}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DEE30E1D-5156-4A04-B443-026B83F59545}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DEE30E1D-5156-4A04-B443-026B83F59545}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87688374-5F69-4880-8C79-781154C7DDCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87688374-5F69-4880-8C79-781154C7DDCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87688374-5F69-4880-8C79-781154C7DDCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87688374-5F69-4880-8C79-781154C7DDCC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
