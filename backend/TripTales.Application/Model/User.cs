@@ -43,6 +43,8 @@ namespace Triptales.Application.Model
         public string? PasswordHash { get; set; }
 
         public List<User> Following { get; } = new();
+        public List<Post> LikedPosts { get; } = new();
+        public List<Post> Posts { get; } = new();
 
         public bool CheckPassword(string password) => PasswordHash == CalculateHash(password, Salt!);
 

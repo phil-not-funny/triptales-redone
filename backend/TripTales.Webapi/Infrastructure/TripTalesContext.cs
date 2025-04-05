@@ -12,9 +12,16 @@ namespace Triptales.Webapi.Infrastructure
             : base(options) { }
 
         public DbSet<User> Users => Set<User>();
+        public DbSet<Post> Posts => Set<Post>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Post>().HasMany(p => p.Likes)
+                .WithMany(u => u.LikedPosts)
+                .UsingEntity(j => j.ToTable("PostLikes"));
+            modelBuilder.Entity<Post>().HasOne(p => p.Author)
+                .WithMany(u => u.Posts);
+
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 // ON DELETE RESTRICT instead of ON DELETE CASCADE
