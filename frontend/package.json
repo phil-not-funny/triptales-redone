@@ -6,7 +6,10 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "cypress:open": "cypress open --e2e --browser electron",
+    "cypress:run": "cypress run --e2e --browser electron",
+    "test": "start-server-and-test dev http://localhost:3000 cypress:run"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -40,10 +43,12 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "cypress": "^14.2.1",
     "eslint": "^9",
     "eslint-config-next": "15.2.3",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
+    "start-server-and-test": "^2.0.11",
     "typescript": "^5"
   }
 }
