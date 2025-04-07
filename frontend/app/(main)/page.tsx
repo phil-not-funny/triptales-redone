@@ -26,7 +26,7 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-4">
-      <div className="flex h-40 w-full items-center justify-center overflow-hidden object-cover shadow-md sm:h-80">
+      <div className="relative flex h-40 w-full items-center justify-center overflow-hidden object-cover shadow-lg sm:h-80">
         <Image
           src={"/images/homepage-background.jpg"}
           width={8640}
@@ -34,6 +34,14 @@ export default function Home() {
           alt="Explore image"
           className="h-auto w-full object-cover"
         />
+        <div className="absolute flex translate-y-1/2 flex-col items-center justify-center">
+          <h1 className="text-primary-saturated text-3xl text-shadow-lg/30 font-bold tracking-wider uppercase md:text-5xl">
+            Explore Posts
+          </h1>
+          <p className="text-primary-main text-lg text-shadow-lg/30 tracking-tight">
+            Discover Stories from Every Corner of the World.
+          </p>
+        </div>
       </div>
       <Post post={examplePost} />
     </div>
