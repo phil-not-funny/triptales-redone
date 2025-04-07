@@ -36,7 +36,7 @@ const Footer: React.FC = () => {
               href="#"
               className="hover:text-primary-hover text-sm text-gray-600 transition-colors duration-200"
             >
-              Terms of Condition
+              Terms and Conditions
             </Link>
             <Link
               href="#"
