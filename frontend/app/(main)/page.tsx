@@ -2,6 +2,7 @@
 
 import Post from "@/components/low/Post";
 import { useUser } from "@/components/providers/UserProvider";
+import Image from "next/image";
 
 const examplePost = {
   author: {
@@ -25,7 +26,15 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-4">
-      <h1 className="text-4xl font-bold text-gray-800 uppercase">Explore trips</h1>
+      <div className="flex h-40 w-full items-center justify-center overflow-hidden object-cover shadow-md sm:h-80">
+        <Image
+          src={"/images/homepage-background.jpg"}
+          width={8640}
+          height={5760}
+          alt="Explore image"
+          className="h-auto w-full object-cover"
+        />
+      </div>
       <Post post={examplePost} />
     </div>
   );

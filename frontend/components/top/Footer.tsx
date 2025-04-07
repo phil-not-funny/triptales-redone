@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
     <footer className="w-full border-t border-gray-100 bg-gray-50 px-4 py-12 md:px-8">
       <div className="mx-auto max-w-7xl">
         {/* Top Section */}
-        <div className="flex flex-col items-center justify-between gap-8 border-b border-gray-100 pb-8 md:flex-row">
+        <div className="flex flex-col items-center justify-between gap-8 border-b border-gray-100 pb-8 md:flex-row md:px-4">
           <div className="flex items-center gap-4">
             <Image
               src={"/images/triptales_full.png"}
@@ -19,31 +19,31 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Navigation Links */}
-          <div className="flex flex-wrap justify-center gap-6 md:gap-8">
-            <a
+          <div className="flex flex-row flex-wrap justify-center gap-6 text-right md:flex-col md:gap-8">
+            <Link
               href="#"
               className="hover:text-primary-hover text-sm text-gray-600 transition-colors duration-200"
             >
               About
-            </a>
-            <a
+            </Link>
+            <Link
               href="#"
               className="hover:text-primary-hover text-sm text-gray-600 transition-colors duration-200"
             >
               Privacy
-            </a>
-            <a
+            </Link>
+            <Link
               href="#"
               className="hover:text-primary-hover text-sm text-gray-600 transition-colors duration-200"
             >
-              Terms
-            </a>
-            <a
+              Terms of Condition
+            </Link>
+            <Link
               href="#"
               className="hover:text-primary-hover text-sm text-gray-600 transition-colors duration-200"
             >
               Contact
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -52,7 +52,6 @@ const Footer: React.FC = () => {
           <p className="text-xs text-gray-600 md:text-sm">
             &copy; 2025 TripTales. All rights reserved.
           </p>
-
           <div className="flex items-center gap-3">
             <p className="text-xs text-gray-600 md:text-sm">
               Made with
@@ -77,6 +76,24 @@ const Footer: React.FC = () => {
             </div>
           </div>
         </div>
+        <p className="text-gray-600 italic text-sm">
+          Homepage Picture by{" "}
+          <Link
+            target="_blank"
+            className="underline"
+            href="https://unsplash.com/de/@neom?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash"
+          >
+            NEOM
+          </Link>{" "}
+          on{" "}
+          <Link
+            target="_blank"
+            className="underline"
+            href="https://unsplash.com/de/fotos/eine-person-die-auf-einem-felsigen-hugel-steht-gOqBe7ropxM?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash"
+          >
+            Unsplash
+          </Link>
+        </p>
       </div>
     </footer>
   );
