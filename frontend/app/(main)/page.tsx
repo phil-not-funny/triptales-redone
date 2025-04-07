@@ -26,7 +26,7 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-4">
-      <div className="relative flex h-40 w-full items-center justify-center overflow-hidden object-cover shadow-lg sm:h-80">
+      <div className="relative mb-12 flex h-40 w-full items-center justify-center overflow-hidden object-cover shadow-lg sm:h-80">
         <Image
           src={"/images/homepage-background.jpg"}
           width={8640}
