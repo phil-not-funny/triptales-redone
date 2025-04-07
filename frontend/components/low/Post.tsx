@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { useRouter } from "next/navigation";
 
 interface PostProps {
   post: PostType;
@@ -18,6 +19,7 @@ interface PostProps {
 
 const Post: React.FC<PostProps> = ({ post }) => {
   const { loggedIn } = useUser();
+  const router = useRouter();
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString("en-US", {
@@ -25,6 +27,14 @@ const Post: React.FC<PostProps> = ({ post }) => {
       month: "short",
       day: "numeric",
     });
+  };
+
+  const handleViewMore = () => {
+    router.push(`/posts/${post.guid}`);
+  };
+
+  const handleLike = () => {
+    // implement like functionality
   };
 
   return (
@@ -65,11 +75,16 @@ const Post: React.FC<PostProps> = ({ post }) => {
           variant={"ghost"}
           disabled={!loggedIn}
           className="text-gray-600 transition-colors duration-200 hover:text-rose-500"
+          onClick={handleLike}
         >
           <Heart />
           {post.likes.length} Likes
         </Button>
-        <Button variant={"default"} className="hover:text-white">
+        <Button
+          variant={"default"}
+          className="hover:text-white"
+          onClick={handleViewMore}
+        >
           View More
         </Button>
       </CardFooter>
