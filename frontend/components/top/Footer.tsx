@@ -15,10 +15,6 @@ const Footer: React.FC = () => {
               className="h-auto w-[125px] transition-transform duration-300 hover:scale-105 md:w-[200px]"
               alt="TripTales Logo"
             />
-            <div className="hidden md:block">
-              <p className="text-sm font-medium text-gray-600">TripTales</p>
-              <p className="text-xs text-gray-500">Explore. Share. Connect.</p>
-            </div>
           </div>
 
           {/* Navigation Links */}
