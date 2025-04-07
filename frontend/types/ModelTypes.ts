@@ -1,4 +1,4 @@
-type Enitity = {
+type Entity = {
   guid: string;
 }
 
