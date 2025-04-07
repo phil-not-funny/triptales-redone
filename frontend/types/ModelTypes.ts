@@ -8,7 +8,7 @@ export type User = {
   email: string;
   verified?: boolean;
   following?: User[];
-} & Enitity;
+} & Entity;
 
 export type Post = {
   title: string;
@@ -18,4 +18,4 @@ export type Post = {
   startDate: Date;
   endDate: Date;
   likes: User[];
-} & Enitity;
+} & Entity;
