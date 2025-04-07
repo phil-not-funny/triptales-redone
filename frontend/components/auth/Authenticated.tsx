@@ -1,7 +1,7 @@
 "use client";
 
-import { Fragment, PropsWithChildren, useEffect } from "react";
-import { useUser } from "../provider/UserProvider";
+import { PropsWithChildren, useEffect } from "react";
+import { useUser } from "../providers/UserProvider";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -20,7 +20,7 @@ const Authenticated: React.FC<PropsWithChildren> = ({ children }) => {
     init();
   }, []);
 
-  return <Fragment>{children}</Fragment>;
+  return children;
 };
 
 export default Authenticated;

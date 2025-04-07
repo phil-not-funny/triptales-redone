@@ -22,7 +22,7 @@ export default function RootLayout({
       <AppSidebar />
       <div className="min-h-screen w-full">
         <SidebarTrigger />
-        <div className="min-h-screen w-full">{children}</div>
+        <div className="min-h-screen w-full text-gray-800">{children}</div>
         <Footer />
       </div>
       <Toaster />
