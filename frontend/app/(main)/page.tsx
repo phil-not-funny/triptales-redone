@@ -1,7 +1,6 @@
 "use client";
 
 import Post from "@/components/low/Post";
-import { useUser } from "@/components/providers/UserProvider";
 import Image from "next/image";
 
 const examplePost = {
@@ -22,7 +21,6 @@ const examplePost = {
 };
 
 export default function Home() {
-  const { user } = useUser();
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-4">
