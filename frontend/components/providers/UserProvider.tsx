@@ -61,7 +61,7 @@ export const UserProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     refreshUser();
-  });
+  }, []);
 
   const register = async (
     values: RegisterRequest,

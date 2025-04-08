@@ -21,7 +21,7 @@ export default function RootLayout({
     <SidebarProvider>
       <AppSidebar />
       <div className="min-h-screen w-full">
-        <SidebarTrigger className="absolute top-2 left-2 z-10" />
+        <SidebarTrigger className="absolute top-2 left-2 z-20" />
         <div className="min-h-screen w-full text-gray-800">{children}</div>
         <Footer />
       </div>

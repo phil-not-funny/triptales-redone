@@ -36,7 +36,7 @@ type Item = {
 
 export const AppSidebar: React.FC = () => {
   const navItems: Item[] = [
-    { title: "Home", url: "#", icon: Home },
+    { title: "Home", url: "/", icon: Home },
     { title: "Inbox", url: "#", icon: Inbox },
     { title: "Search", url: "#", icon: Search },
     { title: "Settings", url: "#", icon: Settings },
@@ -134,7 +134,10 @@ export const AppSidebar: React.FC = () => {
 
       {loggedIn && user && (
         <SidebarFooter className="border-t border-gray-100 bg-gray-50 px-4 py-6">
-          <div className="flex items-center justify-between">
+          <Link
+            href={`/user/${user.username}`}
+            className="flex items-center justify-between rounded-lg p-2 transition-colors duration-150 hover:bg-gray-100"
+          >
             <div className="flex items-center gap-3">
               <Avatar className="h-10 w-10">
                 <AvatarFallback>
@@ -148,7 +151,7 @@ export const AppSidebar: React.FC = () => {
                 <p className="text-xs text-gray-500">@{user.username}</p>
               </div>
             </div>
-          </div>
+          </Link>
         </SidebarFooter>
       )}
     </Sidebar>

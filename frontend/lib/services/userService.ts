@@ -1,8 +1,10 @@
 import {
   isUserPrivateResponse,
+  isUserPublicResponse,
   LoginRequest,
   RegisterRequest,
   UserPrivateResponse,
+  UserPublicResponse,
 } from "@/types/ReqeuestTypes";
 import api from "../api";
 import axios, { HttpStatusCode } from "axios";
@@ -100,6 +102,22 @@ const logout = async (): Promise<boolean> => {
   }
 };
 
-const UserService = { register, login, me, logout };
+const getByUsername = async (
+  username: string,
+): Promise<UserPublicResponse | null> => {
+  try {
+    const response = await api.get(`/User/${username}`);
+    if (
+      response.status === HttpStatusCode.Ok &&
+      isUserPublicResponse(response.data)
+    )
+      return response.data;
+    else throw new Error("Invalid response structure");
+  } catch (error) {
+    return null;
+  }
+};
+
+const UserService = { register, login, me, logout, getByUsername };
 
 export default UserService;
