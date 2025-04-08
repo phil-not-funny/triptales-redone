@@ -25,7 +25,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useUser } from "../providers/UserProvider";
 import { useEffect } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 
 type Item = {
   title: string;

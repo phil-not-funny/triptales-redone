@@ -113,7 +113,7 @@ const getByUsername = async (
     )
       return response.data;
     else throw new Error("Invalid response structure");
-  } catch (error) {
+  } catch {
     return null;
   }
 };

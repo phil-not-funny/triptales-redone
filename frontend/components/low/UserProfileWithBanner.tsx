@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Verified } from "lucide-react";
 import { Button } from "../ui/button";
-import { Card, CardContent, CardHeader } from "../ui/card";
+import { Card, CardContent } from "../ui/card";
 import { PropsWithClassName } from "@/types/ComponentTypes";
 
 interface UserProfileWithBannerProps {
@@ -61,7 +61,7 @@ const UserProfileWithBanner: React.FC<
         <div className="mt-6">
           <h2 className="mb-2 text-lg font-medium">About</h2>
           <p className="text-sm leading-relaxed">
-            {user.displayName} hasn't added a bio yet.
+            {user.displayName} hasn&apos;t added a bio yet.
           </p>
         </div>
 
