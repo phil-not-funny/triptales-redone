@@ -1,6 +1,5 @@
 "use client";
 
-import { Post as PostType } from "@/types/ModelTypes";
 import { Calendar, Heart } from "lucide-react";
 import { Button } from "../ui/button";
 import { useUser } from "../providers/UserProvider";
@@ -12,17 +11,24 @@ import {
   CardTitle,
 } from "../ui/card";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { PostResponse } from "@/types/RequestTypes";
+import { convertToDate } from "@/lib/utils";
 
 interface PostProps {
-  post: PostType;
+  post: PostResponse;
 }
 
 const Post: React.FC<PostProps> = ({ post }) => {
   const { loggedIn } = useUser();
   const router = useRouter();
 
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString("en-US", {
+  useEffect(() => {
+    console.log(post);
+  }, [post]);
+
+  const formatDate = (date: string): string => {
+    return convertToDate(date).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",
@@ -38,7 +44,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
   };
 
   return (
-    <Card className="mx-auto mb-6 max-w-2xl gap-0 overflow-hidden rounded-xl border border-gray-100 bg-white py-0 shadow-sm transition-shadow duration-300 hover:shadow-md">
+    <Card className="mx-auto mb-6 lg:w-2xl gap-0 overflow-hidden rounded-xl border border-gray-100 bg-white py-0 shadow-sm transition-shadow duration-300 hover:shadow-md">
       {/* Header Section */}
       <CardHeader className="border-b border-gray-100 p-6">
         <CardTitle className="mb-2 text-2xl font-semibold text-gray-800">
@@ -78,7 +84,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
           onClick={handleLike}
         >
           <Heart />
-          {post.likes.length} Likes
+          {post.likesCount} Likes
         </Button>
         <Button
           variant={"default"}
