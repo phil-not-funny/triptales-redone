@@ -9,7 +9,7 @@ namespace Triptales.Webapi.Dtos
                           UserPublicCmdSmall Author,
                           string StartDate,
                           string EndDate,
-                          string Created,
+                          string CreatedAt,
                           int LikesCount);
 
 }
