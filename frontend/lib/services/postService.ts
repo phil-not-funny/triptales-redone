@@ -1,4 +1,4 @@
-import { isPostResponse, PostResponse } from "@/types/ReqeuestTypes";
+import { isPostResponse, PostResponse } from "@/types/RequestTypes";
 import api from "../api";
 
 type GetRandomPostsClientResponse = {
@@ -13,7 +13,7 @@ const getRandom = async (
     const response = await api.get<PostResponse[]>(
       `/Post/random?size=${number}`,
     );
-    if (response.status === 200 )
+    if (response.status === 200 && isPostResponse(response.data[0]))
       return {
         success: true,
         data: response.data,

@@ -66,5 +66,4 @@ export const isPostResponse = (p: any): p is PostResponse =>
   "createdAt" in p &&
   "startDate" in p &&
   "endDate" in p &&
-  "likes" in p &&
-  Array.isArray(p.likes);
+  "likesCount" in p

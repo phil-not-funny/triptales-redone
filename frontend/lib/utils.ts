@@ -1,5 +1,3 @@
-import { Post } from "@/types/ModelTypes";
-import { PostResponse } from "@/types/ReqeuestTypes";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
