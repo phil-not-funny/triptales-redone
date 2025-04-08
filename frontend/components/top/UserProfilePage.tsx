@@ -7,6 +7,7 @@ import UserProfileWithBanner from "../low/UserProfileWithBanner";
 import { useEffect, useState } from "react";
 import Loading from "./Loading";
 import UserService from "@/lib/services/userService";
+import Sorry from "../low/Sorry";
 
 interface UserProfileWithBackgroundProps {
   username: string;
@@ -52,7 +53,7 @@ const UserProfilePage: React.FC<UserProfileWithBackgroundProps> = ({
   ) : loading ? (
     <Loading />
   ) : (
-    <h1>User not Found</h1>
+    <Sorry className="h-screen">We were unable to find the user you provided.</Sorry>
   );
 };
 

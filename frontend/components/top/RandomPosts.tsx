@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import Post from "../low/Post";
 import Loading from "./Loading";
+import Sorry from "../low/Sorry";
 
 const RandomPosts: React.FC = () => {
   const [posts, setPosts] = useState<PostResponse[]>([]);
@@ -29,14 +30,7 @@ const RandomPosts: React.FC = () => {
   ) : posts.length ? (
     posts.map((p) => <Post key={p.guid} post={p} />)
   ) : (
-    <div className="flex min-h-[200px] flex-col items-center justify-center p-4 text-gray-800">
-      <pre className="mb-4 text-4xl">:(</pre>
-      <p className="text-center">
-        We were unable to fetch posts from our server.
-        <br />
-        Please try again later or contact support if the problem persists.
-      </p>
-    </div>
+    <Sorry>We were unable to fetch posts from our server.</Sorry>
   );
 };
 
