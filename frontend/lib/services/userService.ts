@@ -5,7 +5,7 @@ import {
   RegisterRequest,
   UserPrivateResponse,
   UserPublicResponse,
-} from "@/types/ReqeuestTypes";
+} from "@/types/RequestTypes";
 import api from "../api";
 import axios, { HttpStatusCode } from "axios";
 

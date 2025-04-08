@@ -12,9 +12,8 @@ import {
 } from "../ui/card";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { PostResponse } from "@/types/ReqeuestTypes";
+import { PostResponse } from "@/types/RequestTypes";
 import { convertToDate } from "@/lib/utils";
-import Loading from "../top/Loading";
 
 interface PostProps {
   post: PostResponse;

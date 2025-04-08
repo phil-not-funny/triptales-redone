@@ -1,4 +1,4 @@
-import { UserPublicResponse } from "@/types/ReqeuestTypes";
+import { UserPublicResponse } from "@/types/RequestTypes";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Verified } from "lucide-react";
 import { Button } from "../ui/button";

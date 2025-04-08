@@ -1,6 +1,6 @@
 "use client";
 
-import { UserPublicResponse } from "@/types/ReqeuestTypes";
+import { UserPublicResponse } from "@/types/RequestTypes";
 import UserProfile from "../low/UserProfile";
 import Image from "next/image";
 import UserProfileWithBanner from "../low/UserProfileWithBanner";

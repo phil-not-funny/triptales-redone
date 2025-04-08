@@ -5,7 +5,7 @@ import {
   LoginRequest,
   RegisterRequest,
   UserPrivateResponse,
-} from "@/types/ReqeuestTypes";
+} from "@/types/RequestTypes";
 import {
   createContext,
   PropsWithChildren,
