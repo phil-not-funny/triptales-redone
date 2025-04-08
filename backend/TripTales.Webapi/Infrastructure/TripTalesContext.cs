@@ -55,8 +55,8 @@ namespace Triptales.Webapi.Infrastructure
         public void SeedDatabase()
         {
             Randomizer.Seed = new Random(11111111);
-            var faker = new Faker();
-            var users = new Faker<User>().CustomInstantiator(f =>
+            var faker = new Faker("de");
+            var users = new Faker<User>(locale: "de").CustomInstantiator(f =>
             {
                 var username = f.Internet.UserName();
                 return new User(username.ToLower(),
@@ -65,10 +65,21 @@ namespace Triptales.Webapi.Infrastructure
                                 username);
             }).Generate(5).ToList();
 
-            var admin = new User("admin", "admin@proxreal.at", "admin", "Administrator");
+            var admin = new User("admin", "admin@triptales.at", "admin", "Administrator");
             admin.Verified = true;
             Users.Add(admin);
             Users.AddRange(users);
+            SaveChanges();
+
+            var posts = new Faker<Post>(locale: "de").CustomInstantiator(f =>
+            {
+                f.Lorem.Locale = "de";
+                var date = f.Date.Between(DateTime.UtcNow.AddDays(-20), DateTime.UtcNow.AddDays(-1));
+                var date2 = f.Date.Between(date, DateTime.UtcNow);
+                var post = new Post(f.Lorem.Sentence(5), f.Lorem.Sentence(15), f.PickRandom(users), date, date);
+                return post;
+            }).Generate(10).ToList();
+            Posts.AddRange(posts);
             SaveChanges();
         }
     }

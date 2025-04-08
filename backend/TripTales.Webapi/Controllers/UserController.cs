@@ -7,12 +7,13 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using proxreal_backend.Repository;
+using TripTales.Repository;
 using Triptales.Application.Cmd;
 using Triptales.Application.Dtos;
 using Triptales.Application.Services;
 using Triptales.Webapi.Infrastructure;
 using Triptales.Application.Model;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Triptales.Webapi.Controllers
 {
@@ -24,11 +25,11 @@ namespace Triptales.Webapi.Controllers
         private readonly UserService _service;
         private readonly UserRepository _repo;
 
-        public UserController(TripTalesContext db)
+        public UserController(TripTalesContext db, UserService userService, UserRepository repo)
         {
             _db = db;
-            _repo = new UserRepository(db);
-            _service = new UserService(db);
+            _service = userService;
+            _repo = repo;
         }
 
         private async Task<User?> getAuthenticatedOrDefault()
@@ -52,8 +53,7 @@ namespace Triptales.Webapi.Controllers
             if (!_service.IsUserValid(user, out var userCreated, out var results))
                 return BadRequest(results);
 
-            _repo.Insert(userCreated);
-            return Ok();
+            return await _repo.Insert(userCreated) ? Ok() : BadRequest("Register failed! Check for invaild credentials");
         }
 
         [HttpGet("logout")]
@@ -95,10 +95,7 @@ namespace Triptales.Webapi.Controllers
         public async Task<ActionResult<UserPrivateCmd>> Me()
         {
             var user = await getAuthenticatedOrDefault();
-            if (user is null)
-                return Unauthorized();
-            else
-                return Ok(_service.ConvertToPrivate(user));
+            return user is not null ? Ok(_service.ConvertToPrivate(user)) : Unauthorized();
         }
 
         [HttpGet]
@@ -110,9 +107,7 @@ namespace Triptales.Webapi.Controllers
         public async Task<IActionResult> GetByUsername(string username)
         {
             var user = await _service.GetUserByUsername(username);
-            if (user is null)
-                return NotFound();
-            return Ok(_service.ConvertToPublic(user));
+            return user is not null ? Ok(_service.ConvertToPublic(user)) : NotFound();
         }
 
         [HttpPost("follow/{guid}")]
