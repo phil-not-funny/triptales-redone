@@ -25,6 +25,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useUser } from "../providers/UserProvider";
 import { useEffect } from "react";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 
 type Item = {
   title: string;
@@ -35,7 +36,7 @@ type Item = {
 
 export const AppSidebar: React.FC = () => {
   const navItems: Item[] = [
-    { title: "Home", url: "#", icon: Home },
+    { title: "Home", url: "/", icon: Home },
     { title: "Inbox", url: "#", icon: Inbox },
     { title: "Search", url: "#", icon: Search },
     { title: "Settings", url: "#", icon: Settings },
@@ -133,11 +134,16 @@ export const AppSidebar: React.FC = () => {
 
       {loggedIn && user && (
         <SidebarFooter className="border-t border-gray-100 bg-gray-50 px-4 py-6">
-          <div className="flex items-center justify-between">
+          <Link
+            href={`/user/${user.username}`}
+            className="flex items-center justify-between rounded-lg p-2 transition-colors duration-150 hover:bg-gray-100"
+          >
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 font-medium text-gray-600">
-                {user.displayName?.charAt(0)}
-              </div>
+              <Avatar className="h-10 w-10">
+                <AvatarFallback>
+                  {user.displayName.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
               <div>
                 <p className="text-sm font-medium text-gray-800">
                   {user.displayName}
@@ -145,7 +151,7 @@ export const AppSidebar: React.FC = () => {
                 <p className="text-xs text-gray-500">@{user.username}</p>
               </div>
             </div>
-          </div>
+          </Link>
         </SidebarFooter>
       )}
     </Sidebar>

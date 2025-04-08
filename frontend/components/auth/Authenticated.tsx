@@ -18,7 +18,7 @@ const Authenticated: React.FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     init();
-  }, []);
+  });
 
   return children;
 };
