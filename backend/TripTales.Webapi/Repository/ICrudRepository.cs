@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Triptales.Application.Model;
 
-namespace TripTales.Repository
+namespace Triptales.Repository
 {
     public interface ICrudRepository<T> where T : BaseEntity
     {

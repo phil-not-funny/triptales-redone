@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TripTales.Repository;
+using Triptales.Repository;
 using Triptales.Application.Cmd;
 using Triptales.Application.Dtos;
 using Triptales.Application.Services;
