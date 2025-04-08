@@ -1,15 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Triptales.Application.Cmd;
 using Triptales.Application.Model;
 using Triptales.Application.Services;
 using Triptales.Webapi.Infrastructure;
-using static TripTales.Controllers.PostController;
+using Triptales.Application.Dtos;
 
-namespace TripTales.Repository
+namespace Triptales.Repository
 {
     public class PostRepository : ICrudRepository<Post>
     {

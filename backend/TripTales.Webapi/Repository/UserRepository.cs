@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Triptales.Webapi.Infrastructure;
 using Triptales.Application.Model;
 
-namespace TripTales.Repository
+namespace Triptales.Repository
 {
     public class UserRepository : ICrudRepository<User>
     {

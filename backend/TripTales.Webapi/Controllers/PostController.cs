@@ -1,50 +1,43 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TripTales.Repository;
+using Triptales.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Triptales.Application.Cmd;
 using Triptales.Application.Model;
 using Triptales.Application.Services;
 using Triptales.Webapi.Infrastructure;
+using Triptales.Application.Dtos;
+using Triptales.Application.Cmd;
 
-namespace TripTales.Controllers
+namespace Triptales.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PostController : ControllerBase
+    public partial class PostController : ControllerBase
     {
         private readonly TripTalesContext _db;
         private readonly UserService _userService;
+        private readonly PostService _postService;
         private readonly PostRepository _repository;
 
-        public PostController(TripTalesContext db, UserService userService, PostRepository repository)
+        public PostController(TripTalesContext db, UserService userService, PostRepository repository, PostService postService)
         {
             _db = db;
             _userService = userService;
             _repository = repository;
+            _postService = postService;
         }
 
-        public record PostDto(Guid Guid, string Title, string Description, UserPublicCmdSmall Author, string StartDate, string EndDate, string Created, int LikesCount);
         [HttpGet]
         public async Task<ActionResult<List<PostDto>>> GetPosts() =>
-            Ok((await _repository.GetAll()).Select(a => new PostDto(
-                a.Guid,
-                a.Title,
-                a.Description,
-                _userService.ConvertToPublicSmall(a.Author),
-                a.StartDate.ToString(),
-                a.EndDate.ToString(),
-                a.CreatedAt.ToString(),
-                a.Likes.Count)).ToList());
+            Ok((await _repository.GetAll()).Select(a => _postService.ConvertToPostDto(a)).ToList());
 
         [HttpGet("{guid:Guid}")]
         public async Task<ActionResult<PostDto>> GetPost(Guid guid) =>
             await _repository.GetFromGuidToPostDto(guid) is PostDto post ? Ok(post) : BadRequest("Post not found");
 
-        public record AddPostCmd(string Title, string Description, Guid AuthorGuid, string StartDate, string EndDate);
         [HttpPost]
         public async Task<ActionResult> AddPost([FromBody] AddPostCmd cmd)
         {
@@ -57,7 +50,6 @@ namespace TripTales.Controllers
         public async Task<ActionResult> DeletePost(Guid guid) =>
             await _repository.Delete(guid) ? NoContent() : BadRequest("Delete failed! Check if the right Guid is used");
 
-        public record UpdatePostCmd(string Title, string Description, string StartDate, string EndDate);
         [HttpPut("{guid:Guid}")]
         public async Task<ActionResult> UpdatePost(Guid guid, [FromBody] UpdatePostCmd cmd)
         {
@@ -66,6 +58,17 @@ namespace TripTales.Controllers
             var post = new Post(cmd.Title, cmd.Description, p.Author, DateTime.Parse(cmd.StartDate), DateTime.Parse(cmd.EndDate));
             post.Guid = guid;
             return await _repository.Update(post) ? NoContent() : BadRequest("Update failed! Check if the parameters are correct");
+        }
+
+        [HttpGet("random")]
+        public async Task<ActionResult<List<PostDto>>> GetRandom([FromQuery] int size = 10)
+        {
+            Random rand = new Random();
+            var take = (await _db.Posts.Include(a => a.Author)
+                .ToListAsync()).OrderBy(p => rand.Next())
+                .Take(size)
+                .Select(p => _postService.ConvertToPostDto(p)).ToList();
+            return Ok(take);
         }
     }
 }

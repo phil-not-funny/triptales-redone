@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using TripTales.Repository;
+using Triptales.Repository;
 using Triptales.Application.Dtos;
 using Triptales.Application.Services;
 using Triptales.Webapi.Infrastructure;
@@ -15,10 +15,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
-builder.Services.AddDbContext<TripTalesContext>(opt => opt.UseSqlite("DataSource=TripTales.db"));
+builder.Services.AddDbContext<TripTalesContext>(opt => opt.UseSqlite("DataSource=Triptales.db"));
 builder.Services.AddTransient<UserService>();
 builder.Services.AddTransient<UserRepository>();
 builder.Services.AddTransient<PostRepository>();
+builder.Services.AddTransient<PostService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(
@@ -42,7 +43,6 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
             : SameSiteMode.Strict;
     };
 });
-// Ich liebe es, wenn mit meinem Arschloch beim Sex gespielt wird.
 builder
     .Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(o =>
