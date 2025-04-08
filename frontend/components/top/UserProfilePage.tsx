@@ -34,13 +34,13 @@ const UserProfilePage: React.FC<UserProfileWithBackgroundProps> = ({
   return user ? (
     <div className="relative min-h-screen w-full items-center justify-center lg:flex">
       <Image
-        className="z-0 hidden h-full w-auto overflow-hidden object-cover lg:absolute lg:block xl:h-auto xl:w-full"
+        className="absolute z-0 hidden h-auto w-full overflow-hidden object-scale-down lg:block"
         src={backgroundImage}
         alt="Background Image"
         width={1920}
         height={1080}
       />
-      <div className="z-10 h-full w-full items-center justify-center lg:absolute lg:flex">
+      <div className="z-10 flex h-full w-full items-center justify-center lg:absolute">
         <UserProfile user={user} className="hidden lg:block" />
         <UserProfileWithBanner
           user={user}

@@ -10,13 +10,14 @@ export default function LandingLayout({
 }>) {
   return (
     <Fragment>
-      <div className="absolute top-0 left-0 z-0 hidden max-h-screen min-h-screen max-w-screen min-w-screen overflow-clip sepia-50 md:flex md:justify-center">
+      <div className="fixed inset-0 z-0 w-screen h-screen overflow-hidden">
         <Image
           src={"/images/default-background.jpg"}
           width={1920}
           height={1080}
           alt="Picture by Claudio Testa on Unsplash"
-          className="z-0 lg:w-screen lg:h-auto h-screen w-auto object-cover blur-xs 2xl:h-auto 2xl:w-screen"
+          className="z-0 w-full h-full object-cover blur-xs sepia-50"
+          priority
         />
       </div>
       <div className="absolute bottom-0 left-0 z-10 p-2">
