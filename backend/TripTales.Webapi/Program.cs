@@ -20,7 +20,7 @@ builder.Services.AddTransient<UserService>();
 builder.Services.AddTransient<UserRepository>();
 builder.Services.AddTransient<PostRepository>();
 builder.Services.AddTransient<PostService>();
-builder.Services.AddScoped<ModelConversions>();
+builder.Services.AddTransient<ModelConversions>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(

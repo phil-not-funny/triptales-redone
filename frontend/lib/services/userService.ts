@@ -1,8 +1,10 @@
 import {
+  isUserDetailedResponse,
   isUserPrivateResponse,
   isUserPublicResponse,
   LoginRequest,
   RegisterRequest,
+  UserDetailedResponse,
   UserPrivateResponse,
   UserPublicResponse,
 } from "@/types/RequestTypes";
@@ -78,12 +80,12 @@ type LoginClientResponse = {
   data?: UserPrivateResponse;
 };
 
-const me = async (): Promise<UserPrivateResponse | null> => {
+const me = async (): Promise<UserDetailedResponse | null> => {
   try {
     const response = await api.get("/User/me");
     if (
       response.status === HttpStatusCode.Ok &&
-      isUserPrivateResponse(response.data)
+      isUserDetailedResponse(response.data)
     )
       return response.data;
     else throw new Error("Invalid response structure");

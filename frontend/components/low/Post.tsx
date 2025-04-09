@@ -11,7 +11,6 @@ import {
   CardTitle,
 } from "../ui/card";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { PostResponse } from "@/types/RequestTypes";
 import { convertToDate } from "@/lib/utils";
 
@@ -22,10 +21,6 @@ interface PostProps {
 const Post: React.FC<PostProps> = ({ post }) => {
   const { loggedIn } = useUser();
   const router = useRouter();
-
-  useEffect(() => {
-    console.log(post);
-  }, [post]);
 
   const formatDate = (date: string): string => {
     return convertToDate(date).toLocaleDateString("en-US", {
