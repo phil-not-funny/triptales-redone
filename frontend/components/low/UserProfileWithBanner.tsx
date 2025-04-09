@@ -1,13 +1,14 @@
-import { UserPublicResponse } from "@/types/RequestTypes";
+import { UserDetailedResponse } from "@/types/RequestTypes";
 import Image from "next/image";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Verified } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import { PropsWithClassName } from "@/types/ComponentTypes";
+import { formatDateOnlyString } from "@/lib/utils";
 
 interface UserProfileWithBannerProps {
-  user: UserPublicResponse;
+  user: UserDetailedResponse;
   bannerImage?: string;
 }
 
@@ -48,10 +49,8 @@ const UserProfileWithBanner: React.FC<
             <p className="mt-1 text-sm">@{user.username}</p>
             <div className="mt-3 flex items-center gap-4 text-sm">
               <span>
-                <span className="font-medium">
-                  {user.following?.length || 0}
-                </span>{" "}
-                Following
+                <span className="font-medium">{user.followerCount || 0}</span>{" "}
+                Followers
               </span>
             </div>
           </div>
@@ -61,7 +60,7 @@ const UserProfileWithBanner: React.FC<
         <div className="mt-6">
           <h2 className="mb-2 text-lg font-medium">About</h2>
           <p className="text-sm leading-relaxed">
-            {user.displayName} hasn&apos;t added a bio yet.
+            {user.displayName} hasn't added a bio yet.
           </p>
         </div>
 
@@ -69,7 +68,9 @@ const UserProfileWithBanner: React.FC<
         <div className="mt-6 flex flex-col gap-4 md:flex-row">
           <div className="flex-1 rounded-lg bg-gray-50 p-4">
             <h3 className="text-sm font-medium">Joined</h3>
-            <p className="mt-1 text-xs">April 2025</p>
+            <p className="mt-1 text-xs">
+              {formatDateOnlyString(user.memberSince)}
+            </p>
           </div>
         </div>
 

@@ -8,12 +8,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Triptales.Repository;
-using Triptales.Application.Cmd;
 using Triptales.Application.Dtos;
-using Triptales.Application.Services;
 using Triptales.Webapi.Infrastructure;
 using Triptales.Application.Model;
-using System.Reflection.Metadata.Ecma335;
+using Triptales.Webapi.Services;
 
 namespace Triptales.Webapi.Controllers
 {
@@ -23,13 +21,15 @@ namespace Triptales.Webapi.Controllers
     {
         private readonly TripTalesContext _db;
         private readonly UserService _service;
+        private readonly ModelConversions _modelConversions;
         private readonly UserRepository _repo;
 
-        public UserController(TripTalesContext db, UserService userService, UserRepository repo)
+        public UserController(TripTalesContext db, UserService userService, UserRepository repo, ModelConversions modelConversions)
         {
             _db = db;
             _service = userService;
             _repo = repo;
+            _modelConversions = modelConversions;
         }
 
         private async Task<User?> getAuthenticatedOrDefault()
@@ -43,7 +43,7 @@ namespace Triptales.Webapi.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] UserRegisterDto user)
+        public async Task<IActionResult> Register([FromBody] UserRegisterCmd user)
         {
             if (await _db.Users.AnyAsync(u => u.Username == user.Username))
                 return BadRequest("Username already exists");
@@ -64,7 +64,7 @@ namespace Triptales.Webapi.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] UserLoginDto credentials)
+        public async Task<IActionResult> Login([FromBody] UserLoginCmd credentials)
         {
             var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == credentials.Username);
             if (user is null || !user.CheckPassword(credentials.Password)) return BadRequest("The given password and username combination does not exist.");
@@ -87,27 +87,27 @@ namespace Triptales.Webapi.Controllers
                 Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
-            return Ok(_service.ConvertToPrivate(user));
+            return Ok(_modelConversions.ConvertToPrivate(user));
         }
 
         [Authorize]
         [HttpGet("me")]
-        public async Task<ActionResult<UserPrivateCmd>> Me()
+        public async Task<ActionResult<UserPrivateDto>> Me()
         {
             var user = await getAuthenticatedOrDefault();
-            return user is not null ? Ok(_service.ConvertToPrivate(user)) : Unauthorized();
+            return user is not null ? Ok(_modelConversions.ConvertToPrivate(user)) : Unauthorized();
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
-            => Ok((await _repo.GetAll()).Select(u => _service.ConvertToPublic(u)).ToList());
+            => Ok((await _repo.GetAll()).Select(u => _modelConversions.ConvertToPublic(u)).ToList());
 
 
         [HttpGet("{username}")]
         public async Task<IActionResult> GetByUsername(string username)
         {
             var user = await _service.GetUserByUsername(username);
-            return user is not null ? Ok(_service.ConvertToPublic(user)) : NotFound();
+            return user is not null ? Ok(_modelConversions.ConvertToDetailed(user)) : NotFound();
         }
 
         [HttpPost("follow/{guid}")]

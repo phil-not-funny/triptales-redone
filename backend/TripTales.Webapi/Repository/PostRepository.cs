@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Triptales.Application.Cmd;
 using Triptales.Application.Model;
-using Triptales.Application.Services;
 using Triptales.Webapi.Infrastructure;
 using Triptales.Application.Dtos;
+using Triptales.Webapi.Services;
 
 namespace Triptales.Repository
 {
@@ -49,7 +49,7 @@ namespace Triptales.Repository
                 post.Guid,
                 post.Title,
                 post.Description,
-                new UserPublicCmdSmall(
+                new UserPublicSmallDto(
                     post.Author.Guid,
                     post.Author.Username,
                     post.Author.DisplayName,

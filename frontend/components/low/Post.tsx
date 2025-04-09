@@ -11,9 +11,8 @@ import {
   CardTitle,
 } from "../ui/card";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { PostResponse } from "@/types/RequestTypes";
-import { convertToDate } from "@/lib/utils";
+import { formatDateString } from "@/lib/utils";
 
 interface PostProps {
   post: PostResponse;
@@ -22,18 +21,6 @@ interface PostProps {
 const Post: React.FC<PostProps> = ({ post }) => {
   const { loggedIn } = useUser();
   const router = useRouter();
-
-  useEffect(() => {
-    console.log(post);
-  }, [post]);
-
-  const formatDate = (date: string): string => {
-    return convertToDate(date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
 
   const handleViewMore = () => {
     router.push(`/posts/${post.guid}`);
@@ -44,7 +31,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
   };
 
   return (
-    <Card className="mx-auto mb-6 lg:w-2xl gap-0 overflow-hidden rounded-xl border border-gray-100 bg-white py-0 shadow-sm transition-shadow duration-300 hover:shadow-md">
+    <Card className="mx-auto mb-6 gap-0 overflow-hidden rounded-xl border border-gray-100 bg-white py-0 shadow-sm transition-shadow duration-300 hover:shadow-md lg:w-2xl">
       {/* Header Section */}
       <CardHeader className="border-b border-gray-100 p-6">
         <CardTitle className="mb-2 text-2xl font-semibold text-gray-800">
@@ -53,7 +40,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
         <div className="flex items-center text-sm text-gray-600">
           <span>By {post.author.username}</span>
           <span className="mx-2">•</span>
-          <span>Posted on {formatDate(post.createdAt)}</span>
+          <span>Posted on {formatDateString(post.createdAt)}</span>
         </div>
       </CardHeader>
 
@@ -66,11 +53,12 @@ const Post: React.FC<PostProps> = ({ post }) => {
           <Calendar className="h-4 w-4 text-gray-400" />
           <div>
             <span className="font-medium">Start:</span>{" "}
-            {formatDate(post.startDate)}
+            {formatDateString(post.startDate)}
           </div>
           <div className="h-2 w-2 rounded-full bg-gray-300"></div>
           <div>
-            <span className="font-medium">End:</span> {formatDate(post.endDate)}
+            <span className="font-medium">End:</span>{" "}
+            {formatDateString(post.endDate)}
           </div>
         </div>
       </CardContent>

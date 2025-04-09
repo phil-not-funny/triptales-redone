@@ -1,15 +1,19 @@
-import { UserPublicResponse } from "@/types/RequestTypes";
+import { UserDetailedResponse } from "@/types/RequestTypes";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Verified } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { PropsWithClassName } from "@/types/ComponentTypes";
+import { formatDateOnlyString } from "@/lib/utils";
 
 interface UserProfileProps {
-  user: UserPublicResponse;
+  user: UserDetailedResponse;
 }
 
-const UserProfile: React.FC<UserProfileProps & PropsWithClassName> = ({ user, className }) => {
+const UserProfile: React.FC<UserProfileProps & PropsWithClassName> = ({
+  user,
+  className,
+}) => {
   return (
     <Card className={`w-full max-w-3xl p-8 ${className}`}>
       {/* Header Section */}
@@ -30,8 +34,8 @@ const UserProfile: React.FC<UserProfileProps & PropsWithClassName> = ({ user, cl
           <p className="mt-1 text-sm text-gray-700">@{user.username}</p>
           <div className="mt-3 flex items-center gap-4 text-sm">
             <span>
-              <span className="font-medium">{user.following?.length || 0}</span>{" "}
-              Following
+              <span className="font-medium">{user.followerCount || 0}</span>{" "}
+              Followers
             </span>
           </div>
         </div>
@@ -49,7 +53,9 @@ const UserProfile: React.FC<UserProfileProps & PropsWithClassName> = ({ user, cl
       <div className="mt-6 flex flex-col gap-4 md:flex-row">
         <div className="flex-1 rounded-lg bg-gray-50 p-4">
           <h3 className="text-sm font-medium">Joined</h3>
-          <p className="mt-1 text-xs">April 2025</p>
+          <p className="mt-1 text-xs">
+            {formatDateOnlyString(user.memberSince)}
+          </p>
         </div>
       </div>
 

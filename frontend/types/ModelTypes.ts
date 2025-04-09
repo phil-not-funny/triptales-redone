@@ -8,6 +8,12 @@ export type User = {
   email: string;
   verified?: boolean;
   following?: User[];
+  likedPosts?: Post[];
+  posts?: Post[];
+  biography?: string;
+  placeOfResidence?: string;
+  favoriteDestination?: string;
+  memberSince?: Date;
 } & Entity;
 
 export type Post = {

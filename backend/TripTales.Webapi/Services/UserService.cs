@@ -1,5 +1,4 @@
-﻿using Triptales.Application.Cmd;
-using Triptales.Application.Model;
+﻿using Triptales.Application.Model;
 using Triptales.Webapi.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
@@ -8,8 +7,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using System.Linq;
+using System;
 
-namespace Triptales.Application.Services
+namespace Triptales.Webapi.Services
 {
     public class UserService
     {
@@ -20,22 +20,17 @@ namespace Triptales.Application.Services
             _db = db;
         }
 
-        public UserPublicCmdSmall ConvertToPublicSmall(User user) => 
-            new UserPublicCmdSmall(user.Guid, user.Username, user.DisplayName, user.Verified);
-        public UserPublicCmd ConvertToPublic(User user) => new UserPublicCmd(
-            user.Guid, user.Username, user.DisplayName, user.Verified,
-            user.Following.Count > 0 ? user.Following.Select(u => ConvertToPublicSmall(u)).ToList() : new());
-        public UserPrivateCmd ConvertToPrivate(User user) => 
-            new UserPrivateCmd(user.Guid, user.Username, user.DisplayName, user.Email);
-
-        public bool IsUserValid(UserRegisterDto user, out User createdUser, out List<ValidationResult> results)
+        public bool IsUserValid(UserRegisterCmd user, out User createdUser, out List<ValidationResult> results)
         {
             createdUser = new User(user.Username, user.Email, user.Password, user.DisplayName);
             var context = new ValidationContext(createdUser);
-            results = new List<ValidationResult>();
+            results = new();
             return Validator.TryValidateObject(createdUser, context, results, true);
         }
 
-        public async Task<User?> GetUserByUsername(string username) => (await _db.Users.Include(u => u.Following).FirstOrDefaultAsync(u => u.Username == username));
+        public List<User> GetFollowers(Guid guid)
+            => _db.Users.Include(u => u.Following).Where(u => u.Following.Any(f => f.Guid == guid)).ToList();
+
+        public async Task<User?> GetUserByUsername(string username) => await _db.Users.Include(u => u.Following).FirstOrDefaultAsync(u => u.Username == username);
     }
 }
