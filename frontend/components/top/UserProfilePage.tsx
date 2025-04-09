@@ -1,6 +1,6 @@
 "use client";
 
-import { UserPublicResponse } from "@/types/RequestTypes";
+import { UserDetailedResponse, UserPublicResponse } from "@/types/RequestTypes";
 import UserProfile from "../low/UserProfile";
 import Image from "next/image";
 import UserProfileWithBanner from "../low/UserProfileWithBanner";
@@ -16,7 +16,7 @@ interface UserProfileWithBackgroundProps {
 const UserProfilePage: React.FC<UserProfileWithBackgroundProps> = ({
   username,
 }) => {
-  const [user, setUser] = useState<UserPublicResponse | null>(null);
+  const [user, setUser] = useState<UserDetailedResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
   const init = async () => {

@@ -1,4 +1,4 @@
-import { UserPublicResponse } from "@/types/RequestTypes";
+import { UserDetailedResponse, UserPublicResponse } from "@/types/RequestTypes";
 import Image from "next/image";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Verified } from "lucide-react";
@@ -7,7 +7,7 @@ import { Card, CardContent } from "../ui/card";
 import { PropsWithClassName } from "@/types/ComponentTypes";
 
 interface UserProfileWithBannerProps {
-  user: UserPublicResponse;
+  user: UserDetailedResponse;
   bannerImage?: string;
 }
 
@@ -49,9 +49,9 @@ const UserProfileWithBanner: React.FC<
             <div className="mt-3 flex items-center gap-4 text-sm">
               <span>
                 <span className="font-medium">
-                  {user.following?.length || 0}
+                  {user.followerCount || 0}
                 </span>{" "}
-                Following
+                Followers
               </span>
             </div>
           </div>
