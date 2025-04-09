@@ -18,12 +18,15 @@ namespace Triptales.Webapi.Services
         public UserDetailedDto ConvertToDetailed(User user) =>
             new(
                 user.Guid,
-                user.Username, user.Email, user.DisplayName, user.Verified,
-                user.Biography, user.PlaceOfResidence, user.FavoriteDestination,
+                user.Username,
+                user.DisplayName,
+                user.Verified,
+                user.Biography,
+                user.PlaceOfResidence,
+                user.FavoriteDestination,
                 user.MemberSince.ToString(),
                 _userService.GetFollowers(user.Guid).Count,
-                user.Posts.Count > 0 ? user.Posts.Select(p => ConvertToPostDto(p)).ToList() : new()
-            );
+                user.Posts.Count > 0 ? user.Posts.Select(p => ConvertToPostDto(p)).ToList() : new());
 
         public UserPublicSmallDto ConvertToPublicSmall(User user) =>
             new(user.Guid, user.Username, user.DisplayName, user.Verified);

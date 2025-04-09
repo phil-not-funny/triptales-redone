@@ -6,7 +6,6 @@ namespace Triptales.Application.Dtos
     public record UserDetailedDto(
         Guid Guid,
         string Username,
-        string Email,
         string DisplayName,
         bool Verified,
         string? Biography,

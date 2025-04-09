@@ -1,5 +1,3 @@
-import { Post } from "./ModelTypes";
-
 export type LoginRequest = {
   username: string;
   password: string;
@@ -30,7 +28,7 @@ export type UserPublicResponse = {
   following?: UserPublicResponseSmall[];
 };
 
-type UserPublicResponseSmall = {
+export type UserPublicResponseSmall = {
   guid: string;
   username: string;
   displayName: string;
@@ -44,6 +42,32 @@ export const isUserPublicResponse = (u: any): u is UserPublicResponse =>
   "verified" in u &&
   "following" in u &&
   Array.isArray(u.following);
+
+export type UserDetailedResponse = {
+  guid: string;
+  username: string;
+  displayName: string;
+  verified?: boolean;
+  biography?: string;
+  placeOfResidence?: string;
+  favoriteDestination?: string;
+  memberSince: string;
+  followerCount: number;
+  posts: PostResponse[];
+}
+
+export const isUserDetailedResponse = (u: any): u is UserDetailedResponse =>
+  "guid" in u &&
+  "username" in u &&
+  "displayName" in u &&
+  "verified" in u &&
+  "biography" in u &&
+  "placeOfResidence" in u &&
+  "favoriteDestination" in u &&
+  "memberSince" in u &&
+  "followerCount" in u &&
+  Array.isArray(u.posts) &&
+  u.posts.every(isPostResponse);
 
 // ANCHOR POST SECTION
 
