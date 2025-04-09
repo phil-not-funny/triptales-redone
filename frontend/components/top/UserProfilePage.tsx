@@ -1,13 +1,12 @@
 "use client";
 
 import { UserDetailedResponse } from "@/types/RequestTypes";
-import UserProfile from "../low/UserProfile";
 import Image from "next/image";
-import UserProfileWithBanner from "../low/UserProfileWithBanner";
 import { useEffect, useState } from "react";
 import Loading from "./Loading";
 import UserService from "@/lib/services/userService";
 import Sorry from "../low/Sorry";
+import { UserProfile, UserProfileWithBanner } from "../low/UserProfile";
 
 interface UserProfileWithBackgroundProps {
   username: string;

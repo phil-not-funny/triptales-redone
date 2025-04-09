@@ -3,8 +3,7 @@ using System.Collections.Generic;
 
 namespace Triptales.Application.Dtos
 {
-    public record UserDetailedDto(
-        Guid Guid,
+    public record UserDetailedDto(Guid Guid,
         string Username,
         string DisplayName,
         bool Verified,
@@ -13,5 +12,6 @@ namespace Triptales.Application.Dtos
         string? FavoriteDestination,
         string MemberSince,
         int FollowerCount,
-        List<PostDto> Posts);
+        List<PostDto> Posts,
+        bool? Follows = false);
 }
