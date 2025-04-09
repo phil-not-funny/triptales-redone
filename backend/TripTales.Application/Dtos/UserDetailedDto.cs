@@ -12,6 +12,6 @@ namespace Triptales.Application.Dtos
         string? PlaceOfResidence,
         string? FavoriteDestination,
         string MemberSince,
-        List<UserPublicSmallDto> Following,
+        int FollowerCount,
         List<PostDto> Posts);
 }
