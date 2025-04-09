@@ -20,19 +20,21 @@ namespace Triptales.Controllers
         private readonly TripTalesContext _db;
         private readonly UserService _userService;
         private readonly PostService _postService;
+        private readonly ModelConversions _modelConversions;
         private readonly PostRepository _repository;
 
-        public PostController(TripTalesContext db, UserService userService, PostRepository repository, PostService postService)
+        public PostController(TripTalesContext db, UserService userService, PostRepository repository, PostService postService, ModelConversions modelConversions)
         {
             _db = db;
             _userService = userService;
             _repository = repository;
             _postService = postService;
+            _modelConversions = modelConversions;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<PostDto>>> GetPosts() =>
-            Ok((await _repository.GetAll()).Select(a => _postService.ConvertToPostDto(a)).ToList());
+            Ok((await _repository.GetAll()).Select(a => _modelConversions.ConvertToPostDto(a)).ToList());
 
         [HttpGet("{guid:Guid}")]
         public async Task<ActionResult<PostDto>> GetPost(Guid guid) =>
@@ -67,7 +69,7 @@ namespace Triptales.Controllers
             var take = (await _db.Posts.Include(a => a.Author)
                 .ToListAsync()).OrderBy(p => rand.Next())
                 .Take(size)
-                .Select(p => _postService.ConvertToPostDto(p)).ToList();
+                .Select(p => _modelConversions.ConvertToPostDto(p)).ToList();
             return Ok(take);
         }
     }

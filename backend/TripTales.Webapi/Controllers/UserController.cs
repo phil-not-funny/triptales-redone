@@ -23,13 +23,15 @@ namespace Triptales.Webapi.Controllers
     {
         private readonly TripTalesContext _db;
         private readonly UserService _service;
+        private readonly ModelConversions _modelConversions;
         private readonly UserRepository _repo;
 
-        public UserController(TripTalesContext db, UserService userService, UserRepository repo)
+        public UserController(TripTalesContext db, UserService userService, UserRepository repo, ModelConversions modelConversions)
         {
             _db = db;
             _service = userService;
             _repo = repo;
+            _modelConversions = modelConversions;
         }
 
         private async Task<User?> getAuthenticatedOrDefault()
@@ -87,7 +89,7 @@ namespace Triptales.Webapi.Controllers
                 Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
-            return Ok(_service.ConvertToPrivate(user));
+            return Ok(_modelConversions.ConvertToPrivate(user));
         }
 
         [Authorize]
@@ -95,19 +97,19 @@ namespace Triptales.Webapi.Controllers
         public async Task<ActionResult<UserPrivateDto>> Me()
         {
             var user = await getAuthenticatedOrDefault();
-            return user is not null ? Ok(_service.ConvertToPrivate(user)) : Unauthorized();
+            return user is not null ? Ok(_modelConversions.ConvertToPrivate(user)) : Unauthorized();
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
-            => Ok((await _repo.GetAll()).Select(u => _service.ConvertToPublic(u)).ToList());
+            => Ok((await _repo.GetAll()).Select(u => _modelConversions.ConvertToPublic(u)).ToList());
 
 
         [HttpGet("{username}")]
         public async Task<IActionResult> GetByUsername(string username)
         {
             var user = await _service.GetUserByUsername(username);
-            return user is not null ? Ok(_service.ConvertToPublic(user)) : NotFound();
+            return user is not null ? Ok(_modelConversions.ConvertToDetailed(user)) : NotFound();
         }
 
         [HttpPost("follow/{guid}")]
