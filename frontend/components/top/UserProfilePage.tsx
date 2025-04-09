@@ -1,6 +1,6 @@
 "use client";
 
-import { UserDetailedResponse, UserPublicResponse } from "@/types/RequestTypes";
+import { UserDetailedResponse } from "@/types/RequestTypes";
 import UserProfile from "../low/UserProfile";
 import Image from "next/image";
 import UserProfileWithBanner from "../low/UserProfileWithBanner";
@@ -53,7 +53,9 @@ const UserProfilePage: React.FC<UserProfileWithBackgroundProps> = ({
   ) : loading ? (
     <Loading />
   ) : (
-    <Sorry className="h-screen">We were unable to find the user you provided.</Sorry>
+    <Sorry className="h-screen">
+      We were unable to find the user you provided.
+    </Sorry>
   );
 };
 
