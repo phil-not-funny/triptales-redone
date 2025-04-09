@@ -6,11 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Triptales.Application.Model;
-using Triptales.Application.Services;
 using Triptales.Webapi.Infrastructure;
 using Triptales.Application.Dtos;
 using Triptales.Application.Cmd;
-using proxreal_backend.Infrastructure;
+using Triptales.Webapi.Services;
 
 namespace Triptales.Controllers
 {

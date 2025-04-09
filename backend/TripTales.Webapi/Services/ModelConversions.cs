@@ -1,9 +1,8 @@
 ﻿using System.Linq;
 using Triptales.Application.Dtos;
 using Triptales.Application.Model;
-using Triptales.Application.Services;
 
-namespace proxreal_backend.Infrastructure
+namespace Triptales.Webapi.Services
 {
     public class ModelConversions
     {

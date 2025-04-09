@@ -6,9 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Triptales.Repository;
 using Triptales.Application.Dtos;
-using Triptales.Application.Services;
 using Triptales.Webapi.Infrastructure;
-using proxreal_backend.Infrastructure;
+using Triptales.Webapi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

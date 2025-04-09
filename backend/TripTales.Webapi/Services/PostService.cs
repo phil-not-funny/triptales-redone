@@ -2,7 +2,7 @@
 using Triptales.Application.Model;
 using Triptales.Webapi.Infrastructure;
 
-namespace Triptales.Application.Services
+namespace Triptales.Webapi.Services
 {
     public class PostService
     {
