@@ -16,6 +16,7 @@ namespace Triptales.Webapi.Model
             Email = email;
             SetPassword(password);
             DisplayName = displayName;
+            MemberSince = DateOnly.FromDateTime(DateTime.Now);
         }
 
 #pragma warning disable CS8618
@@ -48,6 +49,11 @@ namespace Triptales.Webapi.Model
         public List<User> Following { get; } = new();
         public List<Post> LikedPosts { get; } = new();
         public List<Post> Posts { get; } = new();
+        
+        public string? Biography { get; set; }
+        public string? PlaceOfResidence { get; set; }
+        public string? FavoriteDestination { get; set; }
+        public DateOnly MemberSince { get; set; }
 
         public bool CheckPassword(string password) => PasswordHash == CalculateHash(password, Salt!);
 

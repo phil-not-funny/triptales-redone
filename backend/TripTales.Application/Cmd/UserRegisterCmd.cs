@@ -1,6 +1,6 @@
 ﻿namespace Triptales.Webapi.Dtos
 {
-    public record UserRegisterDto(
+    public record UserRegisterCmd(
         string Username,
         string Password,
         string Email,

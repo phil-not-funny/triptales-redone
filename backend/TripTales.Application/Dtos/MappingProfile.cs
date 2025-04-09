@@ -12,7 +12,7 @@ namespace Triptales.Webapi.Dtos
     {
         public MappingProfile()
         {
-            CreateMap<User, UserDto>();
+            CreateMap<User, UserCmd>();
         }
     }
 }

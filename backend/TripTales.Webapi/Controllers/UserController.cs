@@ -8,9 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Triptales.Repository;
-using Triptales.Webapi.Cmd;
-using Triptales.Webapi.Dtos;
-using Triptales.Webapi.Services;
+using Triptales.Application.Dtos;
+using Triptales.Application.Services;
 using Triptales.Webapi.Infrastructure;
 using Triptales.Webapi.Model;
 using Microsoft.AspNetCore.Http;
@@ -44,7 +43,7 @@ namespace Triptales.Webapi.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] UserRegisterDto user)
+        public async Task<IActionResult> Register([FromBody] UserRegisterCmd user)
         {
             if (await _db.Users.AnyAsync(u => u.Username == user.Username))
                 return BadRequest("Username already exists");
@@ -65,7 +64,7 @@ namespace Triptales.Webapi.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] UserLoginDto credentials)
+        public async Task<IActionResult> Login([FromBody] UserLoginCmd credentials)
         {
             var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == credentials.Username);
             if (user is null || !user.CheckPassword(credentials.Password)) return BadRequest("The given password and username combination does not exist.");
@@ -93,7 +92,7 @@ namespace Triptales.Webapi.Controllers
 
         [Authorize]
         [HttpGet("me")]
-        public async Task<ActionResult<UserPrivateCmd>> Me()
+        public async Task<ActionResult<UserPrivateDto>> Me()
         {
             var user = await getAuthenticatedOrDefault();
             return user is not null ? Ok(_service.ConvertToPrivate(user)) : Unauthorized();
