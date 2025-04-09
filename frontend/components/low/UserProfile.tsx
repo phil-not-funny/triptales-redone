@@ -25,9 +25,10 @@ const UserProfileCardContent: React.FC<UserProfileProps> = ({ user }) => {
   const handleFollow = async () => {
     const success = await UserService.follow(user.guid);
     if (success) {
-      setFollowing((prev) => !prev);
-      setFollowerCount((prev) => prev + (following ? -1 : 1));
-      toast.success(`You are ${!following ? "now" : "no longer"} following ${user.displayName}`);
+      const newStatus = !following;
+      setFollowing(newStatus);
+      setFollowerCount((prev) => prev + (newStatus ? 1 : -1));
+      toast.success(`You are ${newStatus ? "now" : "no longer"} following ${user.displayName}`);
     } else {
       toast.error(`Something went wrong. Please try again later.`);
     }
