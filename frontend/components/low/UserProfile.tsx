@@ -1,4 +1,4 @@
-import { UserPublicResponse } from "@/types/RequestTypes";
+import { UserDetailedResponse } from "@/types/RequestTypes";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Verified } from "lucide-react";
 import { Button } from "../ui/button";
@@ -6,7 +6,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { PropsWithClassName } from "@/types/ComponentTypes";
 
 interface UserProfileProps {
-  user: UserPublicResponse;
+  user: UserDetailedResponse;
 }
 
 const UserProfile: React.FC<UserProfileProps & PropsWithClassName> = ({ user, className }) => {
@@ -30,8 +30,8 @@ const UserProfile: React.FC<UserProfileProps & PropsWithClassName> = ({ user, cl
           <p className="mt-1 text-sm text-gray-700">@{user.username}</p>
           <div className="mt-3 flex items-center gap-4 text-sm">
             <span>
-              <span className="font-medium">{user.following?.length || 0}</span>{" "}
-              Following
+              <span className="font-medium">{user.followerCount || 0}</span>{" "}
+              Followers
             </span>
           </div>
         </div>

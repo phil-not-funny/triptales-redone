@@ -80,12 +80,12 @@ type LoginClientResponse = {
   data?: UserPrivateResponse;
 };
 
-const me = async (): Promise<UserDetailedResponse | null> => {
+const me = async (): Promise<UserPrivateResponse | null> => {
   try {
     const response = await api.get("/User/me");
     if (
       response.status === HttpStatusCode.Ok &&
-      isUserDetailedResponse(response.data)
+      isUserPrivateResponse(response.data)
     )
       return response.data;
     else throw new Error("Invalid response structure");
@@ -106,12 +106,12 @@ const logout = async (): Promise<boolean> => {
 
 const getByUsername = async (
   username: string,
-): Promise<UserPublicResponse | null> => {
+): Promise<UserDetailedResponse | null> => {
   try {
     const response = await api.get(`/User/${username}`);
     if (
       response.status === HttpStatusCode.Ok &&
-      isUserPublicResponse(response.data)
+      isUserDetailedResponse(response.data)
     )
       return response.data;
     else throw new Error("Invalid response structure");
