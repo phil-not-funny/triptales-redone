@@ -107,7 +107,14 @@ namespace Triptales.Webapi.Controllers
         public async Task<IActionResult> GetByUsername(string username)
         {
             var user = await _service.GetUserByUsername(username);
-            return user is not null ? Ok(_modelConversions.ConvertToDetailed(user)) : NotFound();
+            var authenticated = await getAuthenticatedOrDefault(); //to know when to enable follow button
+            return user is not null ? Ok(
+                _modelConversions.ConvertToDetailed(
+                    user, 
+                    authenticated is not null && 
+                    authenticated.Following.Any(
+                        f => f.Guid == user.Guid))
+                ) : NotFound();
         }
 
         [HttpPost("follow/{guid}")]
@@ -121,7 +128,10 @@ namespace Triptales.Webapi.Controllers
             if (requested is null)
                 return NotFound();
 
-            authenticated.Following.Add(requested);
+            if (requested.Following.Any(r => r.Guid == authenticated.Guid))
+                authenticated.Following.Remove(requested);
+            else
+                authenticated.Following.Add(requested);
             await _db.SaveChangesAsync();
             return Ok();
         }
