@@ -140,5 +140,20 @@ namespace Triptales.Webapi.Controllers
 
             return await _repo.UploadImage(user, cmd) ? Ok() : BadRequest("Upload failed! Please check if you uploaded the right pictures") ;
         }
+        
+        [HttpPut]
+        public async Task<IActionResult> PutFlavor([FromBody] UserFlavorCmd flavor)
+        {
+            var authenticated = await getAuthenticatedOrDefault();
+            if (authenticated is null)
+                return Unauthorized();
+            authenticated.Username = flavor.Username;
+            authenticated.DisplayName = flavor.DisplayName;
+            authenticated.Biography = flavor.Biography;
+            authenticated.PlaceOfResidence = flavor.PlaceOfResidence;
+            authenticated.FavoriteDestination = flavor.FavoriteDestination;
+            await _repo.Update(authenticated);
+            return Ok();
+        }
     }
 }
