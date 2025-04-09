@@ -8,6 +8,7 @@ using Triptales.Repository;
 using Triptales.Application.Dtos;
 using Triptales.Application.Services;
 using Triptales.Webapi.Infrastructure;
+using proxreal_backend.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,7 @@ builder.Services.AddTransient<UserService>();
 builder.Services.AddTransient<UserRepository>();
 builder.Services.AddTransient<PostRepository>();
 builder.Services.AddTransient<PostService>();
+builder.Services.AddScoped<ModelConversions>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(
