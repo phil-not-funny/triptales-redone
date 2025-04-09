@@ -1,12 +1,10 @@
 import {
   isUserDetailedResponse,
   isUserPrivateResponse,
-  isUserPublicResponse,
   LoginRequest,
   RegisterRequest,
   UserDetailedResponse,
   UserPrivateResponse,
-  UserPublicResponse,
 } from "@/types/RequestTypes";
 import api from "../api";
 import axios, { HttpStatusCode } from "axios";

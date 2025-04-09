@@ -4,12 +4,16 @@ import { Verified } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { PropsWithClassName } from "@/types/ComponentTypes";
+import { formatDateOnlyString } from "@/lib/utils";
 
 interface UserProfileProps {
   user: UserDetailedResponse;
 }
 
-const UserProfile: React.FC<UserProfileProps & PropsWithClassName> = ({ user, className }) => {
+const UserProfile: React.FC<UserProfileProps & PropsWithClassName> = ({
+  user,
+  className,
+}) => {
   return (
     <Card className={`w-full max-w-3xl p-8 ${className}`}>
       {/* Header Section */}
@@ -49,7 +53,9 @@ const UserProfile: React.FC<UserProfileProps & PropsWithClassName> = ({ user, cl
       <div className="mt-6 flex flex-col gap-4 md:flex-row">
         <div className="flex-1 rounded-lg bg-gray-50 p-4">
           <h3 className="text-sm font-medium">Joined</h3>
-          <p className="mt-1 text-xs">April 2025</p>
+          <p className="mt-1 text-xs">
+            {formatDateOnlyString(user.memberSince)}
+          </p>
         </div>
       </div>
 
