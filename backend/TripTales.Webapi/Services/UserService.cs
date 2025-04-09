@@ -1,5 +1,4 @@
-﻿using Triptales.Application.Cmd;
-using Triptales.Application.Model;
+﻿using Triptales.Application.Model;
 using Triptales.Webapi.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
@@ -20,15 +19,15 @@ namespace Triptales.Application.Services
             _db = db;
         }
 
-        public UserPublicCmdSmall ConvertToPublicSmall(User user) => 
-            new UserPublicCmdSmall(user.Guid, user.Username, user.DisplayName, user.Verified);
-        public UserPublicCmd ConvertToPublic(User user) => new UserPublicCmd(
+        public UserPublicSmallDto ConvertToPublicSmall(User user) => 
+            new UserPublicSmallDto(user.Guid, user.Username, user.DisplayName, user.Verified);
+        public UserPublicDto ConvertToPublic(User user) => new UserPublicDto(
             user.Guid, user.Username, user.DisplayName, user.Verified,
             user.Following.Count > 0 ? user.Following.Select(u => ConvertToPublicSmall(u)).ToList() : new());
-        public UserPrivateCmd ConvertToPrivate(User user) => 
-            new UserPrivateCmd(user.Guid, user.Username, user.DisplayName, user.Email);
+        public UserPrivateDto ConvertToPrivate(User user) => 
+            new UserPrivateDto(user.Guid, user.Username, user.DisplayName, user.Email);
 
-        public bool IsUserValid(UserRegisterDto user, out User createdUser, out List<ValidationResult> results)
+        public bool IsUserValid(UserRegisterCmd user, out User createdUser, out List<ValidationResult> results)
         {
             createdUser = new User(user.Username, user.Email, user.Password, user.DisplayName);
             var context = new ValidationContext(createdUser);

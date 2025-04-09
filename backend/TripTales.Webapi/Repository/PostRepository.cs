@@ -49,7 +49,7 @@ namespace Triptales.Repository
                 post.Guid,
                 post.Title,
                 post.Description,
-                new UserPublicCmdSmall(
+                new UserPublicSmallDto(
                     post.Author.Guid,
                     post.Author.Username,
                     post.Author.DisplayName,

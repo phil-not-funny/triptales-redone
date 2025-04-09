@@ -12,7 +12,7 @@ namespace Triptales.Application.Dtos
     {
         public MappingProfile()
         {
-            CreateMap<User, UserDto>();
+            CreateMap<User, UserCmd>();
         }
     }
 }
