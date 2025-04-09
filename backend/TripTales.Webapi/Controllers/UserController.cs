@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Triptales.Repository;
 using Triptales.Application.Dtos;
-using Triptales.Application.Services;
 using Triptales.Webapi.Infrastructure;
 using Triptales.Webapi.Model;
 using Microsoft.AspNetCore.Http;
