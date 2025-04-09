@@ -4,6 +4,7 @@ using System.Collections.Generic;
 namespace Triptales.Application.Dtos
 {
     public record UserDetailedDto(
+        Guid Guid,
         string Username,
         string Email,
         string DisplayName,
