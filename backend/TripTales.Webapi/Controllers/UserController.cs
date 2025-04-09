@@ -12,6 +12,7 @@ using Triptales.Application.Dtos;
 using Triptales.Webapi.Infrastructure;
 using Triptales.Application.Model;
 using Triptales.Webapi.Services;
+using Triptales.Application.Cmd;
 
 namespace Triptales.Webapi.Controllers
 {
@@ -123,6 +124,21 @@ namespace Triptales.Webapi.Controllers
 
             authenticated.Following.Add(requested);
             await _db.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> PutFlavor([FromBody] UserFlavorCmd flavor)
+        {
+            var authenticated = await getAuthenticatedOrDefault();
+            if (authenticated is null)
+                return Unauthorized();
+            authenticated.Username = flavor.Username;
+            authenticated.DisplayName = flavor.DisplayName;
+            authenticated.Biography = flavor.Biography;
+            authenticated.PlaceOfResidence = flavor.PlaceOfResidence;
+            authenticated.FavoriteDestination = flavor.FavoriteDestination;
+            await _repo.Update(authenticated);
             return Ok();
         }
     }
