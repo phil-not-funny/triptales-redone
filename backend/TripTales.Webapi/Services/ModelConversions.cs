@@ -17,6 +17,7 @@ namespace Triptales.Webapi.Services
 
         public UserDetailedDto ConvertToDetailed(User user) =>
             new(
+                user.Guid,
                 user.Username, user.Email, user.DisplayName, user.Verified,
                 user.Biography, user.PlaceOfResidence, user.FavoriteDestination,
                 user.MemberSince.ToString(),
