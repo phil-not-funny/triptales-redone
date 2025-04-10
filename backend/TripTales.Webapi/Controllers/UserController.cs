@@ -151,5 +151,19 @@ namespace Triptales.Webapi.Controllers
             await _repo.Update(authenticated);
             return Ok();
         }
+
+        [Authorize]
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadPictures([FromForm] UploadPicturesCmd cmd)
+        {
+            var authenticated = await getAuthenticatedOrDefault();
+            if (authenticated is null) return Unauthorized();
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.Guid == authenticated.Guid);
+            if (user is null) return NotFound();
+
+            if (cmd.ProfilePicture is null && cmd.BannerImage is null) return BadRequest("No image provided");
+
+            return await _repo.UploadImage(user, cmd) ? Ok() : BadRequest("Upload failed! Please check if you uploaded the right pictures");
+        }
     }
 }

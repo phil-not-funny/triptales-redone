@@ -12,6 +12,8 @@ namespace Triptales.Application.Dtos
         string? FavoriteDestination,
         string MemberSince,
         int FollowerCount,
+        string? ProfilePicture,
+        string? BannerImage,
         List<PostDto> Posts,
         bool? Follows = false);
 }

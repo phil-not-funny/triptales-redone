@@ -26,6 +26,8 @@ namespace Triptales.Webapi.Services
                 user.FavoriteDestination,
                 user.MemberSince.ToString(),
                 _userService.GetFollowers(user.Guid).Count,
+                user.ProfilePicture,
+                user.BannerImage,
                 user.Posts.Count > 0 ? user.Posts.Select(p => ConvertToPostDto(p)).ToList() : new(),
                 follows);
 

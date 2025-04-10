@@ -51,6 +51,8 @@ namespace Triptales.Application.Model
         public string? PlaceOfResidence { get; set; }
         public string? FavoriteDestination { get; set; }
         public DateOnly MemberSince { get; set; }
+        public string? ProfilePicture { get; set; }
+        public string? BannerImage { get; set; }
 
         public bool CheckPassword(string password) => PasswordHash == CalculateHash(password, Salt!);
 
