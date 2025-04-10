@@ -15,7 +15,7 @@ import { useUser } from "../providers/UserProvider";
 
 const UserProfileCardContent: React.FC<UserProfileProps> = ({ user }) => {
   const { loggedIn, user: client } = useUser();
-  const canInteract = loggedIn && client?.username !== user.username
+  const canInteract = loggedIn && client?.username !== user.username;
 
   const [followerCount, setFollowerCount] = useState<number>(
     user.followerCount,
@@ -28,7 +28,9 @@ const UserProfileCardContent: React.FC<UserProfileProps> = ({ user }) => {
       const newStatus = !following;
       setFollowing(newStatus);
       setFollowerCount((prev) => prev + (newStatus ? 1 : -1));
-      toast.success(`You are ${newStatus ? "now" : "no longer"} following ${user.displayName}`);
+      toast.success(
+        `You are ${newStatus ? "now" : "no longer"} following ${user.displayName}`,
+      );
     } else {
       toast.error(`Something went wrong. Please try again later.`);
     }
@@ -59,23 +61,42 @@ const UserProfileCardContent: React.FC<UserProfileProps> = ({ user }) => {
         </div>
       </CardHeader>
       <CardContent className="mt-6">
-        <h2 className="mb-2 text-lg font-medium">About</h2>
-        <p className="text-sm leading-relaxed">
-          {user.displayName} hasn't added a bio yet.
-        </p>
-      </CardContent>
-
-      <div className="mt-6 flex flex-col gap-4 md:flex-row">
-        <div className="flex-1 rounded-lg bg-gray-50 p-4">
-          <h3 className="text-sm font-medium">Joined</h3>
-          <p className="mt-1 text-xs">
-            {formatDateOnlyString(user.memberSince)}
+        <div className="px-4">
+          <h2 className="mb-2 text-lg font-medium">About</h2>
+          <p className="text-sm leading-relaxed">
+            {user.biography ||
+              `${user.displayName} has not provided a biography yet.`}
           </p>
         </div>
-      </div>
+
+        <div className="mt-6 grid grid-cols-1 gap-4 rounded-lg bg-gray-100 p-4 md:grid-cols-2">
+          <div className="md:col-span-2">
+            <h3 className="text-sm font-medium">Joined</h3>
+            <p className="mt-1 text-xs">
+              {formatDateOnlyString(user.memberSince)}
+            </p>
+          </div>
+          {user.placeOfResidence && (
+            <div>
+              <h3 className="text-sm font-medium">Place of Residence</h3>
+              <p className="mt-1 text-xs">{user.placeOfResidence}</p>
+            </div>
+          )}
+          {user.favoriteDestination && (
+            <div>
+              <h3 className="text-sm font-medium">Favorite Destination</h3>
+              <p className="mt-1 text-xs">{user.favoriteDestination}</p>
+            </div>
+          )}
+        </div>
+      </CardContent>
 
       <CardFooter className="mt-6 flex gap-3">
-        <Button disabled={!canInteract} onClick={handleFollow} variant={"outline"}>
+        <Button
+          disabled={!canInteract}
+          onClick={handleFollow}
+          variant={"outline"}
+        >
           {following ? "Unfollow" : "Follow"}
         </Button>
         <Button disabled={!canInteract} variant={"outline"}>

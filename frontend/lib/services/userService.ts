@@ -5,6 +5,7 @@ import {
   RegisterRequest,
   UserDetailedResponse,
   UserPrivateResponse,
+  UserPutFlavorRequest,
 } from "@/types/RequestTypes";
 import api from "../api";
 import axios, { HttpStatusCode } from "axios";
@@ -121,14 +122,25 @@ const getByUsername = async (
 const follow = async (guid: string): Promise<boolean> => {
   try {
     const response = await api.post(`/User/follow/${guid}`);
-    if(response.status === HttpStatusCode.Ok) {
+    if (response.status === HttpStatusCode.Ok) {
       return true;
     } else return false;
   } catch {
     return false;
   }
-}
+};
 
-const UserService = { register, login, me, logout, getByUsername, follow };
+const putFlavor = async (data: UserPutFlavorRequest): Promise<boolean> => {
+  try {
+    const response = await api.put("/User", data);
+    if (response.status === HttpStatusCode.Ok) {
+      return true;
+    } else return false;
+  } catch {
+    return false;
+  }
+};
+
+const UserService = { register, login, me, logout, getByUsername, follow, putFlavor };
 
 export default UserService;

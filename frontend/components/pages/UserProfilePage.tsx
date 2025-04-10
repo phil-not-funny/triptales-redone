@@ -3,7 +3,7 @@
 import { UserDetailedResponse } from "@/types/RequestTypes";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import Loading from "./Loading";
+import Loading from "../top/Loading";
 import UserService from "@/lib/services/userService";
 import Sorry from "../low/Sorry";
 import { UserProfile, UserProfileWithBanner } from "../low/UserProfile";

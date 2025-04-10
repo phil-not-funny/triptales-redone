@@ -71,6 +71,14 @@ export const isUserDetailedResponse = (u: any): u is UserDetailedResponse =>
   u.posts.every(isPostResponse) &&
   "follows" in u;
 
+export type UserPutFlavorRequest = {
+  username?: string;
+  displayName?: string;
+  biography?: string;
+  placeOfResidence?: string;
+  favoriteDestination?: string;
+}
+
 // ANCHOR POST SECTION
 
 export type PostResponse = {

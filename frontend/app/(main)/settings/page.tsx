@@ -1,12 +1,13 @@
 import Authenticated from "@/components/auth/Authenticated";
+import Page from "@/components/pages/SettingsPage";
+import { PageHead } from "@/components/top/PageHead";
 
 export default function SettingsPage() {
   return (
     <Authenticated>
-      <div className="flex h-screen flex-col items-center justify-center">
-        <h1 className="text-2xl font-bold">Settings</h1>
-        <p className="mt-4">Settings page content goes here.</p>
-      </div>
+      <PageHead className="pt-24">
+        <Page />
+      </PageHead>
     </Authenticated>
   );
 }
