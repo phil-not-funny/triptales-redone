@@ -141,6 +141,14 @@ const putFlavor = async (data: UserPutFlavorRequest): Promise<boolean> => {
   }
 };
 
-const UserService = { register, login, me, logout, getByUsername, follow, putFlavor };
+const UserService = {
+  register,
+  login,
+  me,
+  logout,
+  getByUsername,
+  follow,
+  putFlavor,
+};
 
 export default UserService;
