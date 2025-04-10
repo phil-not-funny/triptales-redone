@@ -54,6 +54,7 @@ export type UserDetailedResponse = {
   memberSince: string;
   followerCount: number;
   posts: PostResponse[];
+  follows: boolean;
 }
 
 export const isUserDetailedResponse = (u: any): u is UserDetailedResponse =>
@@ -67,7 +68,8 @@ export const isUserDetailedResponse = (u: any): u is UserDetailedResponse =>
   "memberSince" in u &&
   "followerCount" in u &&
   Array.isArray(u.posts) &&
-  u.posts.every(isPostResponse);
+  u.posts.every(isPostResponse) &&
+  "follows" in u;
 
 // ANCHOR POST SECTION
 

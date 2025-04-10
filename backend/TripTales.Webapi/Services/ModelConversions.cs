@@ -15,7 +15,7 @@ namespace Triptales.Webapi.Services
             _userService = userService;
         }
 
-        public UserDetailedDto ConvertToDetailed(User user) =>
+        public UserDetailedDto ConvertToDetailed(User user, bool follows = false) =>
             new(
                 user.Guid,
                 user.Username,
@@ -26,7 +26,8 @@ namespace Triptales.Webapi.Services
                 user.FavoriteDestination,
                 user.MemberSince.ToString(),
                 _userService.GetFollowers(user.Guid).Count,
-                user.Posts.Count > 0 ? user.Posts.Select(p => ConvertToPostDto(p)).ToList() : new());
+                user.Posts.Count > 0 ? user.Posts.Select(p => ConvertToPostDto(p)).ToList() : new(),
+                follows);
 
         public UserPublicSmallDto ConvertToPublicSmall(User user) =>
             new(user.Guid, user.Username, user.DisplayName, user.Verified);

@@ -118,6 +118,17 @@ const getByUsername = async (
   }
 };
 
-const UserService = { register, login, me, logout, getByUsername };
+const follow = async (guid: string): Promise<boolean> => {
+  try {
+    const response = await api.post(`/User/follow/${guid}`);
+    if(response.status === HttpStatusCode.Ok) {
+      return true;
+    } else return false;
+  } catch {
+    return false;
+  }
+}
+
+const UserService = { register, login, me, logout, getByUsername, follow };
 
 export default UserService;
