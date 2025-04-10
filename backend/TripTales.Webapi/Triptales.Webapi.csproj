@@ -21,6 +21,10 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\TripTales.Application\Triptales.Application.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Images\" />
+	</ItemGroup>
   
   
 
