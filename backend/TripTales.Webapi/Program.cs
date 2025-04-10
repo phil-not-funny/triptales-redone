@@ -8,6 +8,8 @@ using Triptales.Repository;
 using Triptales.Application.Dtos;
 using Triptales.Webapi.Infrastructure;
 using Triptales.Webapi.Services;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,7 @@ builder.Services.AddTransient<UserRepository>();
 builder.Services.AddTransient<PostRepository>();
 builder.Services.AddTransient<PostService>();
 builder.Services.AddTransient<ModelConversions>();
+builder.Services.AddTransient<IFileService, LocalFileService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(
@@ -75,6 +78,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
     app.UseCors("AllowDevServer");
+
+    if (!Directory.Exists(Path.Combine(builder.Environment.ContentRootPath, "Images")))
+    {
+        Directory.CreateDirectory(Path.Combine(builder.Environment.ContentRootPath, "Images"));
+    }
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(
+               Path.Combine(builder.Environment.ContentRootPath, "Images")),
+        RequestPath = "/Images"
+    });
 }
 
 app.UseCookiePolicy();
