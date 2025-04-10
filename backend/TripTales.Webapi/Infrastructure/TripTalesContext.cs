@@ -62,7 +62,10 @@ namespace Triptales.Webapi.Infrastructure
                 return new User(username.ToLower(),
                                 f.Internet.Email(),
                                 f.Internet.Password(),
-                                username);
+                                username,
+                                f.Lorem.Sentence(20, 6),
+                                f.Address.City(),
+                                f.Address.County());
             }).Generate(5).ToList();
 
             var admin = new User("admin", "admin@triptales.at", "admin", "Administrator");

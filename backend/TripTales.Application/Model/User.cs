@@ -19,6 +19,13 @@ namespace Triptales.Application.Model
             MemberSince = DateOnly.FromDateTime(DateTime.Now);
         }
 
+        public User(string username, string email, string password, string displayName, string biography, string placeOfResidence, string favoriteDestination) : this(username, email, password, displayName)
+        {
+            Biography = biography;
+            PlaceOfResidence = placeOfResidence;
+            FavoriteDestination = favoriteDestination;
+        }
+
 #pragma warning disable CS8618
         protected User() { }
 #pragma warning restore CS8618
@@ -46,7 +53,7 @@ namespace Triptales.Application.Model
         public List<User> Following { get; } = new();
         public List<Post> LikedPosts { get; } = new();
         public List<Post> Posts { get; } = new();
-        
+
         public string? Biography { get; set; }
         public string? PlaceOfResidence { get; set; }
         public string? FavoriteDestination { get; set; }
