@@ -1,14 +1,15 @@
 "use client";
 
-import { UserPrivateResponse } from "@/types/RequestTypes";
+import { UserDetailedResponse } from "@/types/RequestTypes";
 import { UserFlavorForm } from "../forms/UserFlavorForm";
 import Sorry from "../low/Sorry";
 import { useUser } from "../providers/UserProvider";
 import { Separator } from "../ui/separator";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
+import UserService from "@/lib/services/userService";
 
 interface UserSettingsProps {
-  user: UserPrivateResponse;
+  user: UserDetailedResponse;
 }
 
 const SettingsFlavorSection: React.FC<UserSettingsProps> = ({ user }) => {
@@ -23,7 +24,21 @@ const SettingsFlavorSection: React.FC<UserSettingsProps> = ({ user }) => {
 };
 
 const SettingsPage: React.FC = () => {
-  const { user } = useUser();
+  const { user: savedUser } = useUser();
+  const [user, setUser] = useState<UserDetailedResponse | null>(null);
+
+  const init = async () => {
+    const response = await UserService.getByUsername(savedUser?.username || "");
+    if (response) {
+      setUser(response);
+    } else {
+      setUser(null);
+    }
+  };
+
+  useEffect(() => {
+    init();
+  });
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center">

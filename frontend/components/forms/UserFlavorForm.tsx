@@ -15,11 +15,10 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import userService from "@/lib/services/userService";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
-import { User } from "@/types/ModelTypes";
 import { Textarea } from "../ui/textarea";
+import { UserDetailedResponse } from "@/types/RequestTypes";
 
 const formSchema = z.object({
   username: z
@@ -37,8 +36,7 @@ const formSchema = z.object({
   favoriteDestination: z.string().optional(),
 });
 
-export function UserFlavorForm({ user }: { user: User }) {
-  const router = useRouter();
+export function UserFlavorForm({ user }: { user: UserDetailedResponse }) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -46,9 +44,9 @@ export function UserFlavorForm({ user }: { user: User }) {
     defaultValues: {
       username: user.username,
       displayName: user.displayName,
-      biography: user.biography,
-      placeOfResidence: user.placeOfResidence,
-      favoriteDestination: user.favoriteDestination,
+      biography: user.biography || "",
+      placeOfResidence: user.placeOfResidence || "",
+      favoriteDestination: user.favoriteDestination || "",
     },
   });
 
