@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Triptales.Application.Model
+namespace Triptales.Webapi.Model
 {
     public class Post : BaseEntity
     {

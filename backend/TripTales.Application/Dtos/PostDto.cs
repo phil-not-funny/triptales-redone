@@ -1,7 +1,7 @@
 ﻿using System;
-using Triptales.Application.Cmd;
+using Triptales.Webapi.Cmd;
 
-namespace Triptales.Application.Dtos
+namespace Triptales.Webapi.Dtos
 {
     public record PostDto(Guid Guid,
                           string Title,

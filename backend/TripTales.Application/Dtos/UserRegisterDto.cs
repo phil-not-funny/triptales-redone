@@ -1,4 +1,4 @@
-﻿namespace Triptales.Application.Dtos
+﻿namespace Triptales.Webapi.Dtos
 {
     public record UserRegisterDto(
         string Username,

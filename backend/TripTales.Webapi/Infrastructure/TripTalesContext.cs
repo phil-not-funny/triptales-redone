@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Bogus;
 using Microsoft.EntityFrameworkCore;
-using Triptales.Application.Model;
+using Triptales.Webapi.Model;
 
 namespace Triptales.Webapi.Infrastructure
 {

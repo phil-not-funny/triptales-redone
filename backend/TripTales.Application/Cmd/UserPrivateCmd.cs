@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Triptales.Application.Cmd
+namespace Triptales.Webapi.Cmd
 {
     public record UserPrivateCmd(Guid Guid, string Username, string DisplayName, string Email);
 }

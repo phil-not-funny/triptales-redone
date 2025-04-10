@@ -8,12 +8,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Triptales.Repository;
-using Triptales.Application.Cmd;
-using Triptales.Application.Dtos;
-using Triptales.Application.Services;
+using Triptales.Webapi.Cmd;
+using Triptales.Webapi.Dtos;
+using Triptales.Webapi.Services;
 using Triptales.Webapi.Infrastructure;
-using Triptales.Application.Model;
-using System.Reflection.Metadata.Ecma335;
+using Triptales.Webapi.Model;
+using Microsoft.AspNetCore.Http;
+using Triptales.Application.Cmd;
 
 namespace Triptales.Webapi.Controllers
 {
@@ -124,6 +125,20 @@ namespace Triptales.Webapi.Controllers
             authenticated.Following.Add(requested);
             await _db.SaveChangesAsync();
             return Ok();
+        }
+
+        [Authorize]
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadPictures([FromForm] UploadPicturesCmd cmd)
+        {
+            var authenticated = await getAuthenticatedOrDefault();
+            if (authenticated is null) return Unauthorized();
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.Guid == authenticated.Guid);
+            if (user is null) return NotFound();
+
+            if(cmd.ProfilePicture is null && cmd.BannerImage is null) return BadRequest("No image provided");
+
+            return await _repo.UploadImage(user, cmd) ? Ok() : BadRequest("Upload failed! Please check if you uploaded the right pictures") ;
         }
     }
 }

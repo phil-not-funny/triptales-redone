@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Triptales.Application.Model;
+using Triptales.Webapi.Model;
 
 namespace Triptales.Repository
 {

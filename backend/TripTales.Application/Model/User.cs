@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 
-namespace Triptales.Application.Model
+namespace Triptales.Webapi.Model
 {
     [Index(nameof(Email), IsUnique = true)]
     [Index(nameof(Username), IsUnique = true)]
@@ -41,6 +41,9 @@ namespace Triptales.Application.Model
 
         public string? Salt { get; set; }
         public string? PasswordHash { get; set; }
+
+        public string? ProfilePicture { get; set; }
+        public string? BannerImage { get; set; }
 
         public List<User> Following { get; } = new();
         public List<Post> LikedPosts { get; } = new();

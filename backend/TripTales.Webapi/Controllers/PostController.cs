@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Triptales.Application.Model;
-using Triptales.Application.Services;
+using Triptales.Webapi.Model;
+using Triptales.Webapi.Services;
 using Triptales.Webapi.Infrastructure;
-using Triptales.Application.Dtos;
-using Triptales.Application.Cmd;
+using Triptales.Webapi.Dtos;
+using Triptales.Webapi.Cmd;
 
 namespace Triptales.Controllers
 {

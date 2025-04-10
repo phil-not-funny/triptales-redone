@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Triptales.Application.Cmd
+namespace Triptales.Webapi.Cmd
 {
     public record UserPublicCmdSmall(Guid Guid, string Username, string DisplayName, bool Verified);
 }

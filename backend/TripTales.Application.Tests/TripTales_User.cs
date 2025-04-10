@@ -1,7 +1,7 @@
 ﻿using Xunit;
-using Triptales.Application.Model;
+using Triptales.Webapi.Model;
 
-namespace Triptales.Application.UnitTests
+namespace Triptales.Webapi.UnitTests
 {
     public class TripTales_UserCreation
     {
