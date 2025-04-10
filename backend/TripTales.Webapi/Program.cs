@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Triptales.Repository;
-using Triptales.Webapi.Dtos;
+using Triptales.Application.Dtos;
 using Triptales.Webapi.Services;
 using Triptales.Webapi.Infrastructure;
 using Microsoft.Extensions.FileProviders;

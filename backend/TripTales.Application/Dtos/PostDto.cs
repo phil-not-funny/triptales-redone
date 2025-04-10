@@ -1,4 +1,5 @@
 ﻿using System;
+using Triptales.Application.Cmd;
 
 namespace Triptales.Webapi.Dtos
 {

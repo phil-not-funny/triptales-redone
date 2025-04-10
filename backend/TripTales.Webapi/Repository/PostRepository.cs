@@ -2,11 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Triptales.Webapi.Cmd;
+using Triptales.Application.Cmd;
 using Triptales.Webapi.Model;
 using Triptales.Webapi.Services;
 using Triptales.Webapi.Infrastructure;
-using Triptales.Webapi.Dtos;
+using Triptales.Application.Dtos;
 
 namespace Triptales.Repository
 {

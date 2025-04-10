@@ -1,4 +1,5 @@
 using Triptales.Application.Model;
+using Triptales.Application.Cmd;
 using Triptales.Webapi.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;

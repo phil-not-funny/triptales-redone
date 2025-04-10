@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 using Triptales.Webapi.Model;
 using Triptales.Webapi.Services;
 using Triptales.Webapi.Infrastructure;
-using Triptales.Webapi.Dtos;
-using Triptales.Webapi.Cmd;
+using Triptales.Application.Dtos;
+using Triptales.Application.Cmd;
 
 namespace Triptales.Controllers
 {
