@@ -39,7 +39,7 @@ export const AppSidebar: React.FC = () => {
     { title: "Home", url: "/", icon: Home },
     { title: "Inbox", url: "#", icon: Inbox },
     { title: "Search", url: "#", icon: Search },
-    { title: "Settings", url: "#", icon: Settings },
+    { title: "Settings", url: "/settings", icon: Settings },
   ];
 
   const authItems: Item[] = [
