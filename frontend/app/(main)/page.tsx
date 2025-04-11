@@ -1,11 +1,12 @@
 "use client";
 
+import { PageHead } from "@/components/top/PageHead";
 import RandomPosts from "@/components/top/RandomPosts";
 import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col items-center gap-6">
+    <PageHead className="flex min-h-screen flex-col items-center gap-6">
       <div className="relative mb-12 flex h-40 w-full items-center justify-center overflow-hidden object-cover shadow-lg sm:h-80">
         <Image
           src={"/images/homepage-background.jpg"}
@@ -24,6 +25,6 @@ export default function Home() {
         </div>
       </div>
       <RandomPosts />
-    </div>
+    </PageHead>
   );
 }

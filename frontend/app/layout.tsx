@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-body relative min-h-screen antialiased !text-gray-800`}>
         <Providers>
-          <main className="h-full w-full">{children}</main>
+          <div className="h-full w-full">{children}</div>
           <Toaster />
         </Providers>
       </body>
