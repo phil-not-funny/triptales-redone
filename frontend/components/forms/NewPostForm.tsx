@@ -46,8 +46,6 @@ const formSchema = z
 export function NewPostForm() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
-  const { user } = useUser();
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -129,10 +127,9 @@ export function NewPostForm() {
       endDate: values.endDate.toISOString(),
     });
     if (response) {
-        toast.success("Post created successfully!");
-        router.push(`/post/${response}`);
-    }
-    else toast.error("Failed to create post!");
+      toast.success("Post created successfully!");
+      router.push(`/post/${response}`);
+    } else toast.error("Failed to create post!");
     setLoading(false);
   }
 }
