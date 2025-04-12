@@ -10,6 +10,7 @@ using Triptales.Webapi.Infrastructure;
 using Triptales.Application.Dtos;
 using Triptales.Application.Cmd;
 using Triptales.Webapi.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Triptales.Controllers
 {
@@ -32,6 +33,16 @@ namespace Triptales.Controllers
             _modelConversions = modelConversions;
         }
 
+        private async Task<User?> getAuthenticatedOrDefault()
+        {
+            var authenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
+            if (!authenticated) return null;
+            var username = HttpContext.User.Identity?.Name;
+            if (username is null) return null;
+
+            return await _userService.GetUserByUsername(username);
+        }
+
         [HttpGet]
         public async Task<ActionResult<List<PostDto>>> GetPosts() =>
             Ok((await _repository.GetAll()).Select(a => _modelConversions.ConvertToPostDto(a)).ToList());
@@ -41,11 +52,13 @@ namespace Triptales.Controllers
             await _repository.GetFromGuidToPostDto(guid) is PostDto post ? Ok(post) : BadRequest("Post not found");
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult> AddPost([FromBody] AddPostCmd cmd)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Guid == cmd.AuthorGuid);
-            if (user is null) return NotFound("User doesn't exist");
-            return await _repository.Insert(new Post(cmd.Title, cmd.Description, user, DateTime.Parse(cmd.StartDate), DateTime.Parse(cmd.EndDate))) ? Ok() : BadRequest("Insert failed! Check if the parameters are correct");
+            var user = await getAuthenticatedOrDefault();
+            if (user is null) return Unauthorized("User not authenticated");
+            var post = new Post(cmd.Title, cmd.Description, user, DateTime.Parse(cmd.StartDate), DateTime.Parse(cmd.EndDate));
+            return await _repository.Insert(post) ? Ok(post.Guid) : BadRequest("Insert failed! Check if the parameters are correct");
         }
 
         [HttpDelete("{guid:Guid}")]

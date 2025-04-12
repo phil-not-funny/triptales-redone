@@ -107,5 +107,4 @@ export type CreatePostRequest = {
   description: string;
   startDate: string;
   endDate: string;
-  authorGuid: string;
 };

@@ -1,4 +1,8 @@
-import { isPostResponse, PostResponse } from "@/types/RequestTypes";
+import {
+  CreatePostRequest,
+  isPostResponse,
+  PostResponse,
+} from "@/types/RequestTypes";
 import api from "../api";
 
 type GetRandomPostsClientResponse = {
@@ -27,6 +31,16 @@ const getRandom = async (
   }
 };
 
-const PostService = { getRandom };
+const createPost = async (data: CreatePostRequest): Promise<string | null> => {
+  try {
+    const response = await api.post<string>("/Post", data);
+    if (response.status === 200) return response.data;
+    else return null;
+  } catch {
+    return null;
+  }
+};
+
+const PostService = { getRandom, createPost };
 
 export default PostService;

@@ -13,13 +13,14 @@ import {
 } from "../ui/form";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import userService from "@/lib/services/userService";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Textarea } from "../ui/textarea";
 import { DatePicker } from "../ui/datepicker";
+import PostService from "@/lib/services/postService";
+import { useUser } from "../providers/UserProvider";
 
 const formSchema = z
   .object({
@@ -45,7 +46,7 @@ const formSchema = z
 export function NewPostForm() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
-
+  const { user } = useUser();
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -121,8 +122,14 @@ export function NewPostForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
-    console.log(values);
-
+    const response = await PostService.createPost({
+      title: values.title,
+      description: values.description,
+      startDate: values.startDate.toISOString(),
+      endDate: values.endDate.toISOString(),
+    });
+    if (response) toast.success("Post created successfully!");
+    else toast.error("Failed to create post!");
     setLoading(false);
   }
 }

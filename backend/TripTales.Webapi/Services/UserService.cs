@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using System.Linq;
 using System;
+using Microsoft.AspNetCore.Http;
 
 namespace Triptales.Webapi.Services
 {
