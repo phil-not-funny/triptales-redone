@@ -8,6 +8,7 @@ import {
   LogIn,
   LogOut,
   UserPlus,
+  ListPlusIcon,
 } from "lucide-react";
 
 import {
@@ -39,7 +40,11 @@ export const AppSidebar: React.FC = () => {
     { title: "Home", url: "/", icon: Home },
     { title: "Inbox", url: "#", icon: Inbox },
     { title: "Search", url: "#", icon: Search },
+  ];
+
+  const onlyLoggedIn: Item[] = [
     { title: "Settings", url: "/settings", icon: Settings },
+    { title: "New Post", url: "/post/new", icon: ListPlusIcon },
   ];
 
   const authItems: Item[] = [
@@ -106,7 +111,33 @@ export const AppSidebar: React.FC = () => {
           </SidebarContent>
         </SidebarGroup>
 
-        <SidebarGroup className="mt-6">
+        {loggedIn && (
+          <SidebarGroup>
+            <SidebarGroupLabel className="px-4 text-sm font-medium text-gray-500">
+              User Options
+            </SidebarGroupLabel>
+            <SidebarContent>
+              <SidebarMenu>
+                {onlyLoggedIn.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      variant={"outline"}
+                      className="w-full justify-start text-gray-600 transition-colors duration-200 hover:bg-gray-100"
+                      asChild
+                    >
+                      <Link href={item.url}>
+                        <item.icon className="mr-3 h-5 w-5" />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarContent>
+          </SidebarGroup>
+        )}
+
+        <SidebarGroup>
           <SidebarGroupLabel className="px-4 text-sm font-medium text-gray-500">
             Authentication
           </SidebarGroupLabel>

@@ -2,5 +2,5 @@
 
 namespace Triptales.Application.Cmd
 {
-        public record AddPostCmd(string Title, string Description, Guid AuthorGuid, string StartDate, string EndDate);
+        public record AddPostCmd(string Title, string Description, string StartDate, string EndDate);
 }
