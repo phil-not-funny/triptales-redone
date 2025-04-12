@@ -128,7 +128,10 @@ export function NewPostForm() {
       startDate: values.startDate.toISOString(),
       endDate: values.endDate.toISOString(),
     });
-    if (response) toast.success("Post created successfully!");
+    if (response) {
+        toast.success("Post created successfully!");
+        router.push(`/post/${response}`);
+    }
     else toast.error("Failed to create post!");
     setLoading(false);
   }

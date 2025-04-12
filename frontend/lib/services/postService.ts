@@ -41,6 +41,22 @@ const createPost = async (data: CreatePostRequest): Promise<string | null> => {
   }
 };
 
-const PostService = { getRandom, createPost };
+type GetPostClientResponse = {
+  success: boolean;
+  data: PostResponse | null;
+};
+
+const getPost = async (guid: string): Promise<GetPostClientResponse> => {
+  try {
+    const response = await api.get<PostResponse>(`/Post/${guid}`);
+    if (response.status === 200 && isPostResponse(response.data))
+      return { success: true, data: response.data };
+    else throw new Error("Invalid response structure");
+  } catch {
+    return { success: false, data: null };
+  }
+};
+
+const PostService = { getRandom, createPost, getPost };
 
 export default PostService;
