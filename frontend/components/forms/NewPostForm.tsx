@@ -20,7 +20,6 @@ import { Loader2 } from "lucide-react";
 import { Textarea } from "../ui/textarea";
 import { DatePicker } from "../ui/datepicker";
 import PostService from "@/lib/services/postService";
-import { useUser } from "../providers/UserProvider";
 
 const formSchema = z
   .object({

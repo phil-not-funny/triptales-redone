@@ -29,7 +29,7 @@ const PostPage: React.FC<PostPageProps> = ({ guid }) => {
   return loading ? (
     <Loading />
   ) : !post ? (
-    <Sorry>The post you were looking for doesn't exits.</Sorry>
+    <Sorry>The post you were looking for doesn't exist.</Sorry>
   ) : (
     <Post embed={false} post={post} />
   );
