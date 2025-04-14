@@ -19,7 +19,7 @@ import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { DatePicker } from "../ui/datepicker";
 import PostService from "@/lib/services/postService";
-import MDEditor from "@uiw/react-md-editor";
+import MDEditor, { commands } from "@uiw/react-md-editor";
 
 const formSchema = z
   .object({
@@ -76,7 +76,11 @@ export function NewPostForm() {
             <FormItem>
               <FormLabel>Description / Content</FormLabel>
               <FormControl data-color-mode="light">
-                <MDEditor className="leading-relaxed text-gray-700" {...field}/>
+                <MDEditor
+                  commands={commands.getCommands().filter(i => i.name !== "image")}
+                  className="leading-relaxed text-gray-700"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
