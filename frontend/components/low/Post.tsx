@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { PostResponse } from "@/types/RequestTypes";
 import { formatDateString } from "@/lib/utils";
 import Link from "next/link";
+import MDEditor from "@uiw/react-md-editor";
 
 interface PostProps {
   post: PostResponse;
@@ -51,11 +52,6 @@ const Post: React.FC<PostProps> = ({ post, embed = true }) => {
           <span className="mx-2">•</span>
           <span>Posted on {formatDateString(post.createdAt)}</span>
         </div>
-      </CardHeader>
-
-      <CardContent className="p-6">
-        <p className="mb-4 leading-relaxed text-gray-700">{post.description}</p>
-
         <div className="flex items-center space-x-4 rounded-lg bg-gray-50 p-3 text-sm text-gray-600">
           <Calendar className="h-4 w-4 text-gray-400" />
           <div>
@@ -68,6 +64,13 @@ const Post: React.FC<PostProps> = ({ post, embed = true }) => {
             {formatDateString(post.endDate)}
           </div>
         </div>
+      </CardHeader>
+
+      <CardContent data-color-mode="light" className="p-6">
+        <MDEditor.Markdown
+          source={post.description}
+          className="leading-relaxed text-gray-700"
+        />
       </CardContent>
 
       <CardFooter className="flex items-center justify-between border-t border-gray-100 bg-gray-50 !p-3">
