@@ -77,7 +77,7 @@ export function NewPostForm() {
               <FormLabel>Description / Content</FormLabel>
               <FormControl data-color-mode="light">
                 <MDEditor
-                  commands={commands.getCommands().filter(i => i.name !== "image")}
+                  commands={commands.getCommands().filter(i => i.name !== "image" && i.name !== "comment")}
                   className="leading-relaxed text-gray-700"
                   {...field}
                 />
