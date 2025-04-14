@@ -133,5 +133,11 @@ export type CreatePostRequest = {
   description: string;
   startDate: string;
   endDate: string;
-  days: PostDay[] | [];
+  days: CreatePostRequestDay[] | [];
 };
+
+export type CreatePostRequestDay = {
+  title: string;
+  description: string;
+  date: string;
+}
