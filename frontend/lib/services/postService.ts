@@ -1,23 +1,25 @@
 import {
   CreatePostRequest,
   isPostResponse,
+  isPostResponseSmall,
   PostResponse,
+  PostResponseSmall,
 } from "@/types/RequestTypes";
 import api from "../api";
 
 type GetRandomPostsClientResponse = {
   success: boolean;
-  data: PostResponse[];
+  data: PostResponseSmall[];
 };
 
 const getRandom = async (
   number: number | undefined = 10,
 ): Promise<GetRandomPostsClientResponse> => {
   try {
-    const response = await api.get<PostResponse[]>(
+    const response = await api.get<PostResponseSmall[]>(
       `/Post/random?size=${number}`,
     );
-    if (response.status === 200 && isPostResponse(response.data[0]))
+    if (response.status === 200 && isPostResponseSmall(response.data[0]))
       return {
         success: true,
         data: response.data,
