@@ -39,7 +39,7 @@ const Post: React.FC<PostProps> = ({ post, embed = true }) => {
         <CardTitle className="mb-2 text-2xl font-semibold text-gray-800">
           {post.title}
         </CardTitle>
-        <div className="flex items-center text-sm text-gray-600">
+        <div className="flex items-center text-sm text-gray-600 p-3">
           <span>
             By{" "}
             <Link
