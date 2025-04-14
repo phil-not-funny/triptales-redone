@@ -5,7 +5,7 @@ namespace Triptales.Application.Model
 {
     public class Post : BaseEntity
     {
-        public Post(string title, string description, User author, DateTime startDate, DateTime endDate)
+        public Post(string title, string description, User author, DateOnly startDate, DateOnly endDate)
         {
             Title = title;
             Description = description;
@@ -14,7 +14,7 @@ namespace Triptales.Application.Model
             EndDate = endDate;
         }
 
-        public Post(string title, string description, User author, DateTime startDate, DateTime endDate, List<Day> days) : this(title, description, author, startDate, endDate)
+        public Post(string title, string description, User author, DateOnly startDate, DateOnly endDate, List<Day> days) : this(title, description, author, startDate, endDate)
         {
             Days = days;
         }
@@ -27,8 +27,8 @@ namespace Triptales.Application.Model
         public string Description { get; set; }
         public User Author { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateOnly StartDate { get; set; }
+        public DateOnly EndDate { get; set; }
         public List<User> Likes { get; } = new();
         public List<Day> Days { get; } = new();
 
