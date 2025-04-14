@@ -83,9 +83,9 @@ namespace Triptales.Webapi.Infrastructure
             var posts = new Faker<Post>(locale: "de").CustomInstantiator(f =>
             {
                 f.Lorem.Locale = "de";
-                var date = f.Date.Between(DateTime.UtcNow.AddDays(-20), DateTime.UtcNow.AddDays(-1));
-                var date2 = f.Date.Between(date, DateTime.UtcNow);
-                var post = new Post(f.Lorem.Sentence(5), f.Lorem.Sentence(15), f.PickRandom(users), date, date);
+                var date = DateOnly.FromDateTime(f.Date.Between(DateTime.UtcNow.AddDays(-20), DateTime.UtcNow.AddDays(-1)));
+                var date2 = DateOnly.FromDateTime(f.Date.Between(date.ToDateTime(TimeOnly.MinValue), DateTime.UtcNow));
+                var post = new Post(f.Lorem.Sentence(5), f.Lorem.Sentence(15), f.PickRandom(users), date, date2);
                 return post;
             }).Generate(10).ToList();
             Posts.AddRange(posts);
