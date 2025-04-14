@@ -124,6 +124,7 @@ export function NewPostForm() {
       description: values.description,
       startDate: values.startDate.toISOString(),
       endDate: values.endDate.toISOString(),
+      days: [],
     });
     if (response) {
       toast.success("Post created successfully!");
