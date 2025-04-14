@@ -58,7 +58,8 @@ namespace Triptales.Repository
                 post.StartDate.ToString(),
                 post.EndDate.ToString(),
                 post.CreatedAt.ToString(),
-                post.Likes.Count
+                post.Likes.Count,
+                post.Days
             );
         }
 

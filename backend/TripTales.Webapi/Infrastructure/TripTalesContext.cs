@@ -21,6 +21,10 @@ namespace Triptales.Webapi.Infrastructure
                 .UsingEntity(j => j.ToTable("PostLikes"));
             modelBuilder.Entity<Post>().HasOne(p => p.Author)
                 .WithMany(u => u.Posts);
+            modelBuilder.Entity<Post>().OwnsMany(p => p.Days, p =>
+            {
+                p.HasKey("Id");
+            });
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {

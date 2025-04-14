@@ -14,6 +14,6 @@ namespace Triptales.Application.Dtos
         int FollowerCount,
         string? ProfilePicture,
         string? BannerImage,
-        List<PostDto> Posts,
+        List<PostSmallDto> Posts,
         bool? Follows = false);
 }

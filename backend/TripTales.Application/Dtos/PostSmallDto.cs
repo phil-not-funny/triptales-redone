@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using Triptales.Application.Model;
 
 namespace Triptales.Application.Dtos
 {
-    public record PostDto(Guid Guid,
+    public record PostSmallDto(Guid Guid,
                           string Title,
                           string Description,
                           UserPublicSmallDto Author,
                           string StartDate,
                           string EndDate,
                           string CreatedAt,
-                          int LikesCount,
-                          List<Post.Day> Days);
+                          int LikesCount);
 }

@@ -44,8 +44,8 @@ namespace Triptales.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<PostDto>>> GetPosts() =>
-            Ok((await _repository.GetAll()).Select(a => _modelConversions.ConvertToPostDto(a)).ToList());
+        public async Task<ActionResult<List<PostSmallDto>>> GetPosts() =>
+            Ok((await _repository.GetAll()).Select(a => _modelConversions.ConvertToPostSmallDto(a)).ToList());
 
         [HttpGet("{guid:Guid}")]
         public async Task<ActionResult<PostDto>> GetPost(Guid guid) =>
@@ -57,7 +57,7 @@ namespace Triptales.Controllers
         {
             var user = await getAuthenticatedOrDefault();
             if (user is null) return Unauthorized("User not authenticated");
-            var post = new Post(cmd.Title, cmd.Description, user, DateTime.Parse(cmd.StartDate), DateTime.Parse(cmd.EndDate));
+            var post = new Post(cmd.Title, cmd.Description, user, DateTime.Parse(cmd.StartDate), DateTime.Parse(cmd.EndDate), cmd.Days.Select(d => new Post.Day(d.Title, d.Description, DateOnly.Parse(d.Date))).ToList());
             return await _repository.Insert(post) ? Ok(post.Guid) : BadRequest("Insert failed! Check if the parameters are correct");
         }
 
@@ -76,7 +76,7 @@ namespace Triptales.Controllers
         }
 
         [HttpGet("random")]
-        public async Task<ActionResult<List<PostDto>>> GetRandom([FromQuery] int size = 10)
+        public async Task<ActionResult<List<PostSmallDto>>> GetRandom([FromQuery] int size = 10)
         {
             Random rand = new Random();
             var take = (await _db.Posts.Include(a => a.Author)

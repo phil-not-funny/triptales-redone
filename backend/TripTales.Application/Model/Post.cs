@@ -14,6 +14,11 @@ namespace Triptales.Application.Model
             EndDate = endDate;
         }
 
+        public Post(string title, string description, User author, DateTime startDate, DateTime endDate, List<Day> days) : this(title, description, author, startDate, endDate)
+        {
+            Days = days;
+        }
+
 #pragma warning disable CS8618
         protected Post() { }
 #pragma warning restore CS8618
@@ -25,5 +30,13 @@ namespace Triptales.Application.Model
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public List<User> Likes { get; } = new();
+        public List<Day> Days { get; } = new();
+
+        public class Day(string title, string description, DateOnly date)
+        {
+            public string Title { get; set; } = title;
+            public string Description { get; set; } = description;
+            public DateOnly Date { get; set; } = date;
+        }
     }
 }
