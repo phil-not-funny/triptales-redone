@@ -20,6 +20,7 @@ import { Loader2 } from "lucide-react";
 import { Textarea } from "../ui/textarea";
 import { DatePicker } from "../ui/datepicker";
 import PostService from "@/lib/services/postService";
+import MDEditor from "@uiw/react-md-editor";
 
 const formSchema = z
   .object({
@@ -75,8 +76,8 @@ export function NewPostForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Description / Content</FormLabel>
-              <FormControl>
-                <Textarea {...field} />
+              <FormControl data-color-mode="light">
+                <MDEditor className="leading-relaxed text-gray-700" {...field}/>
               </FormControl>
               <FormMessage />
             </FormItem>
