@@ -17,7 +17,6 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
-import { Textarea } from "../ui/textarea";
 import { DatePicker } from "../ui/datepicker";
 import PostService from "@/lib/services/postService";
 import MDEditor from "@uiw/react-md-editor";
