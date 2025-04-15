@@ -93,7 +93,7 @@ namespace Triptales.Webapi.Infrastructure
                 for (int i = 0; i < numberOfDays; i++)
                 {
                     var totalDaysDifference = (date2 - date).Days;
-                    var dayOffset = i * (totalDaysDifference / Math.Max(1, numberOfDays - 1)); // Distribute days evenly
+                    var dayOffset = i * (totalDaysDifference / Math.Max(1, numberOfDays - 1));
                     var dayDate = date.AddDays(dayOffset);
 
                     var day = new Post.Day(
@@ -105,7 +105,7 @@ namespace Triptales.Webapi.Infrastructure
                     days.Add(day);
                 }
 
-                var post = new Post(f.Lorem.Sentence(7, 2), f.Lorem.Sentence(35, 5), f.PickRandom(users), date, date, days);
+                var post = new Post(f.Lorem.Sentence(7, 2), f.Lorem.Sentence(35, 5), f.PickRandom(users), date, date2, days);
                 return post;
             }).Generate(10).ToList();
             Posts.AddRange(posts);

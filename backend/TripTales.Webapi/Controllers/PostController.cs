@@ -57,7 +57,7 @@ namespace Triptales.Controllers
         {
             var user = await getAuthenticatedOrDefault();
             if (user is null) return Unauthorized("User not authenticated");
-            var post = new Post(cmd.Title, cmd.Description, user, DateTime.Parse(cmd.StartDate), DateTime.Parse(cmd.EndDate), cmd.Days.Select(d => new Post.Day(d.Title, d.Description, DateOnly.Parse(d.Date))).ToList());
+            var post = new Post(cmd.Title, cmd.Description, user, DateOnly.Parse(cmd.StartDate), DateOnly.Parse(cmd.EndDate), cmd.Days.Select(d => new Post.Day(d.Title, d.Description, DateOnly.Parse(d.Date))).ToList());
             return await _repository.Insert(post) ? Ok(post.Guid) : BadRequest("Insert failed! Check if the parameters are correct");
         }
 
@@ -70,7 +70,7 @@ namespace Triptales.Controllers
         {
             var p = await _db.Posts.Include(a => a.Author).FirstOrDefaultAsync(p => p.Guid == guid);
             if (p is null) return NotFound("Post not found");
-            var post = new Post(cmd.Title, cmd.Description, p.Author, DateTime.Parse(cmd.StartDate), DateTime.Parse(cmd.EndDate));
+            var post = new Post(cmd.Title, cmd.Description, p.Author, DateOnly.Parse(cmd.StartDate), DateOnly.Parse(cmd.EndDate));
             post.Guid = guid;
             return await _repository.Update(post) ? NoContent() : BadRequest("Update failed! Check if the parameters are correct");
         }
