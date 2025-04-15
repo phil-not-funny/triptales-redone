@@ -33,3 +33,11 @@ export function formatDateOnlyString(date: string): string {
     day: "numeric",
   });
 }
+
+export function beautifyDate(date: Date | string): string {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(date))
+}

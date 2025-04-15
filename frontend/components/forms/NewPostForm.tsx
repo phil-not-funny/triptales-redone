@@ -13,6 +13,7 @@ import PostService from "@/lib/services/postService";
 import { DayForm } from "./DayForm";
 import { useDays } from "@/hooks/useDays";
 import { FormInput } from "../low/FormInput";
+import { beautifyDate } from "@/lib/utils";
 
 const formSchema = z
   .object({
@@ -112,11 +113,7 @@ export function NewPostForm() {
                 >
                   <PenBox className="h-4 w-4" /> Day {idx + 1}{" "}
                   <span className="text-gray-500">
-                    {new Intl.DateTimeFormat("en-US", {
-                      month: "long",
-                      day: "numeric",
-                      year: "numeric",
-                    }).format(new Date(day.date))}
+                    {beautifyDate(day.date)}
                   </span>
                 </DayForm>
               ))}
