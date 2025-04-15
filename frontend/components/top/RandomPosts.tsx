@@ -1,7 +1,7 @@
 "use client";
 
 import PostService from "@/lib/services/postService";
-import { PostResponse } from "@/types/RequestTypes";
+import { PostResponse, PostResponseSmall } from "@/types/RequestTypes";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import Post from "../low/Post";
@@ -9,7 +9,7 @@ import Loading from "./Loading";
 import Sorry from "../low/Sorry";
 
 const RandomPosts: React.FC = () => {
-  const [posts, setPosts] = useState<PostResponse[]>([]);
+  const [posts, setPosts] = useState<PostResponseSmall[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const init = async () => {
@@ -28,7 +28,7 @@ const RandomPosts: React.FC = () => {
   return loading ? (
     <Loading />
   ) : posts.length ? (
-    posts.map((p) => <Post key={p.guid} post={p} />)
+    posts.map((p) => <Post key={p.guid} post={p} embed={true} />)
   ) : (
     <Sorry>We were unable to fetch posts from our server.</Sorry>
   );

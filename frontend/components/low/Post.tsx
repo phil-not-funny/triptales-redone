@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "../ui/card";
 import { useRouter } from "next/navigation";
-import { PostResponse } from "@/types/RequestTypes";
+import { PostResponse, PostResponseSmall } from "@/types/RequestTypes";
 import { beautifyDate, formatDateString } from "@/lib/utils";
 import Link from "next/link";
 import MDEditor from "@uiw/react-md-editor";
@@ -22,12 +22,17 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 
-interface PostProps {
-  post: PostResponse;
-  embed?: boolean;
+interface EmbeddedPostProps { // props when embed is true
+  post: PostResponseSmall;
+  embed: true;
 }
+interface FullPostProps { // props when embed is false
+  post: PostResponse;
+  embed: false;
+}
+type PostProps = EmbeddedPostProps | FullPostProps;
 
-const Post: React.FC<PostProps> = ({ post, embed = true }) => {
+const Post: React.FC<PostProps> = ({ post, embed }) => {
   const { loggedIn } = useUser();
   const router = useRouter();
 
