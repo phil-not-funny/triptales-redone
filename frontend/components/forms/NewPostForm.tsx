@@ -15,7 +15,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Loader2, Plus } from "lucide-react";
 import { DatePicker } from "../ui/datepicker";
 import PostService from "@/lib/services/postService";
@@ -145,17 +145,17 @@ function NewDayForm({
     </Dialog>
   );
 
-  async function onSubmit(values: z.infer<typeof daysFormSchema>) {
+  async function onSubmit({title, description, date}: z.infer<typeof daysFormSchema>) {
+    //values;
     setDays((prev) => [
       ...prev,
       {
-        title: values.title,
-        description: values.description,
-        date: values.date.toLocaleDateString(),
+        title,
+        description,
+        date: date.toLocaleDateString(),
       },
     ]);
     toast.success("Day added successfully!");
-    console.log(days);
   }
 }
 
@@ -170,6 +170,10 @@ export function NewPostForm() {
       description: "",
     },
   });
+
+  useEffect(() => {
+    console.log(days);
+  }, [days]);
 
   return (
     <div className="w-full space-y-3">
