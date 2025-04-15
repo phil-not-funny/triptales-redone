@@ -18,6 +18,7 @@ import userService from "@/lib/services/userService";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { FormInput } from "../low/FormInput";
 
 const formSchema = z
   .object({
@@ -72,70 +73,37 @@ export function RegisterForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-3">
-        <FormField
+        <FormInput
           control={form.control}
           name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Username"
+          required
         />
-        <FormField
+        <FormInput
           control={form.control}
           name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input type="password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Password"
+          textType="password"
+          required
         />
-        <FormField
+        <FormInput
           control={form.control}
           name="confirmPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Match Password</FormLabel>
-              <FormControl>
-                <Input type="password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Match Password"
+          required
         />
-        <FormField
+        <FormInput
           control={form.control}
           name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email Address</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Email"
+          textType="email"
+          required
         />
-        <FormField
+        <FormInput
           control={form.control}
           name="displayName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Displayed Name</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Display Name"
+          required
         />
         <Button type="submit" disabled={loading}>
           {loading && <Loader2 className="animate-spin" />} Create new Account

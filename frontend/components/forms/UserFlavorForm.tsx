@@ -19,6 +19,7 @@ import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Textarea } from "../ui/textarea";
 import { UserDetailedResponse } from "@/types/RequestTypes";
+import { FormInput } from "../low/FormInput";
 
 const formSchema = z.object({
   username: z
@@ -53,70 +54,34 @@ export function UserFlavorForm({ user }: { user: UserDetailedResponse }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-3">
-        <FormField
+        <FormInput
           control={form.control}
           name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Username"
+          required
         />
-        <FormField
+        <FormInput
           control={form.control}
           name="displayName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Display Name</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Display Name"
+          required
         />
-        <FormField
+        <FormInput
           control={form.control}
           name="placeOfResidence"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Place of Residence</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Place of Residence"
         />
-        <FormField
+        <FormInput
           control={form.control}
           name="favoriteDestination"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Favorite Destination</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Favorite Destination"
         />
-        <FormField
+        <FormInput
           control={form.control}
           name="biography"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Biography</FormLabel>
-              <FormControl>
-                <Textarea className="resize-none" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Biography"
+          type="textarea"
+          className="resize-none"
         />
         <Button type="submit" disabled={loading}>
           {loading && <Loader2 className="animate-spin" />} Submit

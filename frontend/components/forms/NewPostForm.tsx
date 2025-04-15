@@ -70,12 +70,13 @@ export function NewPostForm() {
     <div className="w-full space-y-3">
       <Form {...form}>
         <form onSubmit={handleSubmit} className="w-full space-y-3">
-          <FormInput control={form.control} name="title" label="Title" />
+          <FormInput control={form.control} name="title" label="Title" required />
           <FormInput
             control={form.control}
             name="description"
             label="Description / Content"
             type="markdown"
+            required
           />
           <div className="flex flex-col items-center md:flex-row md:justify-between gap-2">
             <FormInput
@@ -83,12 +84,14 @@ export function NewPostForm() {
               name="startDate"
               label="Start Date"
               type="date"
+              required
             />
             <FormInput
               control={form.control}
               name="endDate"
               label="End Date"
               type="date"
+              required
             />
           </div>
           <DayForm onSubmit={addDay} />

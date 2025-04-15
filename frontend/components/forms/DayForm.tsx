@@ -77,17 +77,24 @@ export function DayForm({
             }}
             className="w-full space-y-3"
           >
-            <FormInput control={form.control} name="title" label="Title" />
+            <FormInput
+              control={form.control}
+              name="title"
+              label="Title"
+              required
+            />
             <FormInput
               control={form.control}
               name="description"
               label="Description"
+              required
             />
             <FormInput
               control={form.control}
               name="date"
               label="Date"
               type="date"
+              required
             />
             <DialogFooter
               className={

@@ -9,13 +9,19 @@ import {
 } from "../ui/form";
 import { DatePicker } from "../ui/datepicker";
 import { Input } from "../ui/input";
+import { HTMLInputTypeAttribute } from "react";
+import { Textarea } from "../ui/textarea";
+import { cn } from "@/lib/utils";
 
 type FormInputProps<T extends FieldValues> = {
   control: Control<T>;
   name: Path<T>;
   label: string;
-  type?: "text" | "date" | "markdown";
+  type?: "text" | "date" | "markdown" | "textarea";
   placeholder?: string;
+  textType?: HTMLInputTypeAttribute | undefined;
+  required?: boolean;
+  className?: string;
 };
 
 export function FormInput<T extends FieldValues>({
@@ -24,6 +30,9 @@ export function FormInput<T extends FieldValues>({
   label,
   type = "text",
   placeholder,
+  required = false,
+  textType,
+  className,
 }: FormInputProps<T>) {
   return (
     <FormField
@@ -31,7 +40,10 @@ export function FormInput<T extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>{label}</FormLabel>
+          <FormLabel className="!gap-1">
+            {label}
+            {required && <span className="font-semibold text-red-400">*</span>}
+          </FormLabel>
           <FormControl>
             {type === "date" ? (
               <DatePicker {...field}>Pick a Date</DatePicker>
@@ -40,13 +52,24 @@ export function FormInput<T extends FieldValues>({
                 commands={commands
                   .getCommands()
                   .filter((i) => i.name !== "image" && i.name !== "comment")}
-                className="leading-relaxed text-gray-700"
+                className={cn("leading-relaxed text-gray-700", className)}
                 data-color-mode="light"
                 {...field}
               />
-            ) : (
-              <Input {...field} placeholder={placeholder} />
-            )}
+            ) : type === "text" ? (
+              <Input
+                type={textType}
+                {...field}
+                placeholder={placeholder}
+                className={className}
+              />
+            ) : type === "textarea" ? (
+              <Textarea
+                {...field}
+                placeholder={placeholder}
+                className={className}
+              />
+            ) : null}
           </FormControl>
           <FormMessage />
         </FormItem>
