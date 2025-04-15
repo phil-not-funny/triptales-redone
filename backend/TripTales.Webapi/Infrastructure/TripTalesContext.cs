@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Bogus;
 using Microsoft.EntityFrameworkCore;
@@ -85,7 +86,26 @@ namespace Triptales.Webapi.Infrastructure
                 f.Lorem.Locale = "de";
                 var date = f.Date.Between(DateTime.UtcNow.AddDays(-20), DateTime.UtcNow.AddDays(-1));
                 var date2 = f.Date.Between(date, DateTime.UtcNow);
-                var post = new Post(f.Lorem.Sentence(5), f.Lorem.Sentence(15), f.PickRandom(users), date, date);
+
+                var numberOfDays = f.Random.Int(1, 5);
+                var days = new List<Post.Day>();
+
+                for (int i = 0; i < numberOfDays; i++)
+                {
+                    var totalDaysDifference = (date2 - date).Days;
+                    var dayOffset = i * (totalDaysDifference / Math.Max(1, numberOfDays - 1)); // Distribute days evenly
+                    var dayDate = date.AddDays(dayOffset);
+
+                    var day = new Post.Day(
+                        title: f.Lorem.Sentence(5, 2),
+                        description: f.Lorem.Sentence(25, 4),
+                        date: DateOnly.FromDateTime(dayDate)
+                    );
+
+                    days.Add(day);
+                }
+
+                var post = new Post(f.Lorem.Sentence(7, 2), f.Lorem.Sentence(35, 5), f.PickRandom(users), date, date, days);
                 return post;
             }).Generate(10).ToList();
             Posts.AddRange(posts);
