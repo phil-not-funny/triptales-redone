@@ -7,7 +7,7 @@ import { Form } from "../ui/form";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Loader2, PenBox } from "lucide-react";
 import PostService from "@/lib/services/postService";
 import { DayForm } from "./DayForm";
@@ -43,10 +43,6 @@ export function NewPostForm() {
     resolver: zodResolver(formSchema),
     defaultValues: { title: "", description: "" },
   });
-
-  useEffect(() => {
-    console.log(days);
-  }, [days]);
 
   const handleSubmit = form.handleSubmit(async (values) => {
     setLoading(true);
