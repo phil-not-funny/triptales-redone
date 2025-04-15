@@ -1,7 +1,7 @@
 "use client";
 
 import PostService from "@/lib/services/postService";
-import { PostResponse, PostResponseSmall } from "@/types/RequestTypes";
+import { PostResponseSmall } from "@/types/RequestTypes";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import Post from "../low/Post";

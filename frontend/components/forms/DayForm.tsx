@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Form } from "../ui/form";
 import { Button } from "../ui/button";
-import { Plus, PenBox } from "lucide-react";
+import { Plus } from "lucide-react";
 import {
   Dialog,
   DialogContent,

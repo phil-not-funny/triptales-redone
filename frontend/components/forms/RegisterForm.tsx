@@ -4,16 +4,8 @@ import { Loader2 } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
+import { Form } from "../ui/form";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
 import userService from "@/lib/services/userService";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
