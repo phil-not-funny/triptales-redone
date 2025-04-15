@@ -24,7 +24,7 @@ namespace Triptales.Webapi.Services
                 user.Biography,
                 user.PlaceOfResidence,
                 user.FavoriteDestination,
-                user.MemberSince.ToString(),
+                user.MemberSince.ToString("yyyy.MM.dd"),
                 _userService.GetFollowers(user.Guid).Count,
                 user.ProfilePicture,
                 user.BannerImage,
@@ -46,9 +46,9 @@ namespace Triptales.Webapi.Services
                 a.Title,
                 a.Description,
                 ConvertToPublicSmall(a.Author),
-                a.StartDate.ToString(),
-                a.EndDate.ToString(),
-                a.CreatedAt.ToString(),
+                a.StartDate.ToString("yyyy.MM.dd"),
+                a.EndDate.ToString("yyyy.MM.dd"),
+                a.CreatedAt.ToString("yyyy.MM.dd"),
                 a.Likes.Count);
 
         public PostDto ConvertToPostDto(Post a) => new(
@@ -56,9 +56,9 @@ namespace Triptales.Webapi.Services
                 a.Title,
                 a.Description,
                 ConvertToPublicSmall(a.Author),
-                a.StartDate.ToString(),
-                a.EndDate.ToString(),
-                a.CreatedAt.ToString(),
+                a.StartDate.ToString("yyyy.MM.dd"),
+                a.EndDate.ToString("yyyy.MM.dd"),
+                a.CreatedAt.ToString("yyyy.MM.dd"),
                 a.Likes.Count,
                 a.Days);
     }

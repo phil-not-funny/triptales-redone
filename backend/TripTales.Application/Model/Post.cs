@@ -26,7 +26,7 @@ namespace Triptales.Application.Model
         public string Title { get; set; }
         public string Description { get; set; }
         public User Author { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateOnly CreatedAt { get; set; } = DateOnly.FromDateTime(DateTime.Now);
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }
         public List<User> Likes { get; } = new();
