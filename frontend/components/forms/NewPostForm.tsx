@@ -77,7 +77,7 @@ export function NewPostForm() {
             label="Description / Content"
             type="markdown"
           />
-          <div className="flex flex-row justify-between gap-2">
+          <div className="flex flex-col items-center md:flex-row md:justify-between gap-2">
             <FormInput
               control={form.control}
               name="startDate"
