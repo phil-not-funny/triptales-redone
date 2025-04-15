@@ -52,8 +52,8 @@ export function NewPostForm() {
     const response = await PostService.createPost({
       title: values.title,
       description: values.description,
-      startDate: values.startDate.toISOString(),
-      endDate: values.endDate.toISOString(),
+      startDate: values.startDate.toISOString().split("T")[0],
+      endDate: values.endDate.toISOString().split("T")[0],
       days: getDaysForApi(),
     });
     if (response) {
@@ -90,38 +90,44 @@ export function NewPostForm() {
               type="date"
             />
           </div>
+          <DayForm onSubmit={addDay} />
+
+          {days.length > 0 && (
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+              {days.map((day, idx) => (
+                <DayForm
+                  key={day.uuid}
+                  defaultValues={{
+                    date: new Date(day.date),
+                    title: day.title,
+                    description: day.description,
+                  }}
+                  onSubmit={(values) => editDay(idx, values)}
+                  headers={{
+                    title: `Edit Day ${idx + 1}`,
+                    description: "You're about to edit a day in your post.",
+                  }}
+                  removeBtn
+                  onRemove={() => removeDay(idx)}
+                >
+                  <PenBox className="h-4 w-4" /> Day {idx + 1}{" "}
+                  <span className="text-gray-500">
+                    {new Intl.DateTimeFormat("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    }).format(new Date(day.date))}
+                  </span>
+                </DayForm>
+              ))}
+            </div>
+          )}
           <Button type="submit" disabled={loading}>
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Submit
           </Button>
         </form>
       </Form>
-
-      <DayForm onSubmit={addDay} />
-
-      {days.length > 0 && (
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          {days.map((day, idx) => (
-            <DayForm
-              key={day.uuid}
-              defaultValues={{
-                date: new Date(day.date),
-                title: day.title,
-                description: day.description,
-              }}
-              onSubmit={(values) => editDay(idx, values)}
-              headers={{
-                title: `Edit Day ${idx + 1}`,
-                description: "You're about to edit a day in your post.",
-              }}
-              removeBtn
-              onRemove={() => removeDay(idx)}
-            >
-              <PenBox className="h-4 w-4" /> Day {idx + 1}
-            </DayForm>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

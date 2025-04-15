@@ -69,7 +69,14 @@ export function DayForm({
           <DialogDescription>{headers.description}</DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={handleSubmit} className="w-full space-y-3">
+          <form
+            onSubmit={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              handleSubmit();
+            }}
+            className="w-full space-y-3"
+          >
             <FormInput control={form.control} name="title" label="Title" />
             <FormInput
               control={form.control}
@@ -93,6 +100,7 @@ export function DayForm({
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
+                    e.preventDefault();
                     onRemove?.();
                   }}
                 >

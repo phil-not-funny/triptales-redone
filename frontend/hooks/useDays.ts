@@ -16,11 +16,27 @@ type DayValues = {
 export function useDays() {
   const [days, setDays] = useState<NCreatePostRequestDay[]>([]);
 
+  const sortDaysByDate = (
+    daysArray: NCreatePostRequestDay[],
+  ): NCreatePostRequestDay[] => {
+    return [...daysArray].sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return dateA.getTime() - dateB.getTime();
+    });
+  };
+
   const addDay = ({ title, description, date }: DayValues) => {
-    setDays((prev) => [
-      ...prev,
-      { title, description, date: date.toLocaleDateString(), uuid: uuidv4() },
-    ]);
+    setDays((prev) => {
+      const newDay = {
+        title,
+        description,
+        date: date.toISOString().split("T")[0],
+        uuid: uuidv4(),
+      };
+      const updatedDays = [...prev, newDay];
+      return sortDaysByDate(updatedDays);
+    });
     toast.success("Day added successfully!");
   };
 
@@ -30,10 +46,10 @@ export function useDays() {
       newDays[index] = {
         title,
         description,
-        date: date.toLocaleDateString(),
+        date: date.toISOString().split("T")[0],
         uuid: newDays[index].uuid,
       };
-      return newDays;
+      return sortDaysByDate(newDays);
     });
   };
 
