@@ -33,35 +33,7 @@ namespace Triptales.Repository
             await _db.Posts.Include(a => a.Author).Include(a => a.Likes).ToListAsync();
 
         public async Task<Post?> GetFromGuid(Guid guid) => 
-            await _db.Posts.Include(a => a.Author).Include(a => a.Likes).FirstAsync(a => a.Guid == guid);
-
-        public async Task<PostDto?> GetFromGuidToPostDto(Guid guid)
-        {
-            var post = await _db.Posts
-                .Include(p => p.Author)
-                .Include(p => p.Likes)
-                .FirstOrDefaultAsync(p => p.Guid == guid);
-
-            if (post is null)
-                return null;
-
-            return new PostDto(
-                post.Guid,
-                post.Title,
-                post.Description,
-                new UserPublicSmallDto(
-                    post.Author.Guid,
-                    post.Author.Username,
-                    post.Author.DisplayName,
-                    post.Author.Verified
-                ),
-                post.StartDate.ToString(),
-                post.EndDate.ToString(),
-                post.CreatedAt.ToString(),
-                post.Likes.Count,
-                post.Days
-            );
-        }
+            await _db.Posts.Include(a => a.Author).Include(a => a.Likes).FirstOrDefaultAsync(a => a.Guid == guid);
 
         public async Task<bool> Insert(Post entity)
         {

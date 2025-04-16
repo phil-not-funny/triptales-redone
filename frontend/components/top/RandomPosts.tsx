@@ -14,7 +14,6 @@ const RandomPosts: React.FC = () => {
 
   const init = async () => {
     const response = await PostService.getRandom();
-    console.log(response);
 
     if (response.success) setPosts(response.data);
     else toast.error("Failed to Fetch Posts from Server!");

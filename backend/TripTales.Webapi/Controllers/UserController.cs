@@ -129,7 +129,7 @@ namespace Triptales.Webapi.Controllers
             if (requested is null)
                 return NotFound();
 
-            if (requested.Following.Any(r => r.Guid == authenticated.Guid))
+            if (authenticated.Following.Any(r => r.Guid == guid))
                 authenticated.Following.Remove(requested);
             else
                 authenticated.Following.Add(requested);

@@ -56,7 +56,7 @@ export type UserDetailedResponse = {
   memberSince: string;
   followerCount: number;
   posts: PostResponseSmall[];
-  follows: boolean;
+  userFollowing: boolean;
 };
 
 export const isUserDetailedResponse = (u: any): u is UserDetailedResponse =>
@@ -71,7 +71,7 @@ export const isUserDetailedResponse = (u: any): u is UserDetailedResponse =>
   "followerCount" in u &&
   Array.isArray(u.posts) &&
   u.posts.every(isPostResponseSmall) &&
-  "follows" in u;
+  "userFollowing" in u;
 
 export type UserPutFlavorRequest = {
   username?: string;
@@ -93,6 +93,7 @@ export type PostResponse = {
   likesCount: number;
   guid: string;
   days: PostDay[];
+  userLiked: boolean;
 };
 
 export type PostResponseSmall = {
@@ -104,6 +105,7 @@ export type PostResponseSmall = {
   endDate: string;
   likesCount: number;
   guid: string;
+  userLiked: boolean;
 };
 
 export const isPostResponse = (p: any): p is PostResponse =>
@@ -116,7 +118,8 @@ export const isPostResponse = (p: any): p is PostResponse =>
   "endDate" in p &&
   "likesCount" in p &&
   "days" in p &&
-  Array.isArray(p.days);
+  Array.isArray(p.days) &&
+  "userLiked" in p;
 
 export const isPostResponseSmall = (p: any): p is PostResponse =>
   "guid" in p &&
@@ -126,7 +129,8 @@ export const isPostResponseSmall = (p: any): p is PostResponse =>
   "createdAt" in p &&
   "startDate" in p &&
   "endDate" in p &&
-  "likesCount" in p;
+  "likesCount" in p &&
+  "userLiked" in p;
 
 export type CreatePostRequest = {
   title: string;
