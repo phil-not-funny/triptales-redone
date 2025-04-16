@@ -51,9 +51,10 @@ const Post: React.FC<PostProps> = ({ post, embed }) => {
   const handleLike = async () => {
     const response = await PostService.likePost(post.guid);
     if (response) {
-      setLiked((prev) => !prev);
-      setLikesCount((prev) => (liked ? prev - 1 : prev + 1));
-      toast.success(`${liked ? "Unliked" : "Liked"} the post successfully!`);
+      const newLiked = !liked;
+      setLiked(newLiked);
+      setLikesCount((prev) => (newLiked ? prev + 1 : prev - 1));
+      toast.success(`${newLiked ? "Liked" : "Unliked"} the post successfully!`);
     } else {
       toast.error("Failed to like the post. Please try again later.");
     }
