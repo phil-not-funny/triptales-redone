@@ -49,7 +49,7 @@ namespace Triptales.Controllers
             var authenticated = await getAuthenticatedOrDefault();
             return Ok((await _repository.GetAll()).Select(a => _modelConversions.ConvertToPostSmallDto(
                 a,
-                authenticated is not null && authenticated.LikedPosts.Any(p => p.Guid == a.Guid))).ToList());
+                authenticated is not null && a.Likes.Any(u => u.Guid == authenticated.Guid))).ToList());
         }
 
         [HttpGet("{guid:Guid}")]
@@ -58,7 +58,7 @@ namespace Triptales.Controllers
             var authenticated = await getAuthenticatedOrDefault();
             return await _repository.GetFromGuid(guid) is Post post ? Ok(_modelConversions.ConvertToPostDto(
                 post, 
-                authenticated is not null && authenticated.LikedPosts.Any(p => p.Guid == post.Guid)
+                authenticated is not null && post.Likes.Any(u => u.Guid == authenticated.Guid)
                 )) : BadRequest("Post not found");
         }
 
@@ -100,7 +100,7 @@ namespace Triptales.Controllers
                 .Select(p =>
                     _modelConversions.ConvertToPostSmallDto(
                         p,
-                        authenticated is not null && authenticated.LikedPosts.Any(a => a.Guid == p.Guid))).ToList();
+                        authenticated is not null && p.Likes.Any(u => u.Guid == authenticated.Guid))).ToList();
             return Ok(take);
         }
 
@@ -116,10 +116,10 @@ namespace Triptales.Controllers
             if (requested is null)
                 return NotFound();
 
-            if (authenticated.LikedPosts.Any(p => p.Guid == guid))
-                authenticated.LikedPosts.Remove(requested);
+            if (requested.Likes.Any(u => u.Guid == authenticated.Guid))
+                requested.Likes.Remove(authenticated);
             else
-                authenticated.LikedPosts.Add(requested);
+                requested.Likes.Add(authenticated);
             await _db.SaveChangesAsync();
             return Ok();
         }

@@ -12,6 +12,6 @@ namespace Triptales.Application.Dtos
                           string EndDate,
                           string CreatedAt,
                           int LikesCount,
-                          List<Post.Day> Days,
+                          List<PostDayDto> Days,
                           bool UserLiked);
 }

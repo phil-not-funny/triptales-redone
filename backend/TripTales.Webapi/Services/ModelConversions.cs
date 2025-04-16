@@ -61,7 +61,7 @@ namespace Triptales.Webapi.Services
                 a.EndDate.ToString(),
                 a.CreatedAt.ToString(),
                 a.Likes.Count,
-                a.Days,
+                a.Days.Select(d => new PostDayDto(d.Title, d.Description, d.Date.ToString())).ToList(),
                 userLiked);
     }
 }
