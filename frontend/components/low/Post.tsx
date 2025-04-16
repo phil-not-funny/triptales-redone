@@ -21,18 +21,26 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
+import { useState } from "react";
+import PostService from "@/lib/services/postService";
+import { toast } from "sonner";
 
-interface EmbeddedPostProps { // props when embed is true
+interface EmbeddedPostProps {
+  // props when embed is true
   post: PostResponseSmall;
   embed: true;
 }
-interface FullPostProps { // props when embed is false
+interface FullPostProps {
+  // props when embed is false
   post: PostResponse;
   embed: false;
 }
 type PostProps = EmbeddedPostProps | FullPostProps;
 
 const Post: React.FC<PostProps> = ({ post, embed }) => {
+  const [liked, setLiked] = useState<boolean>(post.userLiked);
+  const [likesCount, setLikesCount] = useState<number>(post.likesCount);
+
   const { loggedIn } = useUser();
   const router = useRouter();
 
@@ -40,8 +48,16 @@ const Post: React.FC<PostProps> = ({ post, embed }) => {
     router.push(`/post/${post.guid}`);
   };
 
-  const handleLike = () => {
-    // implement like functionality
+  const handleLike = async () => {
+    const response = await PostService.likePost(post.guid);
+    if (response) {
+      const newLiked = !liked;
+      setLiked(newLiked);
+      setLikesCount((prev) => (newLiked ? prev + 1 : prev - 1));
+      toast.success(`${newLiked ? "Liked" : "Unliked"} the post successfully!`);
+    } else {
+      toast.error("Failed to like the post. Please try again later.");
+    }
   };
 
   return (
@@ -117,8 +133,8 @@ const Post: React.FC<PostProps> = ({ post, embed }) => {
           className="text-gray-600 transition-colors duration-200 hover:text-rose-500"
           onClick={handleLike}
         >
-          <Heart />
-          {post.likesCount} Likes
+          <Heart className={liked ? "fill-red-500 text-red-500" : undefined} />
+          {likesCount} Like{likesCount !== 1 ? "s" : ""}
         </Button>
         {embed ? (
           <Button

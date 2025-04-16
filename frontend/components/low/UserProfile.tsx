@@ -21,7 +21,7 @@ const UserProfileCardContent: React.FC<UserProfileProps> = ({ user }) => {
   const [followerCount, setFollowerCount] = useState<number>(
     user.followerCount,
   );
-  const [following, setFollowing] = useState<boolean>(user.follows);
+  const [following, setFollowing] = useState<boolean>(user.userFollowing);
 
   const handleFollow = async () => {
     const success = await UserService.follow(user.guid);

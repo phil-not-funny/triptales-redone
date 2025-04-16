@@ -15,7 +15,7 @@ namespace Triptales.Webapi.Services
             _userService = userService;
         }
 
-        public UserDetailedDto ConvertToDetailed(User user, bool follows = false) =>
+        public UserDetailedDto ConvertToDetailed(User user, bool userFollowing = false) =>
             new(
                 user.Guid,
                 user.Username,
@@ -29,7 +29,7 @@ namespace Triptales.Webapi.Services
                 user.ProfilePicture,
                 user.BannerImage,
                 user.Posts.Count > 0 ? user.Posts.Select(p => ConvertToPostSmallDto(p)).ToList() : new(),
-                follows);
+                userFollowing);
 
         public UserPublicSmallDto ConvertToPublicSmall(User user) =>
             new(user.Guid, user.Username, user.DisplayName, user.Verified);
@@ -41,17 +41,7 @@ namespace Triptales.Webapi.Services
         public UserPrivateDto ConvertToPrivate(User user) =>
             new(user.Guid, user.Username, user.DisplayName, user.Email);
 
-        public PostSmallDto ConvertToPostSmallDto(Post a) => new(
-                a.Guid,
-                a.Title,
-                a.Description,
-                ConvertToPublicSmall(a.Author),
-                a.StartDate.ToString(),
-                a.EndDate.ToString(),
-                a.CreatedAt.ToString(),
-                a.Likes.Count);
-
-        public PostDto ConvertToPostDto(Post a) => new(
+        public PostSmallDto ConvertToPostSmallDto(Post a, bool userLiked = false) => new(
                 a.Guid,
                 a.Title,
                 a.Description,
@@ -60,6 +50,18 @@ namespace Triptales.Webapi.Services
                 a.EndDate.ToString(),
                 a.CreatedAt.ToString(),
                 a.Likes.Count,
-                a.Days);
+                userLiked);
+
+        public PostDto ConvertToPostDto(Post a, bool userLiked = false) => new(
+                a.Guid,
+                a.Title,
+                a.Description,
+                ConvertToPublicSmall(a.Author),
+                a.StartDate.ToString(),
+                a.EndDate.ToString(),
+                a.CreatedAt.ToString(),
+                a.Likes.Count,
+                a.Days,
+                userLiked);
     }
 }

@@ -15,5 +15,5 @@ namespace Triptales.Application.Dtos
         string? ProfilePicture,
         string? BannerImage,
         List<PostSmallDto> Posts,
-        bool? Follows = false);
+        bool? UserFollowing = false);
 }

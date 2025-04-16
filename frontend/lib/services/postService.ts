@@ -51,6 +51,8 @@ type GetPostClientResponse = {
 const getPost = async (guid: string): Promise<GetPostClientResponse> => {
   try {
     const response = await api.get<PostResponse>(`/Post/${guid}`);
+    console.log(response.data);
+    
     if (response.status === 200 && isPostResponse(response.data))
       return { success: true, data: response.data };
     else throw new Error("Invalid response structure");
@@ -59,6 +61,16 @@ const getPost = async (guid: string): Promise<GetPostClientResponse> => {
   }
 };
 
-const PostService = { getRandom, createPost, getPost };
+const likePost = async (guid: string): Promise<boolean> => {
+  try {
+    const response = await api.post(`/Post/like/${guid}`);
+    if (response.status === 200) return true;
+    else return false;
+  } catch {
+    return false;
+  }
+}
+
+const PostService = { getRandom, createPost, getPost, likePost };
 
 export default PostService;

@@ -44,12 +44,23 @@ namespace Triptales.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<PostSmallDto>>> GetPosts() =>
-            Ok((await _repository.GetAll()).Select(a => _modelConversions.ConvertToPostSmallDto(a)).ToList());
+        public async Task<ActionResult<List<PostSmallDto>>> GetPosts()
+        {
+            var authenticated = await getAuthenticatedOrDefault();
+            return Ok((await _repository.GetAll()).Select(a => _modelConversions.ConvertToPostSmallDto(
+                a,
+                authenticated is not null && authenticated.LikedPosts.Any(p => p.Guid == a.Guid))).ToList());
+        }
 
         [HttpGet("{guid:Guid}")]
-        public async Task<ActionResult<PostDto>> GetPost(Guid guid) =>
-            await _repository.GetFromGuidToPostDto(guid) is PostDto post ? Ok(post) : BadRequest("Post not found");
+        public async Task<ActionResult<PostDto>> GetPost(Guid guid)
+        {
+            var authenticated = await getAuthenticatedOrDefault();
+            return await _repository.GetFromGuid(guid) is Post post ? Ok(_modelConversions.ConvertToPostDto(
+                post, 
+                authenticated is not null && authenticated.LikedPosts.Any(p => p.Guid == post.Guid)
+                )) : BadRequest("Post not found");
+        }
 
         [HttpPost]
         [Authorize]
@@ -78,12 +89,39 @@ namespace Triptales.Controllers
         [HttpGet("random")]
         public async Task<ActionResult<List<PostSmallDto>>> GetRandom([FromQuery] int size = 10)
         {
+            if (size <= 0) return BadRequest("Size must be greater than 0");
+
+            var authenticated = await getAuthenticatedOrDefault();
+
             Random rand = new Random();
             var take = (await _db.Posts.Include(a => a.Author)
                 .ToListAsync()).OrderBy(p => rand.Next())
                 .Take(size)
-                .Select(p => _modelConversions.ConvertToPostSmallDto(p)).ToList();
+                .Select(p =>
+                    _modelConversions.ConvertToPostSmallDto(
+                        p,
+                        authenticated is not null && authenticated.LikedPosts.Any(a => a.Guid == p.Guid))).ToList();
             return Ok(take);
+        }
+
+        [HttpPost("like/{guid:Guid}")]
+        [Authorize]
+        public async Task<IActionResult> LikePost(Guid guid)
+        {
+            var authenticated = await getAuthenticatedOrDefault();
+            if (authenticated is null)
+                return Unauthorized();
+
+            var requested = await _repository.GetFromGuid(guid);
+            if (requested is null)
+                return NotFound();
+
+            if (authenticated.LikedPosts.Any(p => p.Guid == guid))
+                authenticated.LikedPosts.Remove(requested);
+            else
+                authenticated.LikedPosts.Add(requested);
+            await _db.SaveChangesAsync();
+            return Ok();
         }
     }
 }
