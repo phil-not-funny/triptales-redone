@@ -24,7 +24,7 @@ namespace Triptales.Webapi.Services
                 user.Biography,
                 user.PlaceOfResidence,
                 user.FavoriteDestination,
-                user.MemberSince.ToString("yyyy.MM.dd"),
+                user.MemberSince.ToString(),
                 _userService.GetFollowers(user.Guid).Count,
                 user.ProfilePicture,
                 user.BannerImage,
