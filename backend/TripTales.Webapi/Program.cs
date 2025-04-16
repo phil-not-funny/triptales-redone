@@ -10,8 +10,16 @@ using Triptales.Webapi.Infrastructure;
 using Triptales.Webapi.Services;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var cultureInfo = new CultureInfo("de-AT");
+cultureInfo.DateTimeFormat.ShortDatePattern = "yyyy.MM.dd";
+cultureInfo.DateTimeFormat.DateSeparator = ".";
+
+CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
