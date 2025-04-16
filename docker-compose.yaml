@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  backend:
+    image: ghcr.io/bastimagorangen/triptales-backend:latest
+    ports:
+      - "5001:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+
+    restart: unless-stopped
+  frontend:
+    image: ghcr.io/bastimagorangen/triptales-frontend:latest
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
