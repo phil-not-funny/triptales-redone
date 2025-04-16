@@ -46,9 +46,9 @@ namespace Triptales.Webapi.Services
                 a.Title,
                 a.Description,
                 ConvertToPublicSmall(a.Author),
-                a.StartDate.ToString("yyyy.MM.dd"),
-                a.EndDate.ToString("yyyy.MM.dd"),
-                a.CreatedAt.ToString("yyyy.MM.dd"),
+                a.StartDate.ToString(),
+                a.EndDate.ToString(),
+                a.CreatedAt.ToString(),
                 a.Likes.Count);
 
         public PostDto ConvertToPostDto(Post a) => new(
@@ -56,9 +56,9 @@ namespace Triptales.Webapi.Services
                 a.Title,
                 a.Description,
                 ConvertToPublicSmall(a.Author),
-                a.StartDate.ToString("yyyy.MM.dd"),
-                a.EndDate.ToString("yyyy.MM.dd"),
-                a.CreatedAt.ToString("yyyy.MM.dd"),
+                a.StartDate.ToString(),
+                a.EndDate.ToString(),
+                a.CreatedAt.ToString(),
                 a.Likes.Count,
                 a.Days);
     }
