@@ -82,7 +82,7 @@ namespace Triptales.Controllers
             var take = (await _db.Posts.Include(a => a.Author)
                 .ToListAsync()).OrderBy(p => rand.Next())
                 .Take(size)
-                .Select(p => _modelConversions.ConvertToPostDto(p)).ToList();
+                .Select(p => _modelConversions.ConvertToPostSmallDto(p)).ToList();
             return Ok(take);
         }
     }

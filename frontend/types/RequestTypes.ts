@@ -1,3 +1,5 @@
+import { PostDay } from "./ModelTypes";
+
 export type LoginRequest = {
   username: string;
   password: string;
@@ -53,7 +55,7 @@ export type UserDetailedResponse = {
   favoriteDestination?: string;
   memberSince: string;
   followerCount: number;
-  posts: PostResponse[];
+  posts: PostResponseSmall[];
   follows: boolean;
 };
 
@@ -68,7 +70,7 @@ export const isUserDetailedResponse = (u: any): u is UserDetailedResponse =>
   "memberSince" in u &&
   "followerCount" in u &&
   Array.isArray(u.posts) &&
-  u.posts.every(isPostResponse) &&
+  u.posts.every(isPostResponseSmall) &&
   "follows" in u;
 
 export type UserPutFlavorRequest = {
@@ -90,9 +92,33 @@ export type PostResponse = {
   endDate: string;
   likesCount: number;
   guid: string;
+  days: PostDay[];
+};
+
+export type PostResponseSmall = {
+  title: string;
+  description: string;
+  author: UserPublicResponseSmall;
+  createdAt: string;
+  startDate: string;
+  endDate: string;
+  likesCount: number;
+  guid: string;
 };
 
 export const isPostResponse = (p: any): p is PostResponse =>
+  "guid" in p &&
+  "title" in p &&
+  "description" in p &&
+  "author" in p &&
+  "createdAt" in p &&
+  "startDate" in p &&
+  "endDate" in p &&
+  "likesCount" in p &&
+  "days" in p &&
+  Array.isArray(p.days);
+
+export const isPostResponseSmall = (p: any): p is PostResponse =>
   "guid" in p &&
   "title" in p &&
   "description" in p &&
@@ -107,4 +133,11 @@ export type CreatePostRequest = {
   description: string;
   startDate: string;
   endDate: string;
+  days: CreatePostRequestDay[] | [];
 };
+
+export type CreatePostRequestDay = {
+  title: string;
+  description: string;
+  date: string;
+}

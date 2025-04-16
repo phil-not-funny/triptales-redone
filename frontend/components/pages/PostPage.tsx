@@ -24,7 +24,7 @@ const PostPage: React.FC<PostPageProps> = ({ guid }) => {
 
   useEffect(() => {
     init();
-  });
+  }, []);
 
   return loading ? (
     <Loading />

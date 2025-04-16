@@ -11,17 +11,28 @@ import {
   CardTitle,
 } from "../ui/card";
 import { useRouter } from "next/navigation";
-import { PostResponse } from "@/types/RequestTypes";
-import { formatDateString } from "@/lib/utils";
+import { PostResponse, PostResponseSmall } from "@/types/RequestTypes";
+import { beautifyDate, formatDateString } from "@/lib/utils";
 import Link from "next/link";
 import MDEditor from "@uiw/react-md-editor";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../ui/accordion";
 
-interface PostProps {
-  post: PostResponse;
-  embed?: boolean;
+interface EmbeddedPostProps { // props when embed is true
+  post: PostResponseSmall;
+  embed: true;
 }
+interface FullPostProps { // props when embed is false
+  post: PostResponse;
+  embed: false;
+}
+type PostProps = EmbeddedPostProps | FullPostProps;
 
-const Post: React.FC<PostProps> = ({ post, embed = true }) => {
+const Post: React.FC<PostProps> = ({ post, embed }) => {
   const { loggedIn } = useUser();
   const router = useRouter();
 
@@ -39,7 +50,7 @@ const Post: React.FC<PostProps> = ({ post, embed = true }) => {
         <CardTitle className="mb-2 text-2xl font-semibold text-gray-800">
           {post.title}
         </CardTitle>
-        <div className="flex items-center text-sm text-gray-600">
+        <div className="flex items-center p-3 text-sm text-gray-600">
           <span>
             By{" "}
             <Link
@@ -71,6 +82,32 @@ const Post: React.FC<PostProps> = ({ post, embed = true }) => {
           source={post.description}
           className="leading-relaxed text-gray-700"
         />
+        {!embed && post.days && post.days.length > 0 && (
+          <div className="mt-6">
+            <h3 className="mb-4 text-lg font-semibold text-gray-800">
+              Timeline of Days
+            </h3>
+            <Accordion type="single" collapsible className="w-full">
+              {post.days.map((day, index) => (
+                <AccordionItem key={index} value={`day-${index}`}>
+                  <AccordionTrigger className="text-left">
+                    <div className="flex w-full items-center justify-between">
+                      <span className="font-medium text-gray-800">
+                        Day {index + 1}: {day.title}
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        {beautifyDate(day.date)}
+                      </span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <p className="text-gray-700">{day.description}</p>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        )}
       </CardContent>
 
       <CardFooter className="flex items-center justify-between border-t border-gray-100 bg-gray-50 !p-3">

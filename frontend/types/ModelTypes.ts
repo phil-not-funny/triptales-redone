@@ -24,4 +24,11 @@ export type Post = {
   startDate: Date;
   endDate: Date;
   likes: User[];
+  days: PostDay[];
 } & Entity;
+
+export type PostDay = {
+  title: string;
+  description: string;
+  date: Date;
+}
