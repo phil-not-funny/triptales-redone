@@ -88,7 +88,7 @@ namespace Triptales.Webapi.Controllers
                 Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
-            return Ok(_modelConversions.ConvertToPrivate(user));
+            return Ok(_modelConversions.ToUserPrivateDto(user));
         }
 
         [Authorize]
@@ -96,12 +96,12 @@ namespace Triptales.Webapi.Controllers
         public async Task<ActionResult<UserPrivateDto>> Me()
         {
             var user = await getAuthenticatedOrDefault();
-            return user is not null ? Ok(_modelConversions.ConvertToPrivate(user)) : Unauthorized();
+            return user is not null ? Ok(_modelConversions.ToUserPrivateDto(user)) : Unauthorized();
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
-            => Ok((await _repo.GetAll()).Select(u => _modelConversions.ConvertToPublic(u)).ToList());
+            => Ok((await _repo.GetAll()).Select(u => _modelConversions.ToUserPublicDto(u)).ToList());
 
 
         [HttpGet("{username}")]
@@ -110,7 +110,7 @@ namespace Triptales.Webapi.Controllers
             var user = await _service.GetUserByUsername(username);
             var authenticated = await getAuthenticatedOrDefault(); //to know when to enable follow button
             return user is not null ? Ok(
-                _modelConversions.ConvertToDetailed(
+                _modelConversions.ToUserDetailedDto(
                     user, 
                     authenticated is not null && 
                     authenticated.Following.Any(

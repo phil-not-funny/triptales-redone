@@ -4,6 +4,7 @@ using System.Linq;
 using Bogus;
 using Microsoft.EntityFrameworkCore;
 using Triptales.Application.Model;
+using static Triptales.Application.Model.Post;
 
 namespace Triptales.Webapi.Infrastructure
 {
@@ -21,10 +22,12 @@ namespace Triptales.Webapi.Infrastructure
                 .WithMany(u => u.LikedPosts)
                 .UsingEntity(j => j.ToTable("PostLikes"));
             modelBuilder.Entity<Post.Comment>().HasMany(c => c.Likes)
-                .WithMany(u => u.LikedComments)
-                .UsingEntity(j => j.ToTable("CommentLikes"));
+                .WithMany(u => u.LikedPostComments)
+                .UsingEntity(j => j.ToTable("PostCommentLikes"));
             modelBuilder.Entity<Post>().HasOne(p => p.Author)
                 .WithMany(u => u.Posts);
+            modelBuilder.Entity<Post.Comment>().HasOne(c => c.Author)
+                .WithMany(u => u.Comments);
             modelBuilder.Entity<Post>().OwnsMany(p => p.Days, p =>
             {
                 p.HasKey("Id");
@@ -114,13 +117,48 @@ namespace Triptales.Webapi.Infrastructure
 
                     var post = new Post(
                         title: f.Lorem.Sentence(7, 2),
-                        description: f.Lorem.Sentence(35, 5),
+                        description: f.Lorem.Sentence(40, 5),
                         author: f.PickRandom(users),
                         startDate: startDate,
                         endDate: endDate,
                         days: days
                     );
 
+                    List<Post.Comment> GenerateComments(int maxDepth, int currentDepth = 0, int genCount = 4)
+                    {
+                        var comments = new Faker<Comment>("de")
+                            .CustomInstantiator(f =>
+                            {
+                                var comment = new Comment(
+                                    content: f.Lorem.Sentence(5, 10),
+                                    post: post,
+                                    author: f.PickRandom(users)
+                                );
+
+                                var likeCount = f.Random.Int(0, users.Count);
+                                var randomUsers = users.OrderBy(_ => f.Random.Int()).Take(likeCount).ToList();
+                                comment.Likes.AddRange(randomUsers);
+
+                                if (currentDepth < maxDepth)
+                                {
+                                    var subCommentCount = f.Random.Int(0, 2);
+                                    var subComments = GenerateComments(maxDepth, currentDepth + 1, subCommentCount);
+                                    comment.Comments.AddRange(subComments);
+                                }
+
+                                return comment;
+                            })
+                            .Generate(f.Random.Int(1, genCount))
+                            .ToList();
+
+                        return comments;
+                    }
+
+                    var likeCount = f.Random.Int(0, users.Count);
+                    var randomUsers = users.OrderBy(_ => f.Random.Int()).Take(likeCount).ToList();
+                    post.Likes.AddRange(randomUsers);
+
+                    post.Comments.AddRange(GenerateComments(maxDepth: 3));
                     return post;
                 })
                 .Generate(10)

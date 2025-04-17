@@ -10,5 +10,6 @@ namespace Triptales.Application.Dtos
                           string EndDate,
                           string CreatedAt,
                           int LikesCount,
-                          bool UserLiked);
+                          bool UserLiked,
+                          int CommentsCount);
 }

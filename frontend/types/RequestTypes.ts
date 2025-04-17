@@ -94,6 +94,9 @@ export type PostResponse = {
   guid: string;
   days: PostDay[];
   userLiked: boolean;
+  commentsCount: number;
+  comments: PostCommentResponse[];
+  userCommented: boolean;
 };
 
 export type PostResponseSmall = {
@@ -106,6 +109,18 @@ export type PostResponseSmall = {
   likesCount: number;
   guid: string;
   userLiked: boolean;
+  commentsCount: number;
+};
+
+export type PostCommentResponse = {
+  guid: string;
+  author: UserPublicResponseSmall;
+  content: string;
+  createdAt: string;
+  likesCount: number;
+  commentsCount: number;
+  userLiked: boolean;
+  comments: PostCommentResponse[];
 };
 
 export const isPostResponse = (p: any): p is PostResponse =>
@@ -119,7 +134,12 @@ export const isPostResponse = (p: any): p is PostResponse =>
   "likesCount" in p &&
   "days" in p &&
   Array.isArray(p.days) &&
-  "userLiked" in p;
+  "userLiked" in p &&
+  "commentsCount" in p &&
+  "comments" in p &&
+  Array.isArray(p.comments) &&
+  p.comments.every(isPostCommentResponse) &&
+  "userCommented" in p;
 
 export const isPostResponseSmall = (p: any): p is PostResponse =>
   "guid" in p &&
@@ -130,6 +150,18 @@ export const isPostResponseSmall = (p: any): p is PostResponse =>
   "startDate" in p &&
   "endDate" in p &&
   "likesCount" in p &&
+  "userLiked" in p &&
+  "commentsCount" in p;
+
+export const isPostCommentResponse = (p: any): p is PostCommentResponse =>
+  "author" in p &&
+  "content" in p &&
+  "createdAt" in p &&
+  "likesCount" in p &&
+  "commentsCount" in p &&
+  "comments" in p &&
+  Array.isArray(p.comments) &&
+  p.comments.every(isPostCommentResponse) &&
   "userLiked" in p;
 
 export type CreatePostRequest = {
@@ -144,4 +176,4 @@ export type CreatePostRequestDay = {
   title: string;
   description: string;
   date: string;
-}
+};

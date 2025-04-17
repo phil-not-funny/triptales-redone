@@ -1,6 +1,6 @@
 type Entity = {
   guid: string;
-}
+};
 
 export type User = {
   username: string;
@@ -31,4 +31,13 @@ export type PostDay = {
   title: string;
   description: string;
   date: Date;
-}
+};
+
+export type PostComment = {
+  author: User;
+  post: Post;
+  createdAt: Date;
+  content: string;
+  likes: User[];
+  comments: PostComment[];
+} & Entity;

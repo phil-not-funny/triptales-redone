@@ -47,7 +47,7 @@ namespace Triptales.Controllers
         public async Task<ActionResult<List<PostSmallDto>>> GetPosts()
         {
             var authenticated = await getAuthenticatedOrDefault();
-            return Ok((await _repository.GetAll()).Select(a => _modelConversions.ConvertToPostSmallDto(
+            return Ok((await _repository.GetAll()).Select(a => _modelConversions.ToPostSmallDto(
                 a,
                 authenticated is not null && a.Likes.Any(u => u.Guid == authenticated.Guid))).ToList());
         }
@@ -56,8 +56,8 @@ namespace Triptales.Controllers
         public async Task<ActionResult<PostDto>> GetPost(Guid guid)
         {
             var authenticated = await getAuthenticatedOrDefault();
-            return await _repository.GetFromGuid(guid) is Post post ? Ok(_modelConversions.ConvertToPostDto(
-                post, 
+            return await _repository.GetFromGuid(guid) is Post post ? Ok(_modelConversions.ToPostDto(
+                post,
                 authenticated is not null && post.Likes.Any(u => u.Guid == authenticated.Guid)
                 )) : BadRequest("Post not found");
         }
@@ -94,11 +94,13 @@ namespace Triptales.Controllers
             var authenticated = await getAuthenticatedOrDefault();
 
             Random rand = new Random();
-            var take = (await _db.Posts.Include(a => a.Author)
+            var take = (await _db.Posts.Include(p => p.Author)
+                .Include(p => p.Likes)
+                .Include(p => p.Comments)
                 .ToListAsync()).OrderBy(p => rand.Next())
                 .Take(size)
                 .Select(p =>
-                    _modelConversions.ConvertToPostSmallDto(
+                    _modelConversions.ToPostSmallDto(
                         p,
                         authenticated is not null && p.Likes.Any(u => u.Guid == authenticated.Guid))).ToList();
             return Ok(take);
