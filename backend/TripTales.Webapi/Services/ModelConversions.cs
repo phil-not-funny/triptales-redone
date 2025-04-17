@@ -69,6 +69,7 @@ namespace Triptales.Webapi.Services
                 userCommented);
 
         public PostCommentDto ToPostCommentDto(Post.Comment c, bool userLiked = false) => new(
+                c.Guid,
                 ToUserPublicSmallDto(c.Author),
                 c.Content,
                 c.CreatedAt.ToString(),
