@@ -99,7 +99,7 @@ const PostPage: React.FC<PostPageProps> = ({ guid }) => {
           {comments.length > 0 ? (
             <div className="mt-6">
               {comments.map((comment) => (
-                <Comment key={comment.guid} comment={comment} />
+                <Comment post={post} key={comment.guid} comment={comment} />
               ))}
             </div>
           ) : (

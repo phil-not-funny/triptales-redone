@@ -7,7 +7,7 @@ import {
   Minus,
   Plus,
 } from "lucide-react";
-import { PostCommentResponse } from "@/types/RequestTypes";
+import { PostCommentResponse, PostResponse } from "@/types/RequestTypes";
 import { formatDateString } from "@/lib/utils";
 import Link from "next/link";
 import { useState } from "react";
@@ -20,10 +20,11 @@ import { Textarea } from "../ui/textarea";
 
 interface CommentProps {
   comment: PostCommentResponse;
+  post: PostResponse;
   level?: number;
 }
 
-const Comment: React.FC<CommentProps> = ({ comment, level = 0 }) => {
+const Comment: React.FC<CommentProps> = ({ comment, post, level = 0 }) => {
   const { loggedIn, user } = useUser();
   const [liked, setLiked] = useState<boolean>(comment.userLiked);
   const [likesCount, setLikesCount] = useState<number>(comment.likesCount);
@@ -46,10 +47,19 @@ const Comment: React.FC<CommentProps> = ({ comment, level = 0 }) => {
 
   const handleReplySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    setReplyContent("");
-    setIsReplying(false);
-    setIsExpanded(true);
+    const response = await PostService.commentPost(post.guid, {
+      content: replyContent,
+      parent: comment.guid,
+    });
+    if (response) {
+      setSubComments((prev) => [response, ...prev]);
+      setReplyContent("");
+      setIsReplying(false);
+      setIsExpanded(true);
+      toast.success("Reply posted successfully!");
+    } else {
+      toast.error("Failed to post reply. Please try again later.");
+    }
   };
 
   const handleDeleteComment = async () => {};
@@ -59,13 +69,11 @@ const Comment: React.FC<CommentProps> = ({ comment, level = 0 }) => {
     setReplyContent("");
   };
 
-  // Thread line color alternates for visibility
   const threadLineColor =
     level % 2 === 0 ? "border-gray-300" : "border-gray-400";
 
   return (
     <div className={`relative flex space-x-3 ${level > 0 ? "ml-6" : ""} mt-3`}>
-      {/* Vertical thread line for nested comments */}
       {level > 0 && (
         <div
           className={`absolute min-h-full w-px ${threadLineColor}`}
@@ -180,6 +188,7 @@ const Comment: React.FC<CommentProps> = ({ comment, level = 0 }) => {
           <div className="mt-2">
             {subComments.map((nestedComment, idx) => (
               <Comment
+              post={post}
                 key={nestedComment.guid || idx}
                 comment={nestedComment}
                 level={level + 1}
