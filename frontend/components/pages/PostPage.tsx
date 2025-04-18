@@ -55,6 +55,16 @@ const PostPage: React.FC<PostPageProps> = ({ guid }) => {
     }
   };
 
+  const handleDeleteComment = async (comment: PostCommentResponse) => {
+    const response = await PostService.deleteComment(post!.guid, comment.guid);
+    if (response) {
+      setComments((prev) => prev.filter((c) => c.guid !== comment.guid));
+      toast.success("Comment deleted successfully!");
+    } else {
+      toast.error("Failed to delete comment. Please try again later.");
+    }
+  };
+
   useEffect(() => {
     init();
   }, []);
@@ -99,7 +109,7 @@ const PostPage: React.FC<PostPageProps> = ({ guid }) => {
           {comments.length > 0 ? (
             <div className="mt-6">
               {comments.map((comment) => (
-                <Comment post={post} key={comment.guid} comment={comment} />
+                <Comment post={post} key={comment.guid} handleDeleteComment={handleDeleteComment} comment={comment} />
               ))}
             </div>
           ) : (

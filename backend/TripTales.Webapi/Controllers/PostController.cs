@@ -151,5 +151,32 @@ namespace Triptales.Controllers
             await _db.SaveChangesAsync();
             return Ok(_modelConversions.ToPostCommentDto(comment));
         }
+
+        [HttpDelete("{guid:Guid}/comment/{commentGuid:Guid}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteComment(Guid guid, Guid commentGuid)
+        {
+            var authorized = await getAuthenticatedOrDefault();
+            if (authorized is null)
+                return Unauthorized();
+
+            var post = await _repository.GetFromGuid(guid);
+            if (post is null)
+                return NotFound();
+
+            var comment = post.FindCommentById(post.Comments, commentGuid);
+            if (comment is null)
+                return NotFound("Comment does not exist in Post");
+
+            if (comment.Author.Guid != authorized.Guid)
+                return Unauthorized("You are not the author of this comment");
+
+            if(comment.Post is not null)
+                post.Comments.Remove(comment);
+            else
+                comment.Parent!.Comments.Remove(comment);
+            await _db.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }

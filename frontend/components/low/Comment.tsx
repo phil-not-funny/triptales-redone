@@ -21,10 +21,11 @@ import { Textarea } from "../ui/textarea";
 interface CommentProps {
   comment: PostCommentResponse;
   post: PostResponse;
+  handleDeleteComment: (c: PostCommentResponse) => void;
   level?: number;
 }
 
-const Comment: React.FC<CommentProps> = ({ comment, post, level = 0 }) => {
+const Comment: React.FC<CommentProps> = ({ comment, post, handleDeleteComment, level = 0 }) => {
   const { loggedIn, user } = useUser();
   const [liked, setLiked] = useState<boolean>(comment.userLiked);
   const [likesCount, setLikesCount] = useState<number>(comment.likesCount);
@@ -62,7 +63,15 @@ const Comment: React.FC<CommentProps> = ({ comment, post, level = 0 }) => {
     }
   };
 
-  const handleDeleteComment = async () => {};
+  const handleDeleteSubComment = async (subComment: PostCommentResponse) => {
+    const response = await PostService.deleteComment(post.guid, subComment.guid);
+    if (response) {
+      setSubComments((prev) => prev.filter((c) => c.guid !== subComment.guid));
+      toast.success("Comment deleted successfully!");
+    } else {
+      toast.error("Failed to delete comment. Please try again later.");
+    }
+  };
 
   const toggleReply = () => {
     setIsReplying(!isReplying);
@@ -146,7 +155,7 @@ const Comment: React.FC<CommentProps> = ({ comment, post, level = 0 }) => {
             <Button
               variant="ghost"
               size="sm"
-              onClick={handleDeleteComment}
+              onClick={() => handleDeleteComment(comment)}
               className="text-gray-600 hover:text-red-500"
             >
               Delete
@@ -188,9 +197,10 @@ const Comment: React.FC<CommentProps> = ({ comment, post, level = 0 }) => {
           <div className="mt-2">
             {subComments.map((nestedComment, idx) => (
               <Comment
-              post={post}
-                key={nestedComment.guid || idx}
+                post={post}
+                key={nestedComment.guid}
                 comment={nestedComment}
+                handleDeleteComment={handleDeleteSubComment}
                 level={level + 1}
               />
             ))}
