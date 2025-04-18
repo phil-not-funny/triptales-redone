@@ -125,5 +125,31 @@ namespace Triptales.Controllers
             await _db.SaveChangesAsync();
             return Ok();
         }
+
+        [HttpPost("{guid:Guid}/comment")]
+        [Authorize]
+        public async Task<IActionResult> CommentPost(Guid guid, [FromBody] AddCommentCmd cmd)
+        {
+            var authorized = await getAuthenticatedOrDefault();
+            if (authorized is null)
+                return Unauthorized();
+
+            var post = await _repository.GetFromGuid(guid);
+            if (post is null)
+                return NotFound();
+
+            var parent = post.FindCommentById(post.Comments, cmd.Parent.GetValueOrDefault());
+            var comment = new Post.Comment(post, authorized, cmd.Content, parent);
+
+            if(!cmd.Parent.HasValue)
+                post.Comments.Add(comment);
+            else if (parent is not null)
+                parent.Comments.Add(comment);
+            else
+                return NotFound("Parent Comment does not exist in Post");
+            
+            await _db.SaveChangesAsync();
+            return Ok();
+        }
     }
 }

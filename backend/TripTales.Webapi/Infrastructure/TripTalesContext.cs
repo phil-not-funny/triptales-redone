@@ -21,16 +21,28 @@ namespace Triptales.Webapi.Infrastructure
             modelBuilder.Entity<Post>().HasMany(p => p.Likes)
                 .WithMany(u => u.LikedPosts)
                 .UsingEntity(j => j.ToTable("PostLikes"));
-            modelBuilder.Entity<Post.Comment>().HasMany(c => c.Likes)
+            modelBuilder.Entity<Comment>().HasMany(c => c.Likes)
                 .WithMany(u => u.LikedPostComments)
                 .UsingEntity(j => j.ToTable("PostCommentLikes"));
             modelBuilder.Entity<Post>().HasOne(p => p.Author)
                 .WithMany(u => u.Posts);
-            modelBuilder.Entity<Post.Comment>().HasOne(c => c.Author)
+            modelBuilder.Entity<Comment>().HasOne(c => c.Author)
                 .WithMany(u => u.Comments);
             modelBuilder.Entity<Post>().OwnsMany(p => p.Days, p =>
             {
                 p.HasKey("Id");
+            });
+
+            modelBuilder.Entity<Post.Comment>(comment =>
+            {
+                // Comment to Post (only top-level comments are in Post.Comments)
+                comment.HasOne(c => c.Post)
+                       .WithMany(p => p.Comments)
+                       .OnDelete(DeleteBehavior.Cascade);
+
+                // Self-referential Comment hierarchy
+                comment.HasOne(c => c.Parent)
+                       .WithMany(c => c.Comments);
             });
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
