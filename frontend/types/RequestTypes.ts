@@ -177,3 +177,8 @@ export type CreatePostRequestDay = {
   description: string;
   date: string;
 };
+
+export type CommentPostRequest = {
+  parent?: string;
+  content: string;
+}

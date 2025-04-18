@@ -136,15 +136,16 @@ namespace Triptales.Webapi.Infrastructure
                         days: days
                     );
 
-                    List<Post.Comment> GenerateComments(int maxDepth, int currentDepth = 0, int genCount = 4)
+                    List<Comment> GenerateComments(int maxDepth, Comment? parent = null, int currentDepth = 0, int genCount = 4)
                     {
                         var comments = new Faker<Comment>("de")
                             .CustomInstantiator(f =>
                             {
                                 var comment = new Comment(
                                     content: f.Lorem.Sentence(5, 10),
-                                    post: post,
-                                    author: f.PickRandom(users)
+                                    author: f.PickRandom(users),
+                                    parent: parent,
+                                    post: parent is null ? post : null
                                 );
 
                                 var likeCount = f.Random.Int(0, users.Count);
@@ -154,7 +155,7 @@ namespace Triptales.Webapi.Infrastructure
                                 if (currentDepth < maxDepth)
                                 {
                                     var subCommentCount = f.Random.Int(0, 2);
-                                    var subComments = GenerateComments(maxDepth, currentDepth + 1, subCommentCount);
+                                    var subComments = GenerateComments(maxDepth, comment, currentDepth + 1, subCommentCount);
                                     comment.Comments.AddRange(subComments);
                                 }
 

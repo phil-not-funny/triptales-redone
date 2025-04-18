@@ -1,6 +1,12 @@
 "use client";
 
-import { Heart, MessageCircle, MessageCirclePlus, Minus, Plus } from "lucide-react";
+import {
+  Heart,
+  MessageCircle,
+  MessageCirclePlus,
+  Minus,
+  Plus,
+} from "lucide-react";
 import { PostCommentResponse } from "@/types/RequestTypes";
 import { formatDateString } from "@/lib/utils";
 import Link from "next/link";
@@ -45,6 +51,8 @@ const Comment: React.FC<CommentProps> = ({ comment, level = 0 }) => {
     setIsReplying(false);
     setIsExpanded(true);
   };
+
+  const handleDeleteComment = async () => {};
 
   const toggleReply = () => {
     setIsReplying(!isReplying);
@@ -124,6 +132,16 @@ const Comment: React.FC<CommentProps> = ({ comment, level = 0 }) => {
               className="text-gray-600 hover:text-blue-500"
             >
               Reply
+            </Button>
+          )}
+          {user?.guid === comment.author.guid && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleDeleteComment}
+              className="text-gray-600 hover:text-red-500"
+            >
+              Delete
             </Button>
           )}
         </div>

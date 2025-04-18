@@ -1,7 +1,10 @@
 import {
+  CommentPostRequest,
   CreatePostRequest,
+  isPostCommentResponse,
   isPostResponse,
   isPostResponseSmall,
+  PostCommentResponse,
   PostResponse,
   PostResponseSmall,
 } from "@/types/RequestTypes";
@@ -52,7 +55,7 @@ const getPost = async (guid: string): Promise<GetPostClientResponse> => {
   try {
     const response = await api.get<PostResponse>(`/Post/${guid}`);
     console.log(response.data);
-    
+
     if (response.status === 200 && isPostResponse(response.data))
       return { success: true, data: response.data };
     else throw new Error("Invalid response structure");
@@ -69,8 +72,22 @@ const likePost = async (guid: string): Promise<boolean> => {
   } catch {
     return false;
   }
-}
+};
 
-const PostService = { getRandom, createPost, getPost, likePost };
+const commentPost = async (
+  guid: string,
+  data: CommentPostRequest,
+): Promise<PostCommentResponse | null> => {
+  try {
+    const response = await api.post(`/Post/${guid}/comment`, data);
+    if (response.status === 200 && isPostCommentResponse(response.data))
+      return response.data;
+    else throw new Error("Invalid response structure");
+  } catch {
+    return null;
+  }
+};
+
+const PostService = { getRandom, createPost, getPost, likePost, commentPost };
 
 export default PostService;

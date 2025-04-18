@@ -13,6 +13,7 @@ import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import { MessageCirclePlus } from "lucide-react";
 import Comment from "../low/Comment";
+import { toast } from "sonner";
 
 interface PostPageProps {
   guid: string;
@@ -39,7 +40,20 @@ const PostPage: React.FC<PostPageProps> = ({ guid }) => {
     setLoading(false);
   };
 
-  const handleCommentSubmit = async (e: React.FormEvent) => {};
+  const handleCommentSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const response = await PostService.commentPost(post!.guid, {
+      content: commentContent,
+    });
+    if (response) {
+      setCommentContent("");
+      setCommentsCount((prev) => prev + 1);
+      setComments((prev) => [response, ...prev]);
+      toast.success("Comment posted successfully!");
+    } else {
+      toast.error("Failed to post comment. Please try again later.");
+    }
+  };
 
   useEffect(() => {
     init();
@@ -61,7 +75,9 @@ const PostPage: React.FC<PostPageProps> = ({ guid }) => {
             <form onSubmit={handleCommentSubmit} className="mt-4">
               <div className="flex space-x-3">
                 <Avatar className="h-8 w-8">
-                  <AvatarFallback>{user?.username.toUpperCase()[0]}</AvatarFallback>
+                  <AvatarFallback>
+                    {user?.username.toUpperCase()[0]}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
                   <Textarea

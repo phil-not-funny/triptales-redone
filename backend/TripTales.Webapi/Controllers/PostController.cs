@@ -139,7 +139,7 @@ namespace Triptales.Controllers
                 return NotFound();
 
             var parent = post.FindCommentById(post.Comments, cmd.Parent.GetValueOrDefault());
-            var comment = new Post.Comment(post, authorized, cmd.Content, parent);
+            var comment = new Post.Comment(authorized, cmd.Content, parent, parent is null ? post : null);
 
             if(!cmd.Parent.HasValue)
                 post.Comments.Add(comment);
@@ -149,7 +149,7 @@ namespace Triptales.Controllers
                 return NotFound("Parent Comment does not exist in Post");
             
             await _db.SaveChangesAsync();
-            return Ok();
+            return Ok(_modelConversions.ToPostCommentDto(comment));
         }
     }
 }
