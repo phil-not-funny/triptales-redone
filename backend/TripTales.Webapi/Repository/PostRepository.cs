@@ -37,6 +37,8 @@ namespace Triptales.Repository
                 .ThenInclude(c => c.Author)
             .Include(p => p.Comments)
                 .ThenInclude(c => c.Comments)
+            .Include(p => p.Comments)
+                .ThenInclude(c => c.Likes)
             .FirstOrDefaultAsync(p => p.Guid == guid);
 
         public async Task<bool> Insert(Post entity)

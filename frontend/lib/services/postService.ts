@@ -88,7 +88,7 @@ const commentPost = async (
   }
 };
 
-const deleteComment = async (guid: string, commentGuid?: string): Promise<boolean> => {
+const deleteComment = async (guid: string, commentGuid: string): Promise<boolean> => {
   try {
     const response = await api.delete(`/Post/${guid}/comment/${commentGuid}`);
     if (response.status === 204) return true;
@@ -98,6 +98,16 @@ const deleteComment = async (guid: string, commentGuid?: string): Promise<boolea
   }
 }
 
-const PostService = { getRandom, createPost, getPost, likePost, commentPost, deleteComment };
+const likeComment = async (guid: string, commentGuid: string): Promise<boolean> => {
+  try {
+    const response = await api.post(`/Post/${guid}/comment/like/${commentGuid}`);
+    if (response.status === 200) return true;
+    else return false;
+  } catch {
+    return false;
+  }
+}
+
+const PostService = { getRandom, createPost, getPost, likePost, commentPost, deleteComment, likeComment };
 
 export default PostService;

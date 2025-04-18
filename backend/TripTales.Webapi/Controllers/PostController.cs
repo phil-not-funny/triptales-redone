@@ -126,6 +126,8 @@ namespace Triptales.Controllers
             return Ok();
         }
 
+        // COMMENTS
+
         [HttpPost("{guid:Guid}/comment")]
         [Authorize]
         public async Task<IActionResult> CommentPost(Guid guid, [FromBody] AddCommentCmd cmd)
@@ -150,6 +152,31 @@ namespace Triptales.Controllers
             
             await _db.SaveChangesAsync();
             return Ok(_modelConversions.ToPostCommentDto(comment));
+        }
+
+        [HttpPost("{guid:Guid}/comment/like/{commentGuid:Guid}")]
+        [Authorize]
+        public async Task<IActionResult> LikeComment(Guid guid, Guid commentGuid)
+        {
+            var authorized = await getAuthenticatedOrDefault();
+            if (authorized is null)
+                return Unauthorized();
+
+            var post = await _repository.GetFromGuid(guid);
+            if (post is null)
+                return NotFound();
+
+            var comment = post.FindCommentById(post.Comments, commentGuid);
+            if (comment is null)
+                return NotFound("Comment does not exist in Post");
+
+            if (comment.Likes.Any(u => u.Guid == authorized.Guid))
+                comment.Likes.Remove(authorized);
+            else
+                comment.Likes.Add(authorized);
+
+            await _db.SaveChangesAsync();
+            return Ok();
         }
 
         [HttpDelete("{guid:Guid}/comment/{commentGuid:Guid}")]

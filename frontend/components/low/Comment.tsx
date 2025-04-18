@@ -25,7 +25,12 @@ interface CommentProps {
   level?: number;
 }
 
-const Comment: React.FC<CommentProps> = ({ comment, post, handleDeleteComment, level = 0 }) => {
+const Comment: React.FC<CommentProps> = ({
+  comment,
+  post,
+  handleDeleteComment,
+  level = 0,
+}) => {
   const { loggedIn, user } = useUser();
   const [liked, setLiked] = useState<boolean>(comment.userLiked);
   const [likesCount, setLikesCount] = useState<number>(comment.likesCount);
@@ -37,9 +42,14 @@ const Comment: React.FC<CommentProps> = ({ comment, post, handleDeleteComment, l
   );
 
   const handleLike = async () => {
-    const newLiked = !liked;
-    setLiked(newLiked);
-    setLikesCount((prev) => (newLiked ? prev + 1 : prev - 1));
+    const response = await PostService.likeComment(post.guid, comment.guid);
+    if (response) {
+      const newLiked = !liked;
+      setLiked(newLiked);
+      setLikesCount((prev) => (newLiked ? prev + 1 : prev - 1));
+    } else {
+      toast.error("Failed to like the comment. Please try again later.");
+    }
   };
 
   const toggleExpand = () => {
@@ -64,7 +74,10 @@ const Comment: React.FC<CommentProps> = ({ comment, post, handleDeleteComment, l
   };
 
   const handleDeleteSubComment = async (subComment: PostCommentResponse) => {
-    const response = await PostService.deleteComment(post.guid, subComment.guid);
+    const response = await PostService.deleteComment(
+      post.guid,
+      subComment.guid,
+    );
     if (response) {
       setSubComments((prev) => prev.filter((c) => c.guid !== subComment.guid));
       toast.success("Comment deleted successfully!");
