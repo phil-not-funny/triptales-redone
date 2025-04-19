@@ -33,7 +33,7 @@ namespace Triptales.Webapi.Controllers
             _modelConversions = modelConversions;
         }
 
-        private async Task<User?> getAuthenticatedOrDefault()
+        private async Task<User?> GetAuthenticatedOrDefault()
         {
             var authenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
             if (!authenticated) return null;
@@ -95,7 +95,7 @@ namespace Triptales.Webapi.Controllers
         [HttpGet("me")]
         public async Task<ActionResult<UserPrivateDto>> Me()
         {
-            var user = await getAuthenticatedOrDefault();
+            var user = await GetAuthenticatedOrDefault();
             return user is not null ? Ok(_modelConversions.ToUserPrivateDto(user)) : Unauthorized();
         }
 
@@ -108,7 +108,7 @@ namespace Triptales.Webapi.Controllers
         public async Task<IActionResult> GetByUsername(string username)
         {
             var user = await _service.GetUserByUsername(username);
-            var authenticated = await getAuthenticatedOrDefault(); //to know when to enable follow button
+            var authenticated = await GetAuthenticatedOrDefault(); //to know when to enable follow button
             return user is not null ? Ok(
                 _modelConversions.ToUserDetailedDto(
                     user, 
@@ -121,7 +121,7 @@ namespace Triptales.Webapi.Controllers
         [HttpPost("follow/{guid}")]
         public async Task<IActionResult> Follow(Guid guid)
         {
-            var authenticated = await getAuthenticatedOrDefault();
+            var authenticated = await GetAuthenticatedOrDefault();
             if (authenticated is null)
                 return Unauthorized();
 
@@ -140,7 +140,7 @@ namespace Triptales.Webapi.Controllers
         [HttpPut]
         public async Task<IActionResult> PutFlavor([FromBody] UserFlavorCmd flavor)
         {
-            var authenticated = await getAuthenticatedOrDefault();
+            var authenticated = await GetAuthenticatedOrDefault();
             if (authenticated is null)
                 return Unauthorized();
             authenticated.Username = flavor.Username;
@@ -156,7 +156,7 @@ namespace Triptales.Webapi.Controllers
         [HttpPost("upload")]
         public async Task<IActionResult> UploadPictures([FromForm] UploadPicturesCmd cmd)
         {
-            var authenticated = await getAuthenticatedOrDefault();
+            var authenticated = await GetAuthenticatedOrDefault();
             if (authenticated is null) return Unauthorized();
             var user = await _db.Users.FirstOrDefaultAsync(u => u.Guid == authenticated.Guid);
             if (user is null) return NotFound();

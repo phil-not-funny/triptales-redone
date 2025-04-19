@@ -33,7 +33,7 @@ namespace Triptales.Controllers
             _modelConversions = modelConversions;
         }
 
-        private async Task<User?> getAuthenticatedOrDefault()
+        private async Task<User?> GetAuthenticatedOrDefault()
         {
             var authenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
             if (!authenticated) return null;
@@ -46,7 +46,7 @@ namespace Triptales.Controllers
         [HttpGet]
         public async Task<ActionResult<List<PostSmallDto>>> GetPosts()
         {
-            var authenticated = await getAuthenticatedOrDefault();
+            var authenticated = await GetAuthenticatedOrDefault();
             return Ok((await _repository.GetAll()).Select(a => _modelConversions.ToPostSmallDto(
                 a,
                 authenticated is not null && a.Likes.Any(u => u.Guid == authenticated.Guid))).ToList());
@@ -55,7 +55,7 @@ namespace Triptales.Controllers
         [HttpGet("{guid:Guid}")]
         public async Task<ActionResult<PostDto>> GetPost(Guid guid)
         {
-            var authenticated = await getAuthenticatedOrDefault();
+            var authenticated = await GetAuthenticatedOrDefault();
             return await _repository.GetFromGuid(guid) is Post post ? Ok(_modelConversions.ToPostDto(
                 post,
                 authenticated is not null && post.Likes.Any(u => u.Guid == authenticated.Guid)
@@ -66,7 +66,7 @@ namespace Triptales.Controllers
         [Authorize]
         public async Task<ActionResult> AddPost([FromBody] AddPostCmd cmd)
         {
-            var user = await getAuthenticatedOrDefault();
+            var user = await GetAuthenticatedOrDefault();
             if (user is null) return Unauthorized("User not authenticated");
             var post = new Post(cmd.Title, cmd.Description, user, DateOnly.Parse(cmd.StartDate), DateOnly.Parse(cmd.EndDate), cmd.Days.Select(d => new Post.Day(d.Title, d.Description, DateOnly.Parse(d.Date))).ToList());
             return await _repository.Insert(post) ? Ok(post.Guid) : BadRequest("Insert failed! Check if the parameters are correct");
@@ -91,7 +91,7 @@ namespace Triptales.Controllers
         {
             if (size <= 0) return BadRequest("Size must be greater than 0");
 
-            var authenticated = await getAuthenticatedOrDefault();
+            var authenticated = await GetAuthenticatedOrDefault();
 
             Random rand = new Random();
             var take = (await _db.Posts.Include(p => p.Author)
@@ -110,7 +110,7 @@ namespace Triptales.Controllers
         [Authorize]
         public async Task<IActionResult> LikePost(Guid guid)
         {
-            var authenticated = await getAuthenticatedOrDefault();
+            var authenticated = await GetAuthenticatedOrDefault();
             if (authenticated is null)
                 return Unauthorized();
 
@@ -124,86 +124,6 @@ namespace Triptales.Controllers
                 requested.Likes.Add(authenticated);
             await _db.SaveChangesAsync();
             return Ok();
-        }
-
-        // COMMENTS
-
-        [HttpPost("{guid:Guid}/comment")]
-        [Authorize]
-        public async Task<IActionResult> CommentPost(Guid guid, [FromBody] AddCommentCmd cmd)
-        {
-            var authorized = await getAuthenticatedOrDefault();
-            if (authorized is null)
-                return Unauthorized();
-
-            var post = await _repository.GetFromGuid(guid);
-            if (post is null)
-                return NotFound();
-
-            var parent = post.FindCommentById(post.Comments, cmd.Parent.GetValueOrDefault());
-            var comment = new Post.Comment(authorized, cmd.Content, parent, parent is null ? post : null);
-
-            if(!cmd.Parent.HasValue)
-                post.Comments.Add(comment);
-            else if (parent is not null)
-                parent.Comments.Add(comment);
-            else
-                return NotFound("Parent Comment does not exist in Post");
-            
-            await _db.SaveChangesAsync();
-            return Ok(_modelConversions.ToPostCommentDto(comment));
-        }
-
-        [HttpPost("{guid:Guid}/comment/like/{commentGuid:Guid}")]
-        [Authorize]
-        public async Task<IActionResult> LikeComment(Guid guid, Guid commentGuid)
-        {
-            var authorized = await getAuthenticatedOrDefault();
-            if (authorized is null)
-                return Unauthorized();
-
-            var post = await _repository.GetFromGuid(guid);
-            if (post is null)
-                return NotFound();
-
-            var comment = post.FindCommentById(post.Comments, commentGuid);
-            if (comment is null)
-                return NotFound("Comment does not exist in Post");
-
-            if (comment.Likes.Any(u => u.Guid == authorized.Guid))
-                comment.Likes.Remove(authorized);
-            else
-                comment.Likes.Add(authorized);
-
-            await _db.SaveChangesAsync();
-            return Ok();
-        }
-
-        [HttpDelete("{guid:Guid}/comment/{commentGuid:Guid}")]
-        [Authorize]
-        public async Task<IActionResult> DeleteComment(Guid guid, Guid commentGuid)
-        {
-            var authorized = await getAuthenticatedOrDefault();
-            if (authorized is null)
-                return Unauthorized();
-
-            var post = await _repository.GetFromGuid(guid);
-            if (post is null)
-                return NotFound();
-
-            var comment = post.FindCommentById(post.Comments, commentGuid);
-            if (comment is null)
-                return NotFound("Comment does not exist in Post");
-
-            if (comment.Author.Guid != authorized.Guid)
-                return Unauthorized("You are not the author of this comment");
-
-            if(comment.Post is not null)
-                post.Comments.Remove(comment);
-            else
-                comment.Parent!.Comments.Remove(comment);
-            await _db.SaveChangesAsync();
-            return NoContent();
         }
     }
 }

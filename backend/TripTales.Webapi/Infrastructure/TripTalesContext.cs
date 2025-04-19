@@ -15,6 +15,7 @@ namespace Triptales.Webapi.Infrastructure
 
         public DbSet<User> Users => Set<User>();
         public DbSet<Post> Posts => Set<Post>();
+        public DbSet<Comment> Comments => Set<Comment>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,7 +34,7 @@ namespace Triptales.Webapi.Infrastructure
                 p.HasKey("Id");
             });
 
-            modelBuilder.Entity<Post.Comment>(comment =>
+            modelBuilder.Entity<Comment>(comment =>
             {
                 // Comment to Post (only top-level comments are in Post.Comments)
                 comment.HasOne(c => c.Post)

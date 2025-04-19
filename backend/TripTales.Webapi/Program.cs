@@ -29,6 +29,7 @@ builder.Services.AddDbContext<TripTalesContext>(opt => opt.UseSqlite("DataSource
 builder.Services.AddTransient<UserService>();
 builder.Services.AddTransient<UserRepository>();
 builder.Services.AddTransient<PostRepository>();
+builder.Services.AddTransient<CommentRepository>();
 builder.Services.AddTransient<PostService>();
 builder.Services.AddTransient<ModelConversions>();
 builder.Services.AddTransient<IFileService, LocalFileService>();

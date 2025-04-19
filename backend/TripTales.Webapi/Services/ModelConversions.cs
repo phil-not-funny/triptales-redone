@@ -68,7 +68,7 @@ namespace Triptales.Webapi.Services
                 a.Comments.Count > 0 ? a.Comments.Select(c => ToPostCommentDto(c)).ToList() : [],
                 userCommented);
 
-        public PostCommentDto ToPostCommentDto(Post.Comment c, bool userLiked = false) => new(
+        public PostCommentDto ToPostCommentDto(Comment c, bool userLiked = false) => new(
                 c.Guid,
                 ToUserPublicSmallDto(c.Author),
                 c.Content,

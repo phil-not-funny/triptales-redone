@@ -42,8 +42,9 @@ const PostPage: React.FC<PostPageProps> = ({ guid }) => {
 
   const handleCommentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await PostService.commentPost(post!.guid, {
+    const response = await PostService.commentPost({
       content: commentContent,
+      post: post!.guid,
     });
     if (response) {
       setCommentContent("");
@@ -56,7 +57,7 @@ const PostPage: React.FC<PostPageProps> = ({ guid }) => {
   };
 
   const handleDeleteComment = async (comment: PostCommentResponse) => {
-    const response = await PostService.deleteComment(post!.guid, comment.guid);
+    const response = await PostService.deleteComment(comment.guid);
     if (response) {
       setComments((prev) => prev.filter((c) => c.guid !== comment.guid));
       toast.success("Comment deleted successfully!");

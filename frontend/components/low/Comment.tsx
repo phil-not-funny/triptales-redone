@@ -2,6 +2,7 @@
 
 import {
   Heart,
+  Loader2,
   MessageCircle,
   MessageCirclePlus,
   Minus,
@@ -37,12 +38,11 @@ const Comment: React.FC<CommentProps> = ({
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [isReplying, setIsReplying] = useState<boolean>(false);
   const [replyContent, setReplyContent] = useState<string>("");
-  const [subComments, setSubComments] = useState<PostCommentResponse[]>(
-    comment.comments || [],
-  );
+  const [subComments, setSubComments] = useState<PostCommentResponse[]>([]);
+  const [isExpandLoading, setIsExpandLoading] = useState<boolean>(false);
 
   const handleLike = async () => {
-    const response = await PostService.likeComment(post.guid, comment.guid);
+    const response = await PostService.likeComment(comment.guid);
     if (response) {
       const newLiked = !liked;
       setLiked(newLiked);
@@ -52,13 +52,24 @@ const Comment: React.FC<CommentProps> = ({
     }
   };
 
-  const toggleExpand = () => {
-    setIsExpanded(!isExpanded);
+  const toggleExpand = async () => {
+    if (isExpanded) setIsExpanded(false);
+    else if (subComments.length === 0) {
+      setIsExpandLoading(true);
+      const response = await PostService.getComment(comment.guid);
+      if (response) {
+        setSubComments(response.comments);
+        setIsExpanded(true);
+      } else {
+        toast.error("Failed to load replies. Please try again later.");
+      }
+      setIsExpandLoading(false);
+    } else setIsExpanded(true);
   };
 
   const handleReplySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await PostService.commentPost(post.guid, {
+    const response = await PostService.commentPost({
       content: replyContent,
       parent: comment.guid,
     });
@@ -74,10 +85,7 @@ const Comment: React.FC<CommentProps> = ({
   };
 
   const handleDeleteSubComment = async (subComment: PostCommentResponse) => {
-    const response = await PostService.deleteComment(
-      post.guid,
-      subComment.guid,
-    );
+    const response = await PostService.deleteComment(subComment.guid);
     if (response) {
       setSubComments((prev) => prev.filter((c) => c.guid !== subComment.guid));
       toast.success("Comment deleted successfully!");
@@ -110,19 +118,23 @@ const Comment: React.FC<CommentProps> = ({
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              {comment.comments && comment.comments.length > 0 && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={toggleExpand}
-                  className="rounded-full text-gray-500"
-                >
-                  {isExpanded ? (
-                    <Minus className="h-4 w-4" />
-                  ) : (
-                    <Plus className="h-4 w-4" />
-                  )}
-                </Button>
+              {isExpandLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin text-gray-500" />
+              ) : (
+                comment.commentsCount > 0 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={toggleExpand}
+                    className="!h-4 !w-4 rounded-full text-gray-500"
+                  >
+                    {isExpanded ? (
+                      <Minus className="h-4 w-4" />
+                    ) : (
+                      <Plus className="h-4 w-4" />
+                    )}
+                  </Button>
+                )
               )}
               <Link
                 href={`/user/${comment.author.username}`}
@@ -152,7 +164,7 @@ const Comment: React.FC<CommentProps> = ({
           </Button>
           <div className="flex items-center text-gray-600">
             <MessageCircle className="h-4 w-4" />
-            <span className="ml-1 text-xs">{subComments.length}</span>
+            <span className="ml-1 text-xs">{comment.commentsCount}</span>
           </div>
           {loggedIn && (
             <Button

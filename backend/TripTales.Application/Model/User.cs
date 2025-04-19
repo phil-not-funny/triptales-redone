@@ -52,9 +52,9 @@ namespace Triptales.Application.Model
 
         public List<User> Following { get; } = new();
         public List<Post> LikedPosts { get; } = new();
-        public List<Post.Comment> LikedPostComments { get; } = new();
+        public List<Comment> LikedPostComments { get; } = new();
         public List<Post> Posts { get; } = new();
-        public List<Post.Comment> Comments { get; } = new();
+        public List<Comment> Comments { get; } = new();
 
         public string? Biography { get; set; }
         public string? PlaceOfResidence { get; set; }

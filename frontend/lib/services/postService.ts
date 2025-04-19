@@ -75,11 +75,10 @@ const likePost = async (guid: string): Promise<boolean> => {
 };
 
 const commentPost = async (
-  guid: string,
   data: CommentPostRequest,
 ): Promise<PostCommentResponse | null> => {
   try {
-    const response = await api.post(`/Post/${guid}/comment`, data);
+    const response = await api.post(`/Comment`, data);
     if (response.status === 200 && isPostCommentResponse(response.data))
       return response.data;
     else throw new Error("Invalid response structure");
@@ -88,12 +87,9 @@ const commentPost = async (
   }
 };
 
-const deleteComment = async (
-  guid: string,
-  commentGuid: string,
-): Promise<boolean> => {
+const deleteComment = async (guid: string): Promise<boolean> => {
   try {
-    const response = await api.delete(`/Post/${guid}/comment/${commentGuid}`);
+    const response = await api.delete(`/Comment/${guid}`);
     if (response.status === 204) return true;
     else return false;
   } catch {
@@ -101,18 +97,26 @@ const deleteComment = async (
   }
 };
 
-const likeComment = async (
-  guid: string,
-  commentGuid: string,
-): Promise<boolean> => {
+const likeComment = async (guid: string): Promise<boolean> => {
   try {
-    const response = await api.post(
-      `/Post/${guid}/comment/like/${commentGuid}`,
-    );
+    const response = await api.post(`/Comment/like/${guid}`);
     if (response.status === 200) return true;
     else return false;
   } catch {
     return false;
+  }
+};
+
+const getComment = async (
+  guid: string,
+): Promise<PostCommentResponse | null> => {
+  try {
+    const response = await api.get<PostCommentResponse>(`/Comment/${guid}`);
+    if (response.status === 200 && isPostCommentResponse(response.data))
+      return response.data;
+    else throw new Error("Invalid response structure");
+  } catch {
+    return null;
   }
 };
 
@@ -124,6 +128,7 @@ const PostService = {
   commentPost,
   deleteComment,
   likeComment,
+  getComment
 };
 
 export default PostService;

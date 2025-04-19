@@ -2,11 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Triptales.Application.Cmd;
 using Triptales.Application.Model;
 using Triptales.Webapi.Infrastructure;
-using Triptales.Application.Dtos;
-using Triptales.Webapi.Services;
 
 namespace Triptales.Repository
 {
@@ -27,18 +24,18 @@ namespace Triptales.Repository
             return true;
         }
 
-        public async Task<List<Post>> GetAll() => 
+        public async Task<List<Post>> GetAll() =>
             await _db.Posts.Include(p => p.Author).Include(p => p.Likes).Include(p => p.Comments).ToListAsync();
 
-        public async Task<Post?> GetFromGuid(Guid guid) => 
+        public async Task<Post?> GetFromGuid(Guid guid) =>
             await _db.Posts.Include(p => p.Author)
             .Include(p => p.Likes)
             .Include(p => p.Comments)
                 .ThenInclude(c => c.Author)
             .Include(p => p.Comments)
-                .ThenInclude(c => c.Comments)
-            .Include(p => p.Comments)
                 .ThenInclude(c => c.Likes)
+            .Include(p => p.Comments)
+                .ThenInclude(c => c.Comments)
             .FirstOrDefaultAsync(p => p.Guid == guid);
 
         public async Task<bool> Insert(Post entity)

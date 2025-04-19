@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Triptales.Application.Cmd
 {
-    public record AddCommentCmd(Guid? Parent, string Content);
+    public record AddCommentCmd(Guid? Parent, Guid? Post, string Content);
 }
