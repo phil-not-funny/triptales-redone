@@ -2,11 +2,14 @@
 
 import { UserDetailedResponse } from "@/types/RequestTypes";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Loading from "../top/Loading";
 import UserService from "@/lib/services/userService";
 import Sorry from "../low/Sorry";
 import { UserProfile, UserProfileWithBanner } from "../low/UserProfile";
+import Post from "../low/Post";
+import { ArrowDown, ArrowDown01 } from "lucide-react";
+import { PageHead } from "../top/PageHead";
 
 interface UserProfileWithBackgroundProps {
   username: string;
@@ -32,23 +35,21 @@ const UserProfilePage: React.FC<UserProfileWithBackgroundProps> = ({
   const backgroundImage = "/images/default-background.jpg";
 
   return user ? (
-    <div className="relative min-h-screen w-full items-center justify-center lg:flex">
-      <Image
-        className="absolute z-0 hidden h-auto w-full overflow-hidden object-scale-down lg:block"
-        src={backgroundImage}
-        alt="Background Image"
-        width={1920}
-        height={1080}
-      />
-      <div className="z-10 flex h-full w-full items-center justify-center lg:absolute">
-        <UserProfile user={user} className="hidden lg:block" />
+    <PageHead>
+      <div className="flex h-full min-h-screen w-full flex-col items-center justify-center gap-10">
         <UserProfileWithBanner
           user={user}
           bannerImage={backgroundImage}
-          className="block rounded-none lg:hidden"
+          className="rounded-none lg:rounded-lg"
         />
+        <h1 className="flex w-full items-center justify-center gap-4 text-center text-2xl font-bold">
+          <ArrowDown /> Posts <ArrowDown />
+        </h1>
       </div>
-    </div>
+      {user.posts.map((post) => (
+        <Post key={post.guid} post={post} embed />
+      ))}
+    </PageHead>
   ) : loading ? (
     <Loading />
   ) : (
