@@ -1,14 +1,13 @@
 "use client";
 
 import { UserDetailedResponse } from "@/types/RequestTypes";
-import Image from "next/image";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Loading from "../top/Loading";
 import UserService from "@/lib/services/userService";
 import Sorry from "../low/Sorry";
-import { UserProfile, UserProfileWithBanner } from "../low/UserProfile";
+import { UserProfileWithBanner } from "../low/UserProfile";
 import Post from "../low/Post";
-import { ArrowDown, ArrowDown01 } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import { PageHead } from "../top/PageHead";
 
 interface UserProfileWithBackgroundProps {

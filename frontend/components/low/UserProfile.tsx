@@ -12,7 +12,6 @@ import { Fragment, useState } from "react";
 import UserService from "@/lib/services/userService";
 import { toast } from "sonner";
 import { useUser } from "../providers/UserProvider";
-import { MotionDiv } from "../Motion";
 
 const UserProfileCardContent: React.FC<UserProfileProps> = ({ user }) => {
   const { loggedIn, user: client } = useUser();
