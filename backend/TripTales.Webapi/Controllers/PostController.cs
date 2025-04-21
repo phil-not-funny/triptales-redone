@@ -73,8 +73,22 @@ namespace Triptales.Controllers
         }
 
         [HttpDelete("{guid:Guid}")]
-        public async Task<ActionResult> DeletePost(Guid guid) =>
-            await _repository.Delete(guid) ? NoContent() : BadRequest("Delete failed! Check if the right Guid is used");
+        [Authorize]
+        public async Task<ActionResult> DeletePost(Guid guid)
+        {
+            var authenticated = await getAuthenticatedOrDefault();
+            if (authenticated is null) 
+                return Unauthorized("User not authenticated");
+
+            var requested = await _repository.GetFromGuid(guid);
+            if (requested is null)
+                return NotFound("Post not found");
+
+            if (requested.Author.Guid != authenticated.Guid)
+                return Unauthorized("You are not authorized to delete this post");
+
+            return await _repository.Delete(guid) ? NoContent() : BadRequest("Delete failed! Check if the right Guid is used");
+        }
 
         [HttpPut("{guid:Guid}")]
         public async Task<ActionResult> UpdatePost(Guid guid, [FromBody] UpdatePostCmd cmd)

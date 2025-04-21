@@ -71,6 +71,16 @@ const likePost = async (guid: string): Promise<boolean> => {
   }
 }
 
-const PostService = { getRandom, createPost, getPost, likePost };
+const deletePost = async (guid: string): Promise<boolean> => {
+  try {
+    const response = await api.delete(`/Post/${guid}`);
+    if (response.status === 204) return true;
+    else return false;
+  } catch {
+    return false;
+  }
+}
+
+const PostService = { getRandom, createPost, getPost, likePost, deletePost };
 
 export default PostService;

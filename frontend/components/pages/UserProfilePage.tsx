@@ -42,9 +42,11 @@ const UserProfilePage: React.FC<UserProfileWithBackgroundProps> = ({
           bannerImage={backgroundImage}
           className="rounded-none lg:rounded-lg"
         />
-        <h1 className="flex w-full items-center justify-center gap-4 text-center text-2xl font-bold">
-          <ArrowDown /> Posts <ArrowDown />
-        </h1>
+        {user.posts.length > 0 && (
+          <h1 className="flex w-full items-center justify-center gap-4 text-center text-2xl font-bold">
+            <ArrowDown /> Posts <ArrowDown />
+          </h1>
+        )}
       </div>
       {user.posts.map((post) => (
         <Post key={post.guid} post={post} embed />
