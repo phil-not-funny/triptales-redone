@@ -70,8 +70,8 @@ const PostSettings: React.FC<{ onDelete: () => Promise<void> }> = ({
             <DialogHeader>
               <DialogTitle>Are you absolutely sure?</DialogTitle>
               <DialogDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
+                This action cannot be undone. This will permanently delete this
+                post and remove its data from our servers.
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="flex w-full flex-row items-center justify-between">
