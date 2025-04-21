@@ -89,10 +89,10 @@ export function UserFlavorForm({ user }: { user: UserDetailedResponse }) {
     const response = await userService.putFlavor(values);
     if (response) {
       toast.success("User updated successfully.");
+      refreshUser();
     } else {
       toast.error("Failed to update user.");
     }
     setLoading(false);
-    refreshUser();
   }
 }
