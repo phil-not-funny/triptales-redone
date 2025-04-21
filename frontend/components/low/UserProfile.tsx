@@ -12,7 +12,6 @@ import { Fragment, useState } from "react";
 import UserService from "@/lib/services/userService";
 import { toast } from "sonner";
 import { useUser } from "../providers/UserProvider";
-import { MotionDiv } from "../Motion";
 
 const UserProfileCardContent: React.FC<UserProfileProps> = ({ user }) => {
   const { loggedIn, user: client } = useUser();
@@ -134,10 +133,7 @@ export const UserProfileWithBanner: React.FC<
   return (
     <Card className={`w-full max-w-3xl pt-0 shadow-sm ${className}`}>
       {/* Banner Section */}
-      <MotionDiv
-        initial={{ opacity: 0, scale: 1 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 1, duration: 5, ease: "easeOut" }}
+      <div
         className="relative mb-6 h-48 w-full overflow-hidden"
       >
         <Image
@@ -145,10 +141,10 @@ export const UserProfileWithBanner: React.FC<
           alt="User Banner"
           width={1200}
           height={300}
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover rounded-none lg:rounded-t-lg"
           priority
         />
-      </MotionDiv>
+      </div>
 
       <UserProfileCardContent user={user} />
     </Card>
