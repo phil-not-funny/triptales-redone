@@ -9,6 +9,7 @@ using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using System.Linq;
 using System;
 using Microsoft.AspNetCore.Http;
+using System.Text.RegularExpressions;
 
 namespace Triptales.Webapi.Services
 {
@@ -26,7 +27,14 @@ namespace Triptales.Webapi.Services
             createdUser = new User(user.Username, user.Email, user.Password, user.DisplayName);
             var context = new ValidationContext(createdUser);
             results = new();
-            return Validator.TryValidateObject(createdUser, context, results, true);
+            var regex = @"^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$";
+            bool isPasswordValid = user.Password.Length >= 8 && Regex.IsMatch(user.Password, regex);
+            if (!isPasswordValid)
+                results.Add(new ValidationResult(
+                    "Password must contain a minimum of eight characters, at least one letter, number and special character",
+                    new[] { nameof(user.Password) }));
+            bool isValid = Validator.TryValidateObject(createdUser, context, results, true);
+            return isPasswordValid && isValid;
         }
 
         public List<User> GetFollowers(Guid guid)
