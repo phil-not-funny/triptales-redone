@@ -53,7 +53,7 @@ const SettingsPictureSectionSection = ({
       setLoading(true);
       const reader = new FileReader();
       reader.onload = () => {
-        var result = reader.result as string;
+        const result = reader.result as string;
         setPreview(result);
         setUploadData((prev: UserUploadRequest | null) => ({
           ProfilePicture:
