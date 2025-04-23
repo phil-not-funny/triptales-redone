@@ -220,7 +220,7 @@ const Comment: React.FC<CommentProps> = ({
         )}
         {subComments.length > 0 && isExpanded && (
           <div className="mt-2">
-            {subComments.map((nestedComment, idx) => (
+            {subComments.map((nestedComment) => (
               <Comment
                 post={post}
                 key={nestedComment.guid}

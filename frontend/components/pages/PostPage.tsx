@@ -25,7 +25,6 @@ const PostPage: React.FC<PostPageProps> = ({ guid }) => {
 
   const [commentContent, setCommentContent] = useState<string>("");
   const [comments, setComments] = useState<PostCommentResponse[]>([]);
-  const [commentsCount, setCommentsCount] = useState<number>(0);
 
   const { loggedIn, user } = useUser();
 
@@ -35,7 +34,6 @@ const PostPage: React.FC<PostPageProps> = ({ guid }) => {
       setPost(response.data);
 
       setComments(response.data.comments);
-      setCommentsCount(response.data.commentsCount);
     } else setPost(null);
     setLoading(false);
   };
@@ -48,7 +46,6 @@ const PostPage: React.FC<PostPageProps> = ({ guid }) => {
     });
     if (response) {
       setCommentContent("");
-      setCommentsCount((prev) => prev + 1);
       setComments((prev) => [response, ...prev]);
       toast.success("Comment posted successfully!");
     } else {

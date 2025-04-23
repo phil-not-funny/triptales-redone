@@ -80,7 +80,7 @@ namespace Triptales.Controllers
         [Authorize]
         public async Task<ActionResult> DeletePost(Guid guid)
         {
-            var authenticated = await getAuthenticatedOrDefault();
+            var authenticated = await GetAuthenticatedOrDefault();
             if (authenticated is null) 
                 return Unauthorized("User not authenticated");
 
