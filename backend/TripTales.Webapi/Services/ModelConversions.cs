@@ -34,14 +34,14 @@ namespace Triptales.Webapi.Services
                 userFollowing);
 
         public UserPublicSmallDto ToUserPublicSmallDto(User user) =>
-            new(user.Guid, user.Username, user.DisplayName, user.Verified);
+            new(user.Guid, user.Username, user.DisplayName, user.Verified, user.ProfilePicture);
 
         public UserPublicDto ToUserPublicDto(User user) => new(
-            user.Guid, user.Username, user.DisplayName, user.Verified,
+            user.Guid, user.Username, user.DisplayName, user.Verified, user.ProfilePicture,
             user.Following.Count > 0 ? user.Following.Select(ToUserPublicSmallDto).ToList() : []);
 
         public UserPrivateDto ToUserPrivateDto(User user) =>
-            new(user.Guid, user.Username, user.DisplayName, user.Email);
+            new(user.Guid, user.Username, user.DisplayName, user.Email, user.ProfilePicture);
 
         public PostSmallDto ToPostSmallDto(Post a, bool userLiked = false) => new(
                 a.Guid,

@@ -15,6 +15,7 @@ const Footer: React.FC = () => {
               height={400}
               className="h-auto w-[125px] transition-transform duration-300 hover:scale-105 md:w-[200px]"
               alt="TripTales Logo"
+              priority
             />
           </div>
 

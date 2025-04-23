@@ -14,6 +14,8 @@ export type User = {
   placeOfResidence?: string;
   favoriteDestination?: string;
   memberSince?: Date;
+  profilePicture?: string;
+  bannerImage?: string;
 } & Entity;
 
 export type Post = {

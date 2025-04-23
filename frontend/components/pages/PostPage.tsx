@@ -8,12 +8,12 @@ import Sorry from "../low/Sorry";
 import Post from "../low/Post";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { useUser } from "../providers/UserProvider";
-import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import { MessageCirclePlus } from "lucide-react";
 import Comment from "../low/Comment";
 import { toast } from "sonner";
+import Avatar from "../low/Avatar";
 
 interface PostPageProps {
   guid: string;
@@ -82,11 +82,7 @@ const PostPage: React.FC<PostPageProps> = ({ guid }) => {
           {loggedIn && (
             <form onSubmit={handleCommentSubmit} className="mt-4">
               <div className="flex space-x-3">
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback>
-                    {user?.username.toUpperCase()[0]}
-                  </AvatarFallback>
-                </Avatar>
+                <Avatar user={user!} />
                 <div className="flex-1">
                   <Textarea
                     value={commentContent}
