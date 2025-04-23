@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Heart, Settings } from "lucide-react";
+import { Calendar, Heart, Settings, MessageCircle } from "lucide-react";
 import { Button } from "../ui/button";
 import { useUser } from "../providers/UserProvider";
 import {
@@ -200,15 +200,25 @@ const Post: React.FC<PostProps> = ({ post, embed }) => {
       </CardContent>
 
       <CardFooter className="flex items-center justify-between border-t border-gray-100 bg-gray-50 !p-3">
-        <Button
-          variant={"ghost"}
-          disabled={!loggedIn}
-          className="text-gray-600 transition-colors duration-200 hover:text-rose-500"
-          onClick={handleLike}
-        >
-          <Heart className={liked ? "fill-red-500 text-red-500" : undefined} />
-          {likesCount} Like{likesCount !== 1 ? "s" : ""}
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button
+            variant={"ghost"}
+            disabled={!loggedIn}
+            className="text-gray-600 transition-colors duration-200 hover:text-rose-500"
+            onClick={handleLike}
+          >
+            <Heart
+              className={liked ? "fill-red-500 text-red-500" : undefined}
+            />
+            {likesCount} Like{likesCount !== 1 ? "s" : ""}
+          </Button>
+          <div className="flex items-center text-sm text-gray-400">
+            <MessageCircle className="h-4 w-4" />
+            <span className="ml-2">
+              {post.commentsCount} Comment{post.commentsCount !== 1 ? "s" : ""}
+            </span>
+          </div>
+        </div>
         {embed ? (
           <Button
             variant={"default"}

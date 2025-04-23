@@ -33,7 +33,7 @@ namespace Triptales.Controllers
             _modelConversions = modelConversions;
         }
 
-        private async Task<User?> getAuthenticatedOrDefault()
+        private async Task<User?> GetAuthenticatedOrDefault()
         {
             var authenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
             if (!authenticated) return null;
@@ -46,27 +46,31 @@ namespace Triptales.Controllers
         [HttpGet]
         public async Task<ActionResult<List<PostSmallDto>>> GetPosts()
         {
-            var authenticated = await getAuthenticatedOrDefault();
-            return Ok((await _repository.GetAll()).Select(a => _modelConversions.ConvertToPostSmallDto(
+            var authenticated = await GetAuthenticatedOrDefault();
+            return Ok((await _repository.GetAll()).Select(a => _modelConversions.ToPostSmallDto(
                 a,
-                authenticated is not null && authenticated.LikedPosts.Any(p => p.Guid == a.Guid))).ToList());
+                authenticated is not null && a.Likes.Any(u => u.Guid == authenticated.Guid))).ToList());
         }
 
         [HttpGet("{guid:Guid}")]
         public async Task<ActionResult<PostDto>> GetPost(Guid guid)
         {
-            var authenticated = await getAuthenticatedOrDefault();
-            return await _repository.GetFromGuid(guid) is Post post ? Ok(_modelConversions.ConvertToPostDto(
-                post, 
-                authenticated is not null && authenticated.LikedPosts.Any(p => p.Guid == post.Guid)
-                )) : BadRequest("Post not found");
+            var authenticated = await GetAuthenticatedOrDefault();
+            var post = await _repository.GetFromGuid(guid);
+            if (post is null)
+            {
+                return BadRequest("Post not found");
+            }
+            return Ok(_modelConversions.ToPostDto(
+                post,
+                authenticated is not null && post.Likes.Any(u => u.Guid == authenticated.Guid)));
         }
 
         [HttpPost]
         [Authorize]
         public async Task<ActionResult> AddPost([FromBody] AddPostCmd cmd)
         {
-            var user = await getAuthenticatedOrDefault();
+            var user = await GetAuthenticatedOrDefault();
             if (user is null) return Unauthorized("User not authenticated");
             var post = new Post(cmd.Title, cmd.Description, user, DateOnly.Parse(cmd.StartDate), DateOnly.Parse(cmd.EndDate), cmd.Days.Select(d => new Post.Day(d.Title, d.Description, DateOnly.Parse(d.Date))).ToList());
             return await _repository.Insert(post) ? Ok(post.Guid) : BadRequest("Insert failed! Check if the parameters are correct");
@@ -76,7 +80,7 @@ namespace Triptales.Controllers
         [Authorize]
         public async Task<ActionResult> DeletePost(Guid guid)
         {
-            var authenticated = await getAuthenticatedOrDefault();
+            var authenticated = await GetAuthenticatedOrDefault();
             if (authenticated is null) 
                 return Unauthorized("User not authenticated");
 
@@ -105,16 +109,18 @@ namespace Triptales.Controllers
         {
             if (size <= 0) return BadRequest("Size must be greater than 0");
 
-            var authenticated = await getAuthenticatedOrDefault();
+            var authenticated = await GetAuthenticatedOrDefault();
 
             Random rand = new Random();
-            var take = (await _db.Posts.Include(a => a.Author)
+            var take = (await _db.Posts.Include(p => p.Author)
+                .Include(p => p.Likes)
+                .Include(p => p.Comments)
                 .ToListAsync()).OrderBy(p => rand.Next())
                 .Take(size)
                 .Select(p =>
-                    _modelConversions.ConvertToPostSmallDto(
+                    _modelConversions.ToPostSmallDto(
                         p,
-                        authenticated is not null && authenticated.LikedPosts.Any(a => a.Guid == p.Guid))).ToList();
+                        authenticated is not null && p.Likes.Any(u => u.Guid == authenticated.Guid))).ToList();
             return Ok(take);
         }
 
@@ -122,7 +128,7 @@ namespace Triptales.Controllers
         [Authorize]
         public async Task<IActionResult> LikePost(Guid guid)
         {
-            var authenticated = await getAuthenticatedOrDefault();
+            var authenticated = await GetAuthenticatedOrDefault();
             if (authenticated is null)
                 return Unauthorized();
 
@@ -130,10 +136,10 @@ namespace Triptales.Controllers
             if (requested is null)
                 return NotFound();
 
-            if (authenticated.LikedPosts.Any(p => p.Guid == guid))
-                authenticated.LikedPosts.Remove(requested);
+            if (requested.Likes.Any(u => u.Guid == authenticated.Guid))
+                requested.Likes.Remove(authenticated);
             else
-                authenticated.LikedPosts.Add(requested);
+                requested.Likes.Add(authenticated);
             await _db.SaveChangesAsync();
             return Ok();
         }

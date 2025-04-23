@@ -1,7 +1,10 @@
 import {
+  CommentPostRequest,
   CreatePostRequest,
+  isPostCommentResponse,
   isPostResponse,
   isPostResponseSmall,
+  PostCommentResponse,
   PostResponse,
   PostResponseSmall,
 } from "@/types/RequestTypes";
@@ -52,7 +55,7 @@ const getPost = async (guid: string): Promise<GetPostClientResponse> => {
   try {
     const response = await api.get<PostResponse>(`/Post/${guid}`);
     console.log(response.data);
-    
+
     if (response.status === 200 && isPostResponse(response.data))
       return { success: true, data: response.data };
     else throw new Error("Invalid response structure");
@@ -69,7 +72,53 @@ const likePost = async (guid: string): Promise<boolean> => {
   } catch {
     return false;
   }
-}
+};
+
+const commentPost = async (
+  data: CommentPostRequest,
+): Promise<PostCommentResponse | null> => {
+  try {
+    const response = await api.post(`/Comment`, data);
+    if (response.status === 200 && isPostCommentResponse(response.data))
+      return response.data;
+    else throw new Error("Invalid response structure");
+  } catch {
+    return null;
+  }
+};
+
+const deleteComment = async (guid: string): Promise<boolean> => {
+  try {
+    const response = await api.delete(`/Comment/${guid}`);
+    if (response.status === 204) return true;
+    else return false;
+  } catch {
+    return false;
+  }
+};
+
+const likeComment = async (guid: string): Promise<boolean> => {
+  try {
+    const response = await api.post(`/Comment/like/${guid}`);
+    if (response.status === 200) return true;
+    else return false;
+  } catch {
+    return false;
+  }
+};
+
+const getComment = async (
+  guid: string,
+): Promise<PostCommentResponse | null> => {
+  try {
+    const response = await api.get<PostCommentResponse>(`/Comment/${guid}`);
+    if (response.status === 200 && isPostCommentResponse(response.data))
+      return response.data;
+    else throw new Error("Invalid response structure");
+  } catch {
+    return null;
+  }
+};
 
 const deletePost = async (guid: string): Promise<boolean> => {
   try {
@@ -81,6 +130,16 @@ const deletePost = async (guid: string): Promise<boolean> => {
   }
 }
 
-const PostService = { getRandom, createPost, getPost, likePost, deletePost };
+const PostService = {
+  getRandom,
+  createPost,
+  getPost,
+  likePost,
+  deletePost,
+  commentPost,
+  deleteComment,
+  likeComment,
+  getComment
+};
 
 export default PostService;

@@ -4,6 +4,7 @@ using System.Linq;
 using Bogus;
 using Microsoft.EntityFrameworkCore;
 using Triptales.Application.Model;
+using static Triptales.Application.Model.Post;
 
 namespace Triptales.Webapi.Infrastructure
 {
@@ -14,17 +15,35 @@ namespace Triptales.Webapi.Infrastructure
 
         public DbSet<User> Users => Set<User>();
         public DbSet<Post> Posts => Set<Post>();
+        public DbSet<Comment> Comments => Set<Comment>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Post>().HasMany(p => p.Likes)
                 .WithMany(u => u.LikedPosts)
                 .UsingEntity(j => j.ToTable("PostLikes"));
+            modelBuilder.Entity<Comment>().HasMany(c => c.Likes)
+                .WithMany(u => u.LikedPostComments)
+                .UsingEntity(j => j.ToTable("PostCommentLikes"));
             modelBuilder.Entity<Post>().HasOne(p => p.Author)
                 .WithMany(u => u.Posts);
+            modelBuilder.Entity<Comment>().HasOne(c => c.Author)
+                .WithMany(u => u.Comments);
             modelBuilder.Entity<Post>().OwnsMany(p => p.Days, p =>
             {
                 p.HasKey("Id");
+            });
+
+            modelBuilder.Entity<Comment>(comment =>
+            {
+                // Comment to Post (only top-level comments are in Post.Comments)
+                comment.HasOne(c => c.Post)
+                       .WithMany(p => p.Comments)
+                       .OnDelete(DeleteBehavior.Cascade);
+
+                // Self-referential Comment hierarchy
+                comment.HasOne(c => c.Parent)
+                       .WithMany(c => c.Comments);
             });
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
@@ -111,13 +130,49 @@ namespace Triptales.Webapi.Infrastructure
 
                     var post = new Post(
                         title: f.Lorem.Sentence(7, 2),
-                        description: f.Lorem.Sentence(35, 5),
+                        description: f.Lorem.Sentence(40, 5),
                         author: f.PickRandom(users),
                         startDate: startDate,
                         endDate: endDate,
                         days: days
                     );
 
+                    List<Comment> GenerateComments(int maxDepth, Comment? parent = null, int currentDepth = 0, int genCount = 4)
+                    {
+                        var comments = new Faker<Comment>("de")
+                            .CustomInstantiator(f =>
+                            {
+                                var comment = new Comment(
+                                    content: f.Lorem.Sentence(5, 10),
+                                    author: f.PickRandom(users),
+                                    parent: parent,
+                                    post: parent is null ? post : null
+                                );
+
+                                var likeCount = f.Random.Int(0, users.Count);
+                                var randomUsers = users.OrderBy(_ => f.Random.Int()).Take(likeCount).ToList();
+                                comment.Likes.AddRange(randomUsers);
+
+                                if (currentDepth < maxDepth)
+                                {
+                                    var subCommentCount = f.Random.Int(0, 2);
+                                    var subComments = GenerateComments(maxDepth, comment, currentDepth + 1, subCommentCount);
+                                    comment.Comments.AddRange(subComments);
+                                }
+
+                                return comment;
+                            })
+                            .Generate(f.Random.Int(1, genCount))
+                            .ToList();
+
+                        return comments;
+                    }
+
+                    var likeCount = f.Random.Int(0, users.Count);
+                    var randomUsers = users.OrderBy(_ => f.Random.Int()).Take(likeCount).ToList();
+                    post.Likes.AddRange(randomUsers);
+
+                    post.Comments.AddRange(GenerateComments(maxDepth: 3));
                     return post;
                 })
                 .Generate(10)

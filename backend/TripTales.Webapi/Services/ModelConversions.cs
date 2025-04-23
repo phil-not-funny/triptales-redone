@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Triptales.Application.Dtos;
 using Triptales.Application.Model;
 
@@ -15,7 +17,7 @@ namespace Triptales.Webapi.Services
             _userService = userService;
         }
 
-        public UserDetailedDto ConvertToDetailed(User user, bool userFollowing = false) =>
+        public UserDetailedDto ToUserDetailedDto(User user, bool userFollowing = false) =>
             new(
                 user.Guid,
                 user.Username,
@@ -28,40 +30,56 @@ namespace Triptales.Webapi.Services
                 _userService.GetFollowers(user.Guid).Count,
                 user.ProfilePicture,
                 user.BannerImage,
-                user.Posts.Count > 0 ? user.Posts.Select(p => ConvertToPostSmallDto(p)).ToList() : new(),
+                user.Posts.Count > 0 ? user.Posts.Select(p => ToPostSmallDto(p)).ToList() : [],
                 userFollowing);
 
-        public UserPublicSmallDto ConvertToPublicSmall(User user) =>
+        public UserPublicSmallDto ToUserPublicSmallDto(User user) =>
             new(user.Guid, user.Username, user.DisplayName, user.Verified);
 
-        public UserPublicDto ConvertToPublic(User user) => new(
+        public UserPublicDto ToUserPublicDto(User user) => new(
             user.Guid, user.Username, user.DisplayName, user.Verified,
-            user.Following.Count > 0 ? user.Following.Select(u => ConvertToPublicSmall(u)).ToList() : new());
+            user.Following.Count > 0 ? user.Following.Select(ToUserPublicSmallDto).ToList() : []);
 
-        public UserPrivateDto ConvertToPrivate(User user) =>
+        public UserPrivateDto ToUserPrivateDto(User user) =>
             new(user.Guid, user.Username, user.DisplayName, user.Email);
 
-        public PostSmallDto ConvertToPostSmallDto(Post a, bool userLiked = false) => new(
+        public PostSmallDto ToPostSmallDto(Post a, bool userLiked = false) => new(
                 a.Guid,
                 a.Title,
                 a.Description,
-                ConvertToPublicSmall(a.Author),
+                ToUserPublicSmallDto(a.Author),
                 a.StartDate.ToString(),
                 a.EndDate.ToString(),
                 a.CreatedAt.ToString(),
                 a.Likes.Count,
+                userLiked,
+                a.Comments.Count);
+
+        public PostDto ToPostDto(Post a, bool userLiked = false, bool userCommented = false) => new(
+                a.Guid,
+                a.Title,
+                a.Description,
+                ToUserPublicSmallDto(a.Author),
+                a.StartDate.ToString(),
+                a.EndDate.ToString(),
+                a.CreatedAt.ToString(),
+                a.Likes.Count,
+                a.Days.Select(ToPostDayDto).ToList(),
+                userLiked,
+                a.Comments.Count,
+                a.Comments.Count > 0 ? a.Comments.Select(c => ToPostCommentDto(c, subComments: false)).ToList() : [],
+                userCommented);
+
+        public PostCommentDto ToPostCommentDto(Comment c, bool userLiked = false, bool subComments = true) => new(
+                c.Guid,
+                ToUserPublicSmallDto(c.Author),
+                c.Content,
+                c.CreatedAt.ToString(),
+                c.Comments.Count > 0 && subComments ? c.Comments.Select(s => ToPostCommentDto(s, subComments: false)).ToList() : [],
+                c.Comments.Count,
+                c.Likes.Count,
                 userLiked);
 
-        public PostDto ConvertToPostDto(Post a, bool userLiked = false) => new(
-                a.Guid,
-                a.Title,
-                a.Description,
-                ConvertToPublicSmall(a.Author),
-                a.StartDate.ToString(),
-                a.EndDate.ToString(),
-                a.CreatedAt.ToString(),
-                a.Likes.Count,
-                a.Days,
-                userLiked);
+        public PostDayDto ToPostDayDto(Post.Day d) => new(d.Title, d.Description, d.Date.ToString());
     }
 }

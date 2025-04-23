@@ -31,6 +31,7 @@ namespace Triptales.Application.Model
         public DateOnly EndDate { get; set; }
         public List<User> Likes { get; } = new();
         public List<Day> Days { get; } = new();
+        public List<Comment> Comments { get; } = new();
 
         public class Day(string title, string description, DateOnly date)
         {
