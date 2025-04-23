@@ -16,15 +16,17 @@ const formSchema = z
   .object({
     username: z
       .string()
-      .min(1, {
-        message: "Username is required",
+      .min(4, {
+        message: "Username must be at least 4 characters long.",
       })
       .regex(/^[a-z0-9._]+$/, {
         message:
           "Username can only contain lowercase letters, numbers, dots, and underscores.",
       }),
-    password: z.string().min(1, {
-      message: "Password is required.",
+    password: z.string().min(8, {
+      message: "Password must be 8 characters long.",
+    }).regex(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/, {
+      message: "Password must contain at least one lower- and uppercase letter, number and special character."
     }),
     confirmPassword: z.string().min(1, {
       message: "Please confirm your password.",
@@ -82,6 +84,7 @@ export function RegisterForm() {
           control={form.control}
           name="confirmPassword"
           label="Match Password"
+          textType="password"
           required
         />
         <FormInput
