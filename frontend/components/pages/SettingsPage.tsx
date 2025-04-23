@@ -35,7 +35,6 @@ const SettingsPictureSectionSection = ({
   type: "ProfilePicture" | "BannerImage";
   setUploadData: Dispatch<SetStateAction<UserUploadRequest | null>>
 }) => {
-  const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -52,9 +51,8 @@ const SettingsPictureSectionSection = ({
         return;
       }
       setLoading(true);
-      setImage(file);
       const reader = new FileReader();
-      reader.onload = (ev) => {
+      reader.onload = () => {
         var result = reader.result as string;
         setPreview(result);
         setUploadData((prev: UserUploadRequest | null) => ({
@@ -103,10 +101,12 @@ const SettingsPictureSectionSection = ({
   );
 };
 
-const SettingsPictureSection: React.FC<UserSettingsProps> = ({ user }) => {
+const SettingsPictureSection: React.FC<UserSettingsProps> = () => {
   const [uploadData, setUploadData] = useState<UserUploadRequest | null>(null);
+  const [ loading, setLoading] = useState<boolean>(false);
 
   const handleUploadImage = async () => {
+    setLoading(true);
     if (!uploadData) {
       toast.error("Please select an image to upload.");
       return;
@@ -117,6 +117,7 @@ const SettingsPictureSection: React.FC<UserSettingsProps> = ({ user }) => {
     } else {
       toast.error("Something went wrong. Please try again later.");
     }
+    setLoading(false);
   };
 
   return (
@@ -128,7 +129,7 @@ const SettingsPictureSection: React.FC<UserSettingsProps> = ({ user }) => {
         <SettingsPictureSectionSection setUploadData={setUploadData} type="ProfilePicture" />
         <SettingsPictureSectionSection setUploadData={setUploadData} type="BannerImage" />
       </div>
-      <Button onClick={handleUploadImage}>Upload Images</Button>
+      <Button onClick={handleUploadImage}>{loading && <Loader2 />} Upload Images</Button>
     </div>
   );
 };

@@ -127,16 +127,22 @@ export const UserProfileWithBanner: React.FC<
 > = ({ user, bannerImage = "/images/default-background.jpg", className }) => {
   return (
     <Card className={`w-full max-w-3xl pt-0 shadow-sm ${className}`}>
-      {/* Banner Section */}
       <div className="relative mb-6 h-48 w-full overflow-hidden">
-        <Image
-          src={bannerImage}
-          alt="User Banner"
-          width={1200}
-          height={300}
-          className="h-full w-full rounded-none object-cover lg:rounded-t-lg"
-          priority
-        />
+        {user.bannerImage ? (
+          <img
+            src={"https://localhost:5001/" + user.bannerImage}
+            alt="User Banner"
+            className="h-full w-full rounded-none object-cover lg:rounded-t-lg"
+          />
+        ) : (
+          <Image
+            src={bannerImage}
+            alt="User Banner"
+            fill
+            className="h-full w-full rounded-none object-cover lg:rounded-t-lg"
+            priority
+          />
+        )}
       </div>
 
       <UserProfileCardContent user={user} />
