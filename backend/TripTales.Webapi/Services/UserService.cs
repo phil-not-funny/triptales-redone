@@ -27,11 +27,11 @@ namespace Triptales.Webapi.Services
             createdUser = new User(user.Username, user.Email, user.Password, user.DisplayName);
             var context = new ValidationContext(createdUser);
             results = new();
-            var regex = @"^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$";
+            var regex = @"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$";
             bool isPasswordValid = user.Password.Length >= 8 && Regex.IsMatch(user.Password, regex);
             if (!isPasswordValid)
                 results.Add(new ValidationResult(
-                    "Password must contain a minimum of eight characters, at least one letter, number and special character",
+                    "Password must contain a minimum of eight characters, at least one lower- and uppercase letter, number and special character",
                     new[] { nameof(user.Password) }));
             bool isValid = Validator.TryValidateObject(createdUser, context, results, true);
             return isPasswordValid && isValid;
