@@ -32,6 +32,6 @@ namespace Triptales.Webapi.Services
         public List<User> GetFollowers(Guid guid)
             => _db.Users.Include(u => u.Following).Where(u => u.Following.Any(f => f.Guid == guid)).ToList();
 
-        public async Task<User?> GetUserByUsername(string username) => await _db.Users.Include(u => u.Following).FirstOrDefaultAsync(u => u.Username == username);
+        public async Task<User?> GetUserByUsername(string username) => await _db.Users.Include(u => u.Following).Include(u => u.LikedPosts).Include(u => u.Posts).FirstOrDefaultAsync(u => u.Username == username);
     }
 }

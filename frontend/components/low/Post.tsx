@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Heart, MessageCircle } from "lucide-react";
+import { Calendar, Heart, Settings, MessageCircle } from "lucide-react";
 import { Button } from "../ui/button";
 import { useUser } from "../providers/UserProvider";
 import {
@@ -24,6 +24,17 @@ import {
 import { useState } from "react";
 import PostService from "@/lib/services/postService";
 import { toast } from "sonner";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 interface EmbeddedPostProps {
   // props when embed is true
@@ -37,7 +48,57 @@ interface FullPostProps {
 }
 type PostProps = EmbeddedPostProps | FullPostProps;
 
+const PostSettings: React.FC<{ onDelete: () => Promise<void> }> = ({
+  onDelete,
+}) => {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button variant={"ghost"} className="absolute top-4 right-4 h-7 w-7">
+          <Settings className="!h-5 !w-5" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="flex flex-col items-start justify-center gap-2">
+        <h3 className="text-base font-semibold uppercase">Quick Settings</h3>
+        <Dialog>
+          <DialogTrigger>
+            <Button variant={"destructive"} size={"sm"}>
+              Delete this Post
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Are you absolutely sure?</DialogTitle>
+              <DialogDescription>
+                This action cannot be undone. This will permanently delete this
+                post and remove its data from our servers.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="flex w-full flex-row items-center justify-between">
+              <DialogClose asChild>
+                <Button
+                  type="button"
+                  onClick={onDelete}
+                  variant={"destructive"}
+                >
+                  Permanently Delete
+                </Button>
+              </DialogClose>
+              <DialogClose asChild>
+                <Button type="button" variant={"outline"}>
+                  Cancel
+                </Button>
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </PopoverContent>
+    </Popover>
+  );
+};
+
 const Post: React.FC<PostProps> = ({ post, embed }) => {
+  const { user } = useUser();
   const [liked, setLiked] = useState<boolean>(post.userLiked);
   const [likesCount, setLikesCount] = useState<number>(post.likesCount);
 
@@ -60,12 +121,25 @@ const Post: React.FC<PostProps> = ({ post, embed }) => {
     }
   };
 
+  const handleDelete = async () => {
+    const response = await PostService.deletePost(post.guid);
+    if (response) {
+      toast.success("Post deleted successfully!");
+      router.push("/user/" + user?.username);
+    } else {
+      toast.error("Failed to delete the post. Please try again later.");
+    }
+  };
+
   return (
     <Card className="mx-auto mb-6 gap-0 overflow-hidden rounded-xl border border-gray-100 bg-white py-0 shadow-sm transition-shadow duration-300 hover:shadow-md lg:w-2xl">
-      <CardHeader className="border-b border-gray-100 p-6">
+      <CardHeader className="relative border-b border-gray-100 p-6">
         <CardTitle className="mb-2 text-2xl font-semibold text-gray-800">
           {post.title}
         </CardTitle>
+        {post.author.guid === user?.guid && (
+          <PostSettings onDelete={handleDelete} />
+        )}
         <div className="flex items-center p-3 text-sm text-gray-600">
           <span>
             By{" "}
@@ -92,7 +166,6 @@ const Post: React.FC<PostProps> = ({ post, embed }) => {
           </div>
         </div>
       </CardHeader>
-
       <CardContent data-color-mode="light" className="p-6">
         <MDEditor.Markdown
           source={post.description}

@@ -120,11 +120,22 @@ const getComment = async (
   }
 };
 
+const deletePost = async (guid: string): Promise<boolean> => {
+  try {
+    const response = await api.delete(`/Post/${guid}`);
+    if (response.status === 204) return true;
+    else return false;
+  } catch {
+    return false;
+  }
+}
+
 const PostService = {
   getRandom,
   createPost,
   getPost,
   likePost,
+  deletePost,
   commentPost,
   deleteComment,
   likeComment,

@@ -11,6 +11,7 @@ import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { UserDetailedResponse } from "@/types/RequestTypes";
 import { FormInput } from "../low/FormInput";
+import { useUser } from "../providers/UserProvider";
 
 const formSchema = z.object({
   username: z
@@ -29,6 +30,7 @@ const formSchema = z.object({
 });
 
 export function UserFlavorForm({ user }: { user: UserDetailedResponse }) {
+  const { refreshUser } = useUser();
   const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -87,6 +89,7 @@ export function UserFlavorForm({ user }: { user: UserDetailedResponse }) {
     const response = await userService.putFlavor(values);
     if (response) {
       toast.success("User updated successfully.");
+      refreshUser();
     } else {
       toast.error("Failed to update user.");
     }
