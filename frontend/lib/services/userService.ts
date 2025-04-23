@@ -6,6 +6,7 @@ import {
   UserDetailedResponse,
   UserPrivateResponse,
   UserPutFlavorRequest,
+  UserUploadRequest,
 } from "@/types/RequestTypes";
 import api from "../api";
 import axios, { HttpStatusCode } from "axios";
@@ -141,6 +142,27 @@ const putFlavor = async (data: UserPutFlavorRequest): Promise<boolean> => {
   }
 };
 
+const userUpload = async (data: UserUploadRequest): Promise<boolean> => {
+  try {
+    const formData = new FormData();
+    if (data.ProfilePicture) {
+      formData.append("ProfilePicture", data.ProfilePicture);
+    }
+    if (data.BannerImage) {
+      formData.append("BannerImage", data.BannerImage);
+    }
+    const response = await api.post("/User/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.status === HttpStatusCode.Ok;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
 const UserService = {
   register,
   login,
@@ -149,6 +171,7 @@ const UserService = {
   getByUsername,
   follow,
   putFlavor,
+  userUpload
 };
 
 export default UserService;

@@ -26,7 +26,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useUser } from "../providers/UserProvider";
 import { useEffect } from "react";
-import { Avatar, AvatarFallback } from "../ui/avatar";
+import Avatar from "../low/Avatar";
 
 type Item = {
   title: string;
@@ -170,11 +170,7 @@ export const AppSidebar: React.FC = () => {
             className="flex items-center justify-between rounded-lg p-2 transition-colors duration-150 hover:bg-gray-100"
           >
             <div className="flex items-center gap-3">
-              <Avatar className="h-10 w-10">
-                <AvatarFallback>
-                  {user.displayName.charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+              <Avatar user={user} />
               <div>
                 <p className="text-sm font-medium text-gray-800">
                   {user.displayName}

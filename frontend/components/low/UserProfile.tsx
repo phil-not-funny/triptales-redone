@@ -1,7 +1,6 @@
 "use client";
 
 import { UserDetailedResponse } from "@/types/RequestTypes";
-import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Verified } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
@@ -12,6 +11,7 @@ import { Fragment, useState } from "react";
 import UserService from "@/lib/services/userService";
 import { toast } from "sonner";
 import { useUser } from "../providers/UserProvider";
+import Avatar from "./Avatar";
 
 const UserProfileCardContent: React.FC<UserProfileProps> = ({ user }) => {
   const { loggedIn, user: client } = useUser();
@@ -39,12 +39,7 @@ const UserProfileCardContent: React.FC<UserProfileProps> = ({ user }) => {
   return (
     <Fragment>
       <CardHeader className="flex items-center gap-6 border-b border-gray-100 pb-6">
-        {/* Avatar */}
-        <Avatar className="h-24 w-24">
-          <AvatarFallback className="text-4xl">
-            {user.username.charAt(0).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
+        <Avatar user={user} className="!h-24 !w-24" textClassName="!text-4xl" />
         <div className="flex-1">
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-semibold">{user.displayName}</h1>
@@ -132,18 +127,22 @@ export const UserProfileWithBanner: React.FC<
 > = ({ user, bannerImage = "/images/default-background.jpg", className }) => {
   return (
     <Card className={`w-full max-w-3xl pt-0 shadow-sm ${className}`}>
-      {/* Banner Section */}
-      <div
-        className="relative mb-6 h-48 w-full overflow-hidden"
-      >
-        <Image
-          src={bannerImage}
-          alt="User Banner"
-          width={1200}
-          height={300}
-          className="h-full w-full object-cover rounded-none lg:rounded-t-lg"
-          priority
-        />
+      <div className="relative mb-6 h-48 w-full overflow-hidden">
+        {user.bannerImage ? (
+          <img
+            src={"https://localhost:5001/" + user.bannerImage}
+            alt="User Banner"
+            className="h-full w-full rounded-none object-cover lg:rounded-t-lg"
+          />
+        ) : (
+          <Image
+            src={bannerImage}
+            alt="User Banner"
+            fill
+            className="h-full w-full rounded-none object-cover lg:rounded-t-lg"
+            priority
+          />
+        )}
       </div>
 
       <UserProfileCardContent user={user} />

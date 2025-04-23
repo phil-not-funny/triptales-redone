@@ -2,5 +2,5 @@
 
 namespace Triptales.Application.Dtos
 {
-    public record UserPublicSmallDto(Guid Guid, string Username, string DisplayName, bool Verified);
+    public record UserPublicSmallDto(Guid Guid, string Username, string DisplayName, bool Verified, string? ProfilePicture);
 }

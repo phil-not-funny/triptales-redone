@@ -17,6 +17,7 @@ export type UserPrivateResponse = {
   username: string;
   displayName: string;
   email: string;
+  profilePicture?: string;
 };
 
 export const isUserPrivateResponse = (u: any): u is UserPrivateResponse =>
@@ -27,6 +28,7 @@ export type UserPublicResponse = {
   username: string;
   displayName: string;
   verified: boolean;
+  profilePicture?: string;
   following?: UserPublicResponseSmall[];
 };
 
@@ -35,6 +37,7 @@ export type UserPublicResponseSmall = {
   username: string;
   displayName: string;
   verified: boolean;
+  profilePicture?: string;
 };
 
 export const isUserPublicResponse = (u: any): u is UserPublicResponse =>
@@ -57,6 +60,8 @@ export type UserDetailedResponse = {
   followerCount: number;
   posts: PostResponseSmall[];
   userFollowing: boolean;
+  profilePicture?: string;
+  bannerImage?: string;
 };
 
 export const isUserDetailedResponse = (u: any): u is UserDetailedResponse =>
@@ -80,6 +85,11 @@ export type UserPutFlavorRequest = {
   placeOfResidence?: string;
   favoriteDestination?: string;
 };
+
+export type UserUploadRequest = {
+  ProfilePicture: File | null;
+  BannerImage: File | null;
+}
 
 // ANCHOR POST SECTION
 

@@ -35,6 +35,7 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { DialogClose } from "@radix-ui/react-dialog";
+import Avatar from "./Avatar";
 
 interface EmbeddedPostProps {
   // props when embed is true
@@ -141,15 +142,19 @@ const Post: React.FC<PostProps> = ({ post, embed }) => {
           <PostSettings onDelete={handleDelete} />
         )}
         <div className="flex items-center p-3 text-sm text-gray-600">
-          <span>
-            By{" "}
+          <div className="flex items-center gap-2">
+            <Avatar
+              user={post.author}
+              className="!h-8 !w-8"
+              textClassName="!text-sm"
+            />
             <Link
               href={`/user/${post.author.username}`}
               className="hover:underline"
             >
               {post.author.username}
             </Link>
-          </span>
+          </div>
           <span className="mx-2">•</span>
           <span>Posted on {formatDateString(post.createdAt)}</span>
         </div>
