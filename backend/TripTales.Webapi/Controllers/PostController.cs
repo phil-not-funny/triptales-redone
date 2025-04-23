@@ -56,10 +56,14 @@ namespace Triptales.Controllers
         public async Task<ActionResult<PostDto>> GetPost(Guid guid)
         {
             var authenticated = await GetAuthenticatedOrDefault();
-            return await _repository.GetFromGuid(guid) is Post post ? Ok(_modelConversions.ToPostDto(
+            var post = await _repository.GetFromGuid(guid);
+            if (post is null)
+            {
+                return BadRequest("Post not found");
+            }
+            return Ok(_modelConversions.ToPostDto(
                 post,
-                authenticated is not null && post.Likes.Any(u => u.Guid == authenticated.Guid)
-                )) : BadRequest("Post not found");
+                authenticated is not null && post.Likes.Any(u => u.Guid == authenticated.Guid)));
         }
 
         [HttpPost]

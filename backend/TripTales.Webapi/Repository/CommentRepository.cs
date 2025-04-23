@@ -24,25 +24,27 @@ namespace Triptales.Repository
             return true;
         }
 
-        public Task<List<Comment>> GetAll() => 
+        public Task<List<Comment>> GetAll() =>
             _db.Comments.Include(c => c.Comments)
             .Include(c => c.Author)
             .Include(c => c.Post)
             .Include(c => c.Likes)
             .Include(c => c.Parent)
             .ToListAsync();
-        
 
-        public Task<Comment?> GetFromGuid(Guid guid) => 
+
+        public Task<Comment?> GetFromGuid(Guid guid) =>
             _db.Comments
             .Include(c => c.Comments)
                 .ThenInclude(c => c.Comments)
+            .Include(c => c.Comments)
+                .ThenInclude(c => c.Author)
             .Include(c => c.Author)
             .Include(c => c.Post)
             .Include(c => c.Likes)
             .Include(c => c.Parent)
             .FirstOrDefaultAsync(c => c.Guid == guid);
-        
+
 
         public Task<bool> Insert(Comment entity)
         {

@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Triptales.Application.Dtos;
 using Triptales.Application.Model;
 
@@ -65,15 +67,15 @@ namespace Triptales.Webapi.Services
                 a.Days.Select(ToPostDayDto).ToList(),
                 userLiked,
                 a.Comments.Count,
-                a.Comments.Count > 0 ? a.Comments.Select(c => ToPostCommentDto(c)).ToList() : [],
+                a.Comments.Count > 0 ? a.Comments.Select(c => ToPostCommentDto(c, subComments: false)).ToList() : [],
                 userCommented);
 
-        public PostCommentDto ToPostCommentDto(Comment c, bool userLiked = false) => new(
+        public PostCommentDto ToPostCommentDto(Comment c, bool userLiked = false, bool subComments = true) => new(
                 c.Guid,
                 ToUserPublicSmallDto(c.Author),
                 c.Content,
                 c.CreatedAt.ToString(),
-                c.Comments.Count > 0 ? c.Comments.Select(o => ToPostCommentDto(o)).ToList() : [],
+                c.Comments.Count > 0 && subComments ? c.Comments.Select(s => ToPostCommentDto(s, subComments: false)).ToList() : [],
                 c.Comments.Count,
                 c.Likes.Count,
                 userLiked);

@@ -28,7 +28,8 @@ namespace Triptales.Repository
             await _db.Posts.Include(p => p.Author).Include(p => p.Likes).Include(p => p.Comments).ToListAsync();
 
         public async Task<Post?> GetFromGuid(Guid guid) =>
-            await _db.Posts.Include(p => p.Author)
+            await _db.Posts
+            .Include(p => p.Author)
             .Include(p => p.Likes)
             .Include(p => p.Comments)
                 .ThenInclude(c => c.Author)
