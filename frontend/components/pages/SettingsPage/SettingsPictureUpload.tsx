@@ -5,7 +5,6 @@ import { type Dispatch, type SetStateAction, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../../ui/button";
 import { Loader2 } from "lucide-react";
-import Image from "next/image";
 import { Input } from "../../ui/input";
 import {
   Dialog,
