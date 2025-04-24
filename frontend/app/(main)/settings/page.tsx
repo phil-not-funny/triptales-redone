@@ -1,5 +1,5 @@
 import Authenticated from "@/components/auth/Authenticated";
-import Page from "@/components/pages/SettingsPage";
+import Page from "@/components/pages/SettingsPage/SettingsPage";
 import { PageHead } from "@/components/top/PageHead";
 
 export default function SettingsPage() {

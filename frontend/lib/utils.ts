@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
+import { Area } from "react-easy-crop";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -38,4 +39,41 @@ export function beautifyDate(date: Date | string): string {
     day: "numeric",
     year: "numeric",
   }).format(new Date(date))
+}
+
+export async function getCroppedImg(
+  imageSrc: string,
+  pixelCrop: Area
+): Promise<Blob> {
+  const image = new Image();
+  image.src = imageSrc;
+
+  await new Promise((resolve) => {
+    image.onload = resolve;
+  });
+
+  const canvas = document.createElement("canvas");
+  canvas.width = pixelCrop.width;
+  canvas.height = pixelCrop.height;
+  const ctx = canvas.getContext("2d");
+
+  if (!ctx) throw new Error("No 2D context");
+
+  ctx.drawImage(
+    image,
+    pixelCrop.x,
+    pixelCrop.y,
+    pixelCrop.width,
+    pixelCrop.height,
+    0,
+    0,
+    pixelCrop.width,
+    pixelCrop.height
+  );
+
+  return new Promise((resolve) => {
+    canvas.toBlob((blob) => {
+      if (blob) resolve(blob);
+    }, "image/jpeg");
+  });
 }
