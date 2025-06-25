@@ -4,23 +4,13 @@ import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { UserProfileProps } from "./UserProfile";
 import UserService from "@/lib/services/userService";
-import { useEffect, useState } from "react";
-import { UserPrivateResponse } from "@/types/RequestTypes";
+import { useState } from "react";
+import useUser from "@/hooks/useUser";
 
 const UserProfileControls: React.FC<UserProfileProps> = ({ user }) => {
-  const [client, setClient] = useState<UserPrivateResponse | null>(null);
   const [following, setFollowing] = useState<boolean>(user.userFollowing);
-
-  const init = async () => {
-    const response = await UserService.me();
-    if (response) setClient(response);
-  };
-
-  useEffect(() => {
-    init();
-  }, []);
-
-  const loggedIn = Boolean(user);
+  
+  const { user: client, loggedIn: loggedIn } = useUser();
   const canInteract = loggedIn && client?.username !== user.username;
 
   const handleFollow = async () => {
@@ -51,3 +41,5 @@ const UserProfileControls: React.FC<UserProfileProps> = ({ user }) => {
     </>
   );
 };
+
+export default UserProfileControls;

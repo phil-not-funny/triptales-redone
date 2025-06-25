@@ -5,6 +5,7 @@ import { PropsWithClassName } from "@/types/ComponentTypes";
 import { formatDateOnlyString } from "@/lib/utils";
 import Image from "next/image";
 import Avatar from "./Avatar";
+import UserProfileControls from "./UserProfileControls";
 
 const UserProfileCardContent: React.FC<UserProfileProps> = ({ user }) => {
   return (
@@ -58,7 +59,9 @@ const UserProfileCardContent: React.FC<UserProfileProps> = ({ user }) => {
         </div>
       </CardContent>
 
-      <CardFooter className="mt-6 flex gap-3"></CardFooter>
+      <CardFooter className="mt-6 flex gap-3">
+        <UserProfileControls user={user} />
+      </CardFooter>
     </>
   );
 };

@@ -16,7 +16,7 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 import Avatar from "./Avatar";
-import {PostControls, PostSettings} from "./PostControls";
+import { PostControls, PostSettings } from "./PostControls";
 import { MarkdownOnly } from "./MarkdownImplementation";
 
 interface EmbeddedPostProps {
@@ -35,22 +35,16 @@ interface FullPostProps {
 
 export type PostProps = EmbeddedPostProps | FullPostProps;
 
-
-const Post: React.FC<PostProps> = ({ post, embed, user }) => {
-  
+const Post: React.FC<PostProps> = ({ post, embed }) => {
   return (
     <Card className="mx-auto mb-6 gap-0 overflow-hidden rounded-xl border border-gray-100 bg-white py-0 shadow-sm transition-shadow duration-300 hover:shadow-md lg:w-2xl">
       <CardHeader className="relative border-b border-gray-100 p-6">
         <CardTitle className="mb-2 text-2xl font-semibold text-gray-800">
           {post.title}
         </CardTitle>
-        {post.author.guid === user?.guid && (
-          embed ? (
-            <PostSettings embed={true} post={post as PostResponseSmall} user={user as PostResponseSmall["author"]} />
-          ) : (
-            <PostSettings embed={false} post={post as PostResponse} user={user as PostResponse["author"]} />
-          )
-        )}
+        {/*post.author.guid === user?.guid && (
+          <PostSettings embed={embed} post={post} />
+        )*/}
         <div className="flex items-center p-3 text-sm text-gray-600">
           <div className="flex items-center gap-2">
             <Avatar
@@ -113,9 +107,9 @@ const Post: React.FC<PostProps> = ({ post, embed, user }) => {
 
       <CardFooter className="flex items-center justify-between border-t border-gray-100 bg-gray-50 !p-3">
         {embed ? (
-          <PostControls embed={true} post={post as PostResponseSmall} user={user} />
+          <PostControls embed={true} post={post as PostResponseSmall} />
         ) : (
-          <PostControls embed={false} post={post as PostResponse} user={user} />
+          <PostControls embed={false} post={post as PostResponse} />
         )}
       </CardFooter>
     </Card>

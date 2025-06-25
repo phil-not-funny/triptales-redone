@@ -19,12 +19,14 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { DialogClose } from "@radix-ui/react-dialog";
+import useUser from "@/hooks/useUser";
 
-export const PostControls: React.FC<PostProps> = ({ post, embed, user }) => {
+export const PostControls: React.FC<PostProps> = ({ post, embed }) => {
   const [liked, setLiked] = useState<boolean>(post.userLiked);
   const [likesCount, setLikesCount] = useState<number>(post.likesCount);
   const router = useRouter();
-  const loggedIn = Boolean(user);
+
+  const { user, loggedIn } = useUser();
 
   const handleViewMore = () => {
     router.push(`/post/${post.guid}`);
