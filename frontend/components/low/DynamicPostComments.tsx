@@ -1,41 +1,34 @@
 "use client";
 
-import PostService from "@/lib/services/postService";
-import { PostCommentResponse, PostResponse } from "@/types/RequestTypes";
+import {
+  PostCommentResponse,
+  PostResponse,
+  UserPrivateResponse,
+} from "@/types/RequestTypes";
+import Comment from "./Comment";
 import { useEffect, useState } from "react";
-import Loading from "../top/Loading";
-import Sorry from "../low/Sorry";
-import Post from "../low/Post";
-import { Card, CardContent, CardHeader } from "../ui/card";
-import { useUser } from "../providers/UserProvider";
-import { Textarea } from "../ui/textarea";
-import { Button } from "../ui/button";
-import { MessageCirclePlus } from "lucide-react";
-import Comment from "../low/Comment";
+import PostService from "@/lib/services/postService";
 import { toast } from "sonner";
-import Avatar from "../low/Avatar";
+import { Card, CardContent, CardHeader } from "../ui/card";
+import { Textarea } from "../ui/textarea";
+import { MessageCirclePlus } from "lucide-react";
+import { Button } from "../ui/button";
+import Avatar from "./Avatar";
 
-interface PostPageProps {
-  guid: string;
+interface Props {
+  post: PostResponse;
+  user: UserPrivateResponse | null;
 }
 
-const PostPage: React.FC<PostPageProps> = ({ guid }) => {
-  const [post, setPost] = useState<PostResponse | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-
+const DynamicPostComments: React.FC<Props> = ({ post, user }) => {
   const [commentContent, setCommentContent] = useState<string>("");
   const [comments, setComments] = useState<PostCommentResponse[]>([]);
 
-  const { loggedIn, user } = useUser();
-
   const init = async () => {
-    const response = await PostService.getPost(guid);
+    const response = await PostService.getPost(post.guid);
     if (response.success && response.data != null) {
-      setPost(response.data);
-
       setComments(response.data.comments);
-    } else setPost(null);
-    setLoading(false);
+    }
   };
 
   const handleCommentSubmit = async (e: React.FormEvent) => {
@@ -67,19 +60,14 @@ const PostPage: React.FC<PostPageProps> = ({ guid }) => {
     init();
   }, []);
 
-  return loading ? (
-    <Loading />
-  ) : !post ? (
-    <Sorry>The post you were looking for doesn't exist.</Sorry>
-  ) : (
-    <div className="gap-6">
-      <Post embed={false} post={post} />
+  return (
+    <>
       <Card className="mx-auto mb-6 rounded-xl border border-gray-100 bg-white p-6 shadow-sm lg:w-2xl">
         <CardHeader className="p-0">
           <h3 className="text-lg font-semibold text-gray-800">Comments</h3>
         </CardHeader>
         <CardContent className="p-0">
-          {loggedIn && (
+          {!!user && (
             <form onSubmit={handleCommentSubmit} className="mt-4">
               <div className="flex space-x-3">
                 <Avatar user={user!} />
@@ -116,8 +104,8 @@ const PostPage: React.FC<PostPageProps> = ({ guid }) => {
           )}
         </CardContent>
       </Card>
-    </div>
+    </>
   );
 };
 
-export default PostPage;
+export default DynamicPostComments;

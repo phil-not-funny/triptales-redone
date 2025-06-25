@@ -1,43 +1,14 @@
-"use client";
-
 import { UserDetailedResponse } from "@/types/RequestTypes";
 import { Verified } from "lucide-react";
-import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { PropsWithClassName } from "@/types/ComponentTypes";
 import { formatDateOnlyString } from "@/lib/utils";
 import Image from "next/image";
-import { Fragment, useState } from "react";
-import UserService from "@/lib/services/userService";
-import { toast } from "sonner";
-import { useUser } from "../providers/UserProvider";
 import Avatar from "./Avatar";
 
 const UserProfileCardContent: React.FC<UserProfileProps> = ({ user }) => {
-  const { loggedIn, user: client } = useUser();
-  const canInteract = loggedIn && client?.username !== user.username;
-
-  const [followerCount, setFollowerCount] = useState<number>(
-    user.followerCount,
-  );
-  const [following, setFollowing] = useState<boolean>(user.userFollowing);
-
-  const handleFollow = async () => {
-    const success = await UserService.follow(user.guid);
-    if (success) {
-      const newStatus = !following;
-      setFollowing(newStatus);
-      setFollowerCount((prev) => prev + (newStatus ? 1 : -1));
-      toast.success(
-        `You are ${newStatus ? "now" : "no longer"} following ${user.displayName}`,
-      );
-    } else {
-      toast.error(`Something went wrong. Please try again later.`);
-    }
-  };
-
   return (
-    <Fragment>
+    <>
       <CardHeader className="flex items-center gap-6 border-b border-gray-100 pb-6">
         <Avatar user={user} className="!h-24 !w-24" textClassName="!text-4xl" />
         <div className="flex-1">
@@ -50,7 +21,8 @@ const UserProfileCardContent: React.FC<UserProfileProps> = ({ user }) => {
           <p className="mt-1 text-sm text-gray-700">@{user.username}</p>
           <div className="mt-3 flex items-center gap-4 text-sm">
             <span>
-              <span className="font-medium">{followerCount}</span> Followers
+              <span className="font-medium">{user.followerCount}</span>{" "}
+              Followers
             </span>
           </div>
         </div>
@@ -86,23 +58,12 @@ const UserProfileCardContent: React.FC<UserProfileProps> = ({ user }) => {
         </div>
       </CardContent>
 
-      <CardFooter className="mt-6 flex gap-3">
-        <Button
-          disabled={!canInteract}
-          onClick={handleFollow}
-          variant={"outline"}
-        >
-          {following ? "Unfollow" : "Follow"}
-        </Button>
-        <Button disabled={!canInteract} variant={"outline"}>
-          Message
-        </Button>
-      </CardFooter>
-    </Fragment>
+      <CardFooter className="mt-6 flex gap-3"></CardFooter>
+    </>
   );
 };
 
-interface UserProfileProps {
+export interface UserProfileProps {
   user: UserDetailedResponse;
 }
 

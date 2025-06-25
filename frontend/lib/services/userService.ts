@@ -108,6 +108,7 @@ const getByUsername = async (
   username: string,
 ): Promise<UserDetailedResponse | null> => {
   try {
+    
     const response = await api.get(`/User/${username}`);
     if (
       response.status === HttpStatusCode.Ok &&

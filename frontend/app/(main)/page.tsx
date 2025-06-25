@@ -1,6 +1,4 @@
-"use client";
-
-import { PageHead } from "@/components/top/PageHead";
+import PageHead from "@/components/top/PageHead";
 import RandomPosts from "@/components/top/RandomPosts";
 import Image from "next/image";
 

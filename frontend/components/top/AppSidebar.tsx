@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Home,
   Inbox,
@@ -24,9 +22,8 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import Image from "next/image";
-import { useUser } from "../providers/UserProvider";
-import { useEffect } from "react";
 import Avatar from "../low/Avatar";
+import UserService from "@/lib/services/userService";
 
 type Item = {
   title: string;
@@ -35,7 +32,10 @@ type Item = {
   onClick?: () => Promise<void>;
 };
 
-export const AppSidebar: React.FC = () => {
+export default async function AppSidebar() {
+  const user = await UserService.me();
+  const loggedIn = Boolean(user);
+
   const navItems: Item[] = [
     { title: "Home", url: "/", icon: Home },
     { title: "Inbox", url: "#", icon: Inbox },
@@ -58,16 +58,10 @@ export const AppSidebar: React.FC = () => {
       url: "/landing",
       icon: LogOut,
       onClick: async () => {
-        await logout();
+        await UserService.logout();;
       },
     },
   ];
-
-  const { loggedIn, refreshUser, logout, user } = useUser();
-
-  useEffect(() => {
-    refreshUser();
-  }, []);
 
   return (
     <Sidebar className="border-r border-gray-100 bg-gray-50 text-gray-700">
