@@ -22,6 +22,7 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import UserService from "@/lib/services/userService";
+import useUser from "@/hooks/useUser";
 
 interface CommentProps {
   comment: PostCommentResponse;
@@ -44,19 +45,7 @@ const Comment: React.FC<CommentProps> = ({
   const [subComments, setSubComments] = useState<PostCommentResponse[]>([]);
   const [isExpandLoading, setIsExpandLoading] = useState<boolean>(false);
 
-  const [user, setUser] = useState<UserPrivateResponse | null>(null);
-  const [loggedIn, setLoggedIn] = useState<boolean>(false);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const response = await UserService.me();
-      if (response) {
-        setUser(response);
-        setLoggedIn(true);
-      }
-    };
-    fetchUser();
-  }, []);
+  const { user, loggedIn } = useUser();
 
   const handleLike = async () => {
     const response = await PostService.likeComment(comment.guid);
