@@ -3,7 +3,6 @@ import Post from "@/components/low/Post";
 import Sorry from "@/components/low/Sorry";
 import PageHead from "@/components/top/PageHead";
 import PostService from "@/lib/services/postService";
-import UserService from "@/lib/services/userService";
 
 interface UserPageProps {
   params: Promise<{ guid: string }>;
