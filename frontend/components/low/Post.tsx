@@ -16,7 +16,7 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 import Avatar from "./Avatar";
-import { PostControls, PostSettings } from "./PostControls";
+import { PostControls } from "./PostControls";
 import { MarkdownOnly } from "./MarkdownImplementation";
 
 interface EmbeddedPostProps {
@@ -42,9 +42,6 @@ const Post: React.FC<PostProps> = ({ post, embed }) => {
         <CardTitle className="mb-2 text-2xl font-semibold text-gray-800">
           {post.title}
         </CardTitle>
-        {/*post.author.guid === user?.guid && (
-          <PostSettings embed={embed} post={post} />
-        )*/}
         <div className="flex items-center p-3 text-sm text-gray-600">
           <div className="flex items-center gap-2">
             <Avatar

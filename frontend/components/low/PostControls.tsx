@@ -20,13 +20,14 @@ import {
 } from "../ui/dialog";
 import { DialogClose } from "@radix-ui/react-dialog";
 import useUser from "@/hooks/useUser";
+import { UserPrivateResponse } from "@/types/RequestTypes";
 
 export const PostControls: React.FC<PostProps> = ({ post, embed }) => {
   const [liked, setLiked] = useState<boolean>(post.userLiked);
   const [likesCount, setLikesCount] = useState<number>(post.likesCount);
   const router = useRouter();
 
-  const { loggedIn } = useUser();
+  const { loggedIn, user } = useUser();
 
   const handleViewMore = () => {
     router.push(`/post/${post.guid}`);
@@ -62,6 +63,7 @@ export const PostControls: React.FC<PostProps> = ({ post, embed }) => {
             {post.commentsCount} Comment{post.commentsCount !== 1 ? "s" : ""}
           </span>
         </div>
+        <PostSettings post={post} user={user!} />
       </div>
       {embed ? (
         <Button
@@ -76,7 +78,10 @@ export const PostControls: React.FC<PostProps> = ({ post, embed }) => {
   );
 };
 
-export const PostSettings: React.FC<PostProps> = ({ post, user }) => {
+export const PostSettings: React.FC<{
+  post: PostProps["post"];
+  user: UserPrivateResponse;
+}> = ({ post, user }) => {
   const router = useRouter();
 
   const handleDelete = async () => {
@@ -92,14 +97,14 @@ export const PostSettings: React.FC<PostProps> = ({ post, user }) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant={"ghost"} className="absolute top-4 right-4 h-7 w-7">
+        <Button variant={"ghost"} className="h-7 w-7">
           <Settings className="!h-5 !w-5" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="flex flex-col items-start justify-center gap-2">
         <h3 className="text-base font-semibold uppercase">Quick Settings</h3>
         <Dialog>
-          <DialogTrigger>
+          <DialogTrigger asChild>
             <Button variant={"destructive"} size={"sm"}>
               Delete this Post
             </Button>
