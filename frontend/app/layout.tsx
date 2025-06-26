@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "sonner";
-import Providers from "@/components/providers/Providers";
 
 export const metadata: Metadata = {
   title: "Triptales",
@@ -17,11 +16,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`font-body relative min-h-screen antialiased !text-gray-800`}>
-        <Providers>
-          <div className="h-full w-full">{children}</div>
-          <Toaster />
-        </Providers>
+      <body
+        className={`font-body relative min-h-screen !text-gray-800 antialiased`}
+      >
+        <div className="h-full w-full">{children}</div>
+        <Toaster />
       </body>
     </html>
   );

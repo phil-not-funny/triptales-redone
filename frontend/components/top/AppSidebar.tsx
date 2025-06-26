@@ -3,12 +3,12 @@
 import {
   Home,
   Inbox,
-  Search,
-  Settings,
+  ListPlusIcon,
   LogIn,
   LogOut,
+  Search,
+  Settings,
   UserPlus,
-  ListPlusIcon,
 } from "lucide-react";
 
 import {
@@ -24,8 +24,8 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import Image from "next/image";
-import { useUser } from "../providers/UserProvider";
-import { useEffect } from "react";
+import useUser from "@/hooks/useUser";
+import UserService from "@/lib/services/userService";
 import Avatar from "../low/Avatar";
 
 type Item = {
@@ -35,7 +35,9 @@ type Item = {
   onClick?: () => Promise<void>;
 };
 
-export const AppSidebar: React.FC = () => {
+export default function AppSidebar() {
+  const { user, loggedIn } = useUser();
+
   const navItems: Item[] = [
     { title: "Home", url: "/", icon: Home },
     { title: "Inbox", url: "#", icon: Inbox },
@@ -58,16 +60,10 @@ export const AppSidebar: React.FC = () => {
       url: "/landing",
       icon: LogOut,
       onClick: async () => {
-        await logout();
+        await UserService.logout();
       },
     },
   ];
-
-  const { loggedIn, refreshUser, logout, user } = useUser();
-
-  useEffect(() => {
-    refreshUser();
-  }, []);
 
   return (
     <Sidebar className="border-r border-gray-100 bg-gray-50 text-gray-700">
@@ -110,7 +106,6 @@ export const AppSidebar: React.FC = () => {
             </SidebarMenu>
           </SidebarContent>
         </SidebarGroup>
-
         {loggedIn && (
           <SidebarGroup>
             <SidebarGroupLabel className="px-4 text-sm font-medium text-gray-500">
@@ -162,8 +157,7 @@ export const AppSidebar: React.FC = () => {
           </SidebarContent>
         </SidebarGroup>
       </SidebarContent>
-
-      {loggedIn && user && (
+      {user && (
         <SidebarFooter className="border-t border-gray-100 bg-gray-50 px-4 py-6">
           <Link
             href={`/user/${user.username}`}
@@ -183,4 +177,4 @@ export const AppSidebar: React.FC = () => {
       )}
     </Sidebar>
   );
-};
+}

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "../globals.css";
 import { Toaster } from "sonner";
-import { AppSidebar } from "@/components/top/AppSidebar";
+import AppSidebar from "@/components/top/AppSidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import Footer from "@/components/top/Footer";
 

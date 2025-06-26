@@ -2,12 +2,13 @@
 
 import { UserDetailedResponse } from "@/types/RequestTypes";
 import Sorry from "../../low/Sorry";
-import { useUser } from "../../providers/UserProvider";
 import { Separator } from "../../ui/separator";
 import { Fragment, useEffect, useState } from "react";
 import UserService from "@/lib/services/userService";
 import SettingsPictureSection from "./SettingsPictureSection";
 import { SettingsFlavorSection } from "./SettingsFlavorSection";
+import useUser from "@/hooks/useUser";
+import Loading from "@/components/top/Loading";
 
 export interface UserSettingsProps {
   user: UserDetailedResponse;
@@ -16,33 +17,32 @@ export interface UserSettingsProps {
 const SettingsPage: React.FC = () => {
   const { user: savedUser } = useUser();
   const [user, setUser] = useState<UserDetailedResponse | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const init = async () => {
-    const response = await UserService.getByUsername(savedUser?.username || "");
+    if (!savedUser || !savedUser?.username) return;
+    setLoading(true);
+    const response = await UserService.getByUsername(savedUser?.username);
     if (response) {
       setUser(response);
-    } else {
-      setUser(null);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
     init();
-  }, []);
+  }, [savedUser]);
 
-  return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-6">
-      <h1 className="text-4xl font-bold">Settings</h1>
-      {!user ? (
-        <Sorry>Please Log In to Continue</Sorry>
-      ) : (
-        <Fragment>
-          <Separator />
-          <SettingsFlavorSection user={user} />
-          <SettingsPictureSection user={user} />
-        </Fragment>
-      )}
-    </div>
+  return loading ? (
+    <Loading />
+  ) : !user ? (
+    <Sorry>Please Log In to Continue</Sorry>
+  ) : (
+    <Fragment>
+      <Separator />
+      <SettingsFlavorSection user={user} />
+      <SettingsPictureSection user={user} />
+    </Fragment>
   );
 };
 
