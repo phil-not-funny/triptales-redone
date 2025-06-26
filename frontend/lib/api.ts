@@ -9,7 +9,7 @@ const api = axios.create({
   },
   withCredentials: true,
   httpsAgent: new https.Agent({
-    rejectUnauthorized: false, // This is not recommended for production, but it clears errors so what gives
+    rejectUnauthorized: process.env.NODE_ENV === "production", // Enable SSL verification in production
   })
 });
 
