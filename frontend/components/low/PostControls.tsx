@@ -26,7 +26,7 @@ export const PostControls: React.FC<PostProps> = ({ post, embed }) => {
   const [likesCount, setLikesCount] = useState<number>(post.likesCount);
   const router = useRouter();
 
-  const { user, loggedIn } = useUser();
+  const { loggedIn } = useUser();
 
   const handleViewMore = () => {
     router.push(`/post/${post.guid}`);
