@@ -22,7 +22,7 @@ export default async function PostPage({ params }: UserPageProps) {
   ) : (
     <PageHead className="gap-6 md:pt-12">
       <Post embed={false} post={post} />
-      <DynamicPostComments post={post} user={user} />
+      <DynamicPostComments post={post} />
     </PageHead>
   );
 }
