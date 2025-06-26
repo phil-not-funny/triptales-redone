@@ -15,7 +15,6 @@ export default async function PostPage({ params }: UserPageProps) {
   const { guid } = await params;
 
   const post = (await PostService.getPost(guid)).data;
-  const user = await UserService.me();
 
   return !post ? (
     <Sorry>The post you were looking for doesn't exist.</Sorry>
