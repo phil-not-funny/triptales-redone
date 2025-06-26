@@ -18,7 +18,6 @@ import useUser from "@/hooks/useUser";
 
 interface Props {
   post: PostResponse;
-  user: UserPrivateResponse | null;
 }
 
 const DynamicPostComments: React.FC<Props> = ({ post }) => {
