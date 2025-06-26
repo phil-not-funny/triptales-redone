@@ -3,7 +3,6 @@
 import {
   PostCommentResponse,
   PostResponse,
-  UserPrivateResponse,
 } from "@/types/RequestTypes";
 import Comment from "./Comment";
 import { useEffect, useState } from "react";

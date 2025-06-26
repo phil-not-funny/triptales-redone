@@ -11,17 +11,15 @@ import {
 import {
   PostCommentResponse,
   PostResponse,
-  UserPrivateResponse,
 } from "@/types/RequestTypes";
 import { formatDateString } from "@/lib/utils";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PostService from "@/lib/services/postService";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
-import UserService from "@/lib/services/userService";
 import useUser from "@/hooks/useUser";
 
 interface CommentProps {
