@@ -20,13 +20,11 @@ const SettingsPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const init = async () => {
-    if (!savedUser) return;
+    if (!savedUser || !savedUser?.username) return;
     setLoading(true);
-    const response = await UserService.getByUsername(savedUser?.username!);
+    const response = await UserService.getByUsername(savedUser?.username);
     if (response) {
       setUser(response);
-    } else {
-      setUser(null);
     }
     setLoading(false);
   };

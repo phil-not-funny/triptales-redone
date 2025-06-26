@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { UserDetailedResponse } from "@/types/RequestTypes";
 import { Verified } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
