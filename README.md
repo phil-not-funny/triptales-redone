@@ -7,6 +7,29 @@ The project is built with **Next.js** for the frontend and **C#** for the backen
 
 ---
 
+## Setup
+
+How much are you expecting to see here.
+
+Make sure to use `node ~24.10.0`, it should be enforced by npm.
+
+If you don't have that version, you can install it via [nvm](https://github.com/nvm-sh/nvm)(my personal favorite).
+
+```
+nvm install 24
+nvm use 24 
+```
+
+now, with the correct node version:
+
+```
+cd ./frontend
+npm ci
+```
+
+**Changes to _package-lock.json_ and _package.json_ may only be done with a PR**
+(Which you shuld do with every change btw)
+
 ## Starting the Application
 
 ### Frontend
