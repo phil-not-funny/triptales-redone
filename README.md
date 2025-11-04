@@ -48,6 +48,15 @@ The frontend will be available by default at [http://localhost:3000](http://loca
 
 To start the backend server, use the provided script:
 
+Linux:
+
+```
+cd ./backend
+sh startDevServer.sh
+```
+
+Windows:
+
 ```
 cd ./backend
 startDevServer.bat
