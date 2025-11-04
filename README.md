@@ -13,21 +13,21 @@ How much are you expecting to see here.
 
 Make sure to use `node ~24.10.0`, it should be enforced by npm.
 
-If you don't have that version, you can install it via [nvm](https://github.com/nvm-sh/nvm)(my personal favorite).
+If you don't have that version, you can install it via [nvm](https://github.com/nvm-sh/nvm) (my personal favorite).
 
 ```
 nvm install 24
 nvm use 24 
 ```
 
-now, with the correct node version:
+Now, with the correct node version:
 
 ```
 cd ./frontend
 npm ci
 ```
 
-**Changes to _package-lock.json_ and _package.json_ may only be done with a PR**
+**Changes to _package-lock.json_ and _package.json_ may only be done with a PR!**
 (Which you shuld do with every change btw)
 
 ## Starting the Application
@@ -64,10 +64,23 @@ startDevServer.bat
 
 The backend will be available by default at [http://localhost:5001](http://localhost:5001).
 
-To use swagger, go to [http://localhost:5001/swagger/index.html](http://localhost:5001/swagger/index.html)
+To use swagger, go to [http://localhost:5001/swagger/index.html](http://localhost:5001/swagger/index.html).
 
 ---
 
 ## Technologies
 - **Frontend**: Next.js / TailwindCSS / shadcn
 - **Backend**: C#
+
+## Troubleshooting
+
+### (Frontend) Styles not loading
+
+This bug might occur whenever tailwind or a CSS package is updated.
+Sometimes tailwind gets confused. (everyone can make mistakes, right?)
+
+To fix:
+- delete the `node_modules` folder
+- run `npm ci`
+
+This should fix it.
