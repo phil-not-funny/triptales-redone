@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { NextIntlClientProvider } from 'next-intl';
 
 export const metadata: Metadata = {
   title: "Triptales",
@@ -17,10 +18,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`font-body relative min-h-screen !text-gray-800 antialiased`}
+        className={`font-body relative min-h-screen text-gray-800! antialiased`}
       >
-        <div className="h-full w-full">{children}</div>
-        <Toaster />
+        <NextIntlClientProvider>
+          <div className="h-full w-full">{children}</div>
+          <Toaster />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

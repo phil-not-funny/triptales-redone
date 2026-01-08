@@ -27,6 +27,9 @@ import Image from "next/image";
 import useUser from "@/hooks/useUser";
 import UserService from "@/lib/services/userService";
 import Avatar from "../low/Avatar";
+import LanguageSwitcher from "../low/LanguageSwitcher";
+
+import { useTranslations } from 'next-intl';
 
 type Item = {
   title: string;
@@ -37,26 +40,27 @@ type Item = {
 
 export default function AppSidebar() {
   const { user, loggedIn } = useUser();
+  const t = useTranslations("Sidebar");
 
   const navItems: Item[] = [
-    { title: "Home", url: "/", icon: Home },
-    { title: "Inbox", url: "#", icon: Inbox },
-    { title: "Search", url: "#", icon: Search },
+    { title: t("home"), url: "/", icon: Home },
+    { title: t("inbox"), url: "#", icon: Inbox },
+    { title: t("search"), url: "#", icon: Search },
   ];
 
   const onlyLoggedIn: Item[] = [
-    { title: "Settings", url: "/settings", icon: Settings },
-    { title: "New Post", url: "/post/new", icon: ListPlusIcon },
+    { title: t("settings"), url: "/settings", icon: Settings },
+    { title: t("newPost"), url: "/post/new", icon: ListPlusIcon },
   ];
 
   const authItems: Item[] = [
-    { title: "Login", url: "/landing/login", icon: LogIn },
-    { title: "Sign Up", url: "/landing/signup", icon: UserPlus },
+    { title: t("login"), url: "/landing/login", icon: LogIn },
+    { title: t("signup"), url: "/landing/signup", icon: UserPlus },
   ];
 
   const unAuthItems: Item[] = [
     {
-      title: "Logout",
+      title: t("logout"),
       url: "/landing",
       icon: LogOut,
       onClick: async () => {
@@ -85,7 +89,7 @@ export default function AppSidebar() {
       <SidebarContent className="py-6">
         <SidebarGroup>
           <SidebarGroupLabel className="px-4 text-sm font-medium text-gray-500">
-            Navigation
+            {t("navigation")}
           </SidebarGroupLabel>
           <SidebarContent>
             <SidebarMenu>
@@ -109,7 +113,7 @@ export default function AppSidebar() {
         {loggedIn && (
           <SidebarGroup>
             <SidebarGroupLabel className="px-4 text-sm font-medium text-gray-500">
-              User Options
+              {t("userOptions")}
             </SidebarGroupLabel>
             <SidebarContent>
               <SidebarMenu>
@@ -134,7 +138,7 @@ export default function AppSidebar() {
 
         <SidebarGroup>
           <SidebarGroupLabel className="px-4 text-sm font-medium text-gray-500">
-            Authentication
+            {t("authentication")}
           </SidebarGroupLabel>
           <SidebarContent>
             <SidebarMenu>
@@ -154,6 +158,17 @@ export default function AppSidebar() {
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
+          </SidebarContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel className="px-4 text-sm font-medium text-gray-500">
+            {t("language")}
+          </SidebarGroupLabel>
+          <SidebarContent>
+            <div className="px-4">
+              <LanguageSwitcher />
+            </div>
           </SidebarContent>
         </SidebarGroup>
       </SidebarContent>

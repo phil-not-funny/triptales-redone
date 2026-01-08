@@ -9,6 +9,7 @@ import SettingsPictureSection from "./SettingsPictureSection";
 import { SettingsFlavorSection } from "./SettingsFlavorSection";
 import useUser from "@/hooks/useUser";
 import Loading from "@/components/top/Loading";
+import { useTranslations } from 'next-intl';
 
 export interface UserSettingsProps {
   user: UserDetailedResponse;
@@ -18,6 +19,7 @@ const SettingsPage: React.FC = () => {
   const { user: savedUser } = useUser();
   const [user, setUser] = useState<UserDetailedResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const t = useTranslations("Sorry");
 
   const init = async () => {
     if (!savedUser || !savedUser?.username) return;
@@ -36,7 +38,7 @@ const SettingsPage: React.FC = () => {
   return loading ? (
     <Loading />
   ) : !user ? (
-    <Sorry>Please Log In to Continue</Sorry>
+    <Sorry>{t("pleaseLogin")}</Sorry>
   ) : (
     <Fragment>
       <Separator />

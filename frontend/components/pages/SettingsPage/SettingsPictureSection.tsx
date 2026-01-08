@@ -8,18 +8,20 @@ import { Button } from "../../ui/button";
 import { Loader2 } from "lucide-react";
 import ImageUploader from "./SettingsPictureUpload";
 import { UserSettingsProps } from "./SettingsPage";
+import { useTranslations } from 'next-intl';
 
 const SettingsPictureSection: React.FC<UserSettingsProps> = ({ user }) => {
   const [uploadData, setUploadData] = useState<UserUploadRequest | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [anyPreview, setAnyPreview] = useState<boolean>(false);
+  const t = useTranslations("Settings");
 
   const handleUploadImage = async () => {
-    if (!uploadData) return toast.error("Select an image first.");
+    if (!uploadData) return toast.error(t("selectImageFirst"));
     setLoading(true);
     const res = await UserService.userUpload(uploadData);
     toast[res ? "success" : "error"](
-      res ? "Images uploaded!" : "Upload failed.",
+      res ? t("uploadSuccess") : t("uploadError"),
     );
     setLoading(false);
   };
@@ -27,7 +29,7 @@ const SettingsPictureSection: React.FC<UserSettingsProps> = ({ user }) => {
   return (
     <div className="w-full max-w-xl space-y-4 px-3 md:px-0">
       <h2 className="text-center text-xl font-semibold text-gray-700">
-        Images Customization
+        {t("imagesCustomization")}
       </h2>
       <div className="grid gap-4 md:grid-cols-2">
         <ImageUploader
@@ -45,12 +47,11 @@ const SettingsPictureSection: React.FC<UserSettingsProps> = ({ user }) => {
       </div>
       {anyPreview && (
         <span className="text-muted-foreground block text-sm italic">
-          This is a preview. Click "Upload Images" to save these changes.
+          {t("previewNote")}
         </span>
       )}
       <Button onClick={handleUploadImage} disabled={loading}>
-        {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Upload
-        Images
+        {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} {t("uploadImages")}
       </Button>
     </div>
   );

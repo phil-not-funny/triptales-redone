@@ -5,6 +5,7 @@ import { UserProfileWithBanner } from "@/components/low/UserProfile";
 import Post from "@/components/low/Post";
 import { ArrowDown } from "lucide-react";
 import PageHead from "@/components/top/PageHead";
+import { getTranslations } from 'next-intl/server';
 
 interface UserPageProps {
   params: Promise<{ username: string }>;
@@ -15,6 +16,8 @@ export const dynamicParams = true;
 
 export default async function UserPage({ params }: UserPageProps) {
   const { username } = await params;
+  const t = await getTranslations("Sorry");
+  const tPages = await getTranslations("Pages");
 
   const user: UserDetailedResponse | null = await UserService.getByUsername(username);
 
@@ -30,7 +33,7 @@ export default async function UserPage({ params }: UserPageProps) {
         />
         {user.posts.length > 0 && (
           <h1 className="flex w-full items-center justify-center gap-4 text-center text-2xl font-bold">
-            <ArrowDown /> Posts <ArrowDown />
+            <ArrowDown /> {tPages("posts")} <ArrowDown />
           </h1>
         )}
       </div>
@@ -40,7 +43,7 @@ export default async function UserPage({ params }: UserPageProps) {
     </PageHead>
   ) : (
     <Sorry className="h-screen">
-      We were unable to find the user you provided.
+      {t("userNotFound")}
     </Sorry>
   );
 }

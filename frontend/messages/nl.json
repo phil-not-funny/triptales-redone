@@ -1,0 +1,219 @@
+{
+  "Sidebar": {
+    "home": "Startpagina",
+    "authentication": "Authenticatie",
+    "navigation": "Navigatie",
+    "inbox": "Postvak",
+    "search": "Zoeken",
+    "login": "Inloggen",
+    "signup": "Registreren",
+    "settings": "Instellingen",
+    "newPost": "Nieuw bericht",
+    "logout": "Uitloggen",
+    "userOptions": "Gebruikersopties",
+    "language": "Taal"
+  },
+  "Home": {
+    "title": "Ontdek berichten",
+    "subheading": "Ontdek verhalen uit de hele wereld.",
+    "RandomPosts": {
+      "error": "We konden geen berichten van onze server ophalen."
+    }
+  },
+  "Sorry": {
+    "error": "Probeer het later opnieuw of neem contact op met de ondersteuning als het probleem aanhoudt.",
+    "postNotFound": "Het bericht dat u zocht bestaat niet.",
+    "userNotFound": "We konden de opgegeven gebruiker niet vinden.",
+    "pageNotFound": "De pagina die u zoekt bestaat niet.",
+    "pleaseLogin": "Log in om door te gaan"
+  },
+  "Common": {
+    "submit": "Verzenden",
+    "cancel": "Annuleren",
+    "back": "Terug",
+    "delete": "Verwijderen",
+    "remove": "Verwijderen",
+    "add": "Toevoegen",
+    "edit": "Bewerken",
+    "save": "Opslaan",
+    "finish": "Voltooien",
+    "viewMore": "Meer bekijken",
+    "toHomepage": "Naar startpagina",
+    "postedOn": "Geplaatst op",
+    "start": "Start",
+    "end": "Einde",
+    "day": "Dag",
+    "likes": "Vind-ik-leuks",
+    "like": "Vind ik leuk",
+    "comments": "Reacties",
+    "comment": "Reactie",
+    "followers": "Volgers",
+    "following": "Volgen",
+    "unfollow": "Ontvolgen",
+    "follow": "Volgen",
+    "message": "Bericht",
+    "reply": "Reageren",
+    "noCommentsYet": "Nog geen reacties.",
+    "postComment": "Reactie plaatsen",
+    "postReply": "Reactie plaatsen",
+    "writeComment": "Schrijf een reactie...",
+    "writeReply": "Schrijf een antwoord...",
+    "pickDate": "Kies een datum"
+  },
+  "Forms": {
+    "LoginForm": {
+      "title": "Inloggen op een account",
+      "description": "Inloggen op een bestaand TripTales account",
+      "username": "Gebruikersnaam",
+      "password": "Wachtwoord",
+      "validation": {
+        "usernameRequired": "Gebruikersnaam is verplicht",
+        "passwordRequired": "Wachtwoord is verplicht.",
+        "usernameFormat": "Gebruikersnaam mag alleen kleine letters, cijfers, punten en underscores bevatten."
+      }
+    },
+    "RegisterForm": {
+      "title": "Een nieuw account registreren",
+      "description": "Een nieuw TripTales account registreren",
+      "username": "Gebruikersnaam",
+      "password": "Wachtwoord",
+      "confirmPassword": "Wachtwoord bevestigen",
+      "email": "E-mail",
+      "displayName": "Weergavenaam",
+      "createAccount": "Nieuw account aanmaken",
+      "validation": {
+        "usernameMinLength": "Gebruikersnaam moet minimaal 4 tekens lang zijn.",
+        "passwordMinLength": "Wachtwoord moet 8 tekens lang zijn.",
+        "passwordFormat": "Wachtwoord moet minimaal één kleine en hoofdletter, cijfer en speciaal teken bevatten.",
+        "confirmPasswordRequired": "Bevestig uw wachtwoord.",
+        "passwordsDoNotMatch": "De wachtwoorden komen niet overeen",
+        "emailInvalid": "Voer een geldig e-mailadres in.",
+        "displayNameRequired": "Voer een weergavenaam in.",
+        "usernameFormat": "Gebruikersnaam mag alleen kleine letters, cijfers, punten en underscores bevatten."
+      },
+      "success": "Account succesvol aangemaakt!"
+    },
+    "NewPostForm": {
+      "title": "Titel",
+      "description": "Beschrijving / Inhoud",
+      "startDate": "Startdatum",
+      "endDate": "Einddatum",
+      "validation": {
+        "titleRequired": "Een titel is verplicht",
+        "descriptionRequired": "Een beschrijving is verplicht",
+        "endDateAfterStart": "De einddatum moet na de startdatum liggen."
+      },
+      "success": "Bericht succesvol aangemaakt!",
+      "error": "Bericht kon niet worden aangemaakt!",
+      "day": {
+        "add": "Een nieuwe dag toevoegen",
+        "addDescription": "U staat op het punt een nieuwe gedetailleerde dag aan uw bericht toe te voegen.",
+        "edit": "Dag {day} bewerken",
+        "editDescription": "U staat op het punt een dag in uw bericht te bewerken."
+      }
+    },
+    "DayForm": {
+      "title": "Titel",
+      "description": "Beschrijving",
+      "date": "Datum",
+      "validation": {
+        "titleRequired": "Een titel is verplicht",
+        "descriptionRequired": "Een beschrijving is verplicht"
+      }
+    },
+    "UserFlavorForm": {
+      "username": "Gebruikersnaam",
+      "displayName": "Weergavenaam",
+      "placeOfResidence": "Woonplaats",
+      "favoriteDestination": "Favoriete bestemming",
+      "biography": "Biografie",
+      "validation": {
+        "usernameRequired": "Gebruikersnaam is verplicht",
+        "displayNameRequired": "Weergavenaam is verplicht.",
+        "usernameFormat": "Gebruikersnaam mag alleen kleine letters, cijfers, punten en underscores bevatten."
+      },
+      "success": "Gebruiker succesvol bijgewerkt.",
+      "error": "Gebruiker kon niet worden bijgewerkt."
+    }
+  },
+  "Post": {
+    "timelineOfDays": "Tijdlijn van dagen",
+    "postedOn": "Geplaatst op",
+    "start": "Start",
+    "end": "Einde"
+  },
+  "PostControls": {
+    "liked": "Vind ik leuk",
+    "unliked": "Vind ik niet meer leuk",
+    "likeSuccess": "{action} het bericht succesvol!",
+    "likeError": "Bericht kon niet worden geliked. Probeer het later opnieuw.",
+    "quickSettings": "Snelle instellingen",
+    "deletePost": "Dit bericht verwijderen",
+    "deleteConfirmTitle": "Weet u het zeker?",
+    "deleteConfirmDescription": "Deze actie kan niet ongedaan worden gemaakt. Dit zal dit bericht permanent verwijderen en de gegevens van onze servers verwijderen.",
+    "permanentlyDelete": "Permanent verwijderen",
+    "deleteSuccess": "Bericht succesvol verwijderd!",
+    "deleteError": "Bericht kon niet worden verwijderd. Probeer het later opnieuw."
+  },
+  "Comment": {
+    "likeError": "Reactie kon niet worden geliked. Probeer het later opnieuw.",
+    "loadRepliesError": "Antwoorden konden niet worden geladen. Probeer het later opnieuw.",
+    "postSuccess": "Reactie succesvol geplaatst!",
+    "postError": "Reactie kon niet worden geplaatst. Probeer het later opnieuw.",
+    "deleteSuccess": "Reactie succesvol verwijderd!",
+    "deleteError": "Reactie kon niet worden verwijderd. Probeer het later opnieuw."
+  },
+  "UserProfile": {
+    "about": "Over",
+    "noBiography": "{displayName} heeft nog geen biografie opgegeven.",
+    "joined": "Lid sinds",
+    "placeOfResidence": "Woonplaats",
+    "favoriteDestination": "Favoriete bestemming",
+    "followSuccess": "U volgt {displayName} {status}",
+    "followError": "Er is iets misgegaan. Probeer het later opnieuw.",
+    "now": "nu",
+    "noLonger": "niet meer"
+  },
+  "Settings": {
+    "title": "Instellingen",
+    "customization": "Aanpassing",
+    "imagesCustomization": "Afbeeldingen aanpassing",
+    "selectProfilePicture": "Profielfoto selecteren",
+    "selectBannerImage": "Bannerafbeelding selecteren",
+    "cropProfilePicture": "Profielfoto bijsnijden",
+    "cropBannerImage": "Bannerafbeelding bijsnijden",
+    "uploadImages": "Afbeeldingen uploaden",
+    "previewNote": "Dit is een voorbeeld. Klik op \"Afbeeldingen uploaden\" om deze wijzigingen op te slaan.",
+    "selectImageFirst": "Selecteer eerst een afbeelding.",
+    "uploadSuccess": "Afbeeldingen geüpload!",
+    "uploadError": "Upload mislukt.",
+    "cropError": "Afbeelding kon niet worden bijgesneden. Probeer het opnieuw.",
+    "imageFormatError": "Upload een geldige afbeelding (JPEG, PNG, GIF)",
+    "imageSizeError": "Afbeelding moet < 25MB zijn"
+  },
+  "Landing": {
+    "welcomeBack": "Welkom terug",
+    "chooseOption": "Kies of u wilt inloggen of registreren",
+    "logIn": "Inloggen",
+    "signUp": "Registreren"
+  },
+  "Pages": {
+    "settings": "Instellingen",
+    "newPost": "Nieuw bericht",
+    "posts": "Berichten"
+  },
+  "Footer": {
+    "about": "Over ons",
+    "privacy": "Privacy",
+    "terms": "Algemene voorwaarden",
+    "contact": "Contact",
+    "copyright": "© 2025 TripTales. Alle rechten voorbehouden.",
+    "madeWith": "Gemaakt met",
+    "byTeam": "door het TripTales Team",
+    "homepagePictureBy": "Startpagina foto van",
+    "on": "op"
+  },
+  "Toasts": {
+    "fetchPostsError": "Berichten konden niet van de server worden opgehaald!"
+  }
+}

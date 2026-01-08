@@ -21,6 +21,7 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import useUser from "@/hooks/useUser";
+import { useTranslations } from 'next-intl';
 
 interface CommentProps {
   comment: PostCommentResponse;
@@ -44,6 +45,8 @@ const Comment: React.FC<CommentProps> = ({
   const [isExpandLoading, setIsExpandLoading] = useState<boolean>(false);
 
   const { user, loggedIn } = useUser();
+  const t = useTranslations("Comment");
+  const tCommon = useTranslations("Common");
 
   const handleLike = async () => {
     const response = await PostService.likeComment(comment.guid);
@@ -52,7 +55,7 @@ const Comment: React.FC<CommentProps> = ({
       setLiked(newLiked);
       setLikesCount((prev) => (newLiked ? prev + 1 : prev - 1));
     } else {
-      toast.error("Failed to like the comment. Please try again later.");
+      toast.error(t("likeError"));
     }
   };
 
@@ -65,7 +68,7 @@ const Comment: React.FC<CommentProps> = ({
         setSubComments(response.comments);
         setIsExpanded(true);
       } else {
-        toast.error("Failed to load replies. Please try again later.");
+        toast.error(t("loadRepliesError"));
       }
       setIsExpandLoading(false);
     } else setIsExpanded(true);
@@ -82,9 +85,9 @@ const Comment: React.FC<CommentProps> = ({
       setReplyContent("");
       setIsReplying(false);
       setIsExpanded(true);
-      toast.success("Reply posted successfully!");
+      toast.success(t("postSuccess"));
     } else {
-      toast.error("Failed to post reply. Please try again later.");
+      toast.error(t("postError"));
     }
   };
 
@@ -92,9 +95,9 @@ const Comment: React.FC<CommentProps> = ({
     const response = await PostService.deleteComment(subComment.guid);
     if (response) {
       setSubComments((prev) => prev.filter((c) => c.guid !== subComment.guid));
-      toast.success("Comment deleted successfully!");
+      toast.success(t("deleteSuccess"));
     } else {
-      toast.error("Failed to delete comment. Please try again later.");
+      toast.error(t("deleteError"));
     }
   };
 
@@ -177,7 +180,7 @@ const Comment: React.FC<CommentProps> = ({
               onClick={toggleReply}
               className="text-gray-600 hover:text-blue-500"
             >
-              Reply
+              {tCommon("reply")}
             </Button>
           )}
           {user?.guid === comment.author.guid && (
@@ -187,7 +190,7 @@ const Comment: React.FC<CommentProps> = ({
               onClick={() => handleDeleteComment(comment)}
               className="text-gray-600 hover:text-red-500"
             >
-              Delete
+              {tCommon("delete")}
             </Button>
           )}
         </div>
@@ -201,7 +204,7 @@ const Comment: React.FC<CommentProps> = ({
                 <Textarea
                   value={replyContent}
                   onChange={(e) => setReplyContent(e.target.value)}
-                  placeholder="Write a reply..."
+                  placeholder={tCommon("writeReply")}
                   className="w-full resize-none"
                   rows={3}
                 />
@@ -212,10 +215,10 @@ const Comment: React.FC<CommentProps> = ({
                     size="sm"
                     onClick={toggleReply}
                   >
-                    Cancel
+                    {tCommon("cancel")}
                   </Button>
                   <Button type="submit" size="sm">
-                    <MessageCirclePlus /> Post Reply
+                    <MessageCirclePlus /> {tCommon("postReply")}
                   </Button>
                 </div>
               </div>

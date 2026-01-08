@@ -14,14 +14,9 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { FormInput } from "../low/FormInput";
+import { useTranslations } from 'next-intl';
 
-const daysFormSchema = z.object({
-  title: z.string().min(1, { message: "A title is required" }),
-  description: z.string().min(1, { message: "A description is required" }),
-  date: z.date(),
-});
-
-type DayFormValues = z.infer<typeof daysFormSchema>;
+type DayFormValues = z.infer<ReturnType<typeof getDayFormSchema>>;
 
 interface DayFormProps {
   onSubmit: (values: DayFormValues) => void;
@@ -32,17 +27,34 @@ interface DayFormProps {
   onRemove?: () => void;
 }
 
+function getDayFormSchema(t: ReturnType<typeof useTranslations<"Forms.DayForm">>) {
+  return z.object({
+    title: z.string().min(1, { message: t("validation.titleRequired") }),
+    description: z.string().min(1, { message: t("validation.descriptionRequired") }),
+    date: z.date(),
+  });
+}
+
 export function DayForm({
   onSubmit,
   defaultValues = { title: "", description: "" },
   children,
-  headers = {
-    title: "Add a new Day",
-    description: "You're about to add a new in-detail day to your post.",
-  },
+  headers,
   removeBtn = false,
   onRemove,
 }: DayFormProps) {
+  const t = useTranslations("Forms.DayForm");
+  const tCommon = useTranslations("Common");
+  const tNewPost = useTranslations("Forms.NewPostForm.day");
+
+  const defaultHeaders = {
+    title: tNewPost("add"),
+    description: tNewPost("addDescription"),
+  };
+
+  const finalHeaders = headers || defaultHeaders;
+  const daysFormSchema = getDayFormSchema(t);
+
   const form = useForm<DayFormValues>({
     resolver: zodResolver(daysFormSchema),
     defaultValues,
@@ -58,15 +70,15 @@ export function DayForm({
         <Button variant="outline" className="w-full">
           {children || (
             <>
-              <Plus className="h-4 w-4" /> Day
+              <Plus className="h-4 w-4" /> {tCommon("day")}
             </>
           )}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{headers.title}</DialogTitle>
-          <DialogDescription>{headers.description}</DialogDescription>
+          <DialogTitle>{finalHeaders.title}</DialogTitle>
+          <DialogDescription>{finalHeaders.description}</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -80,19 +92,19 @@ export function DayForm({
             <FormInput
               control={form.control}
               name="title"
-              label="Title"
+              label={t("title")}
               required
             />
             <FormInput
               control={form.control}
               name="description"
-              label="Description"
+              label={t("description")}
               required
             />
             <FormInput
               control={form.control}
               name="date"
-              label="Date"
+              label={t("date")}
               type="date"
               required
             />
@@ -111,10 +123,10 @@ export function DayForm({
                     onRemove?.();
                   }}
                 >
-                  Remove
+                  {tCommon("remove")}
                 </Button>
               )}
-              <Button type="submit">Add</Button>
+              <Button type="submit">{tCommon("add")}</Button>
             </DialogFooter>
           </form>
         </Form>
