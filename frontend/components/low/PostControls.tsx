@@ -21,11 +21,14 @@ import {
 import { DialogClose } from "@radix-ui/react-dialog";
 import useUser from "@/hooks/useUser";
 import { UserPrivateResponse } from "@/types/RequestTypes";
+import { useTranslations } from 'next-intl';
 
 export const PostControls: React.FC<PostProps> = ({ post, embed }) => {
   const [liked, setLiked] = useState<boolean>(post.userLiked);
   const [likesCount, setLikesCount] = useState<number>(post.likesCount);
   const router = useRouter();
+  const t = useTranslations("PostControls");
+  const tCommon = useTranslations("Common");
 
   const { loggedIn, user } = useUser();
 
@@ -39,9 +42,10 @@ export const PostControls: React.FC<PostProps> = ({ post, embed }) => {
       const newLiked = !liked;
       setLiked(newLiked);
       setLikesCount((prev) => (newLiked ? prev + 1 : prev - 1));
-      toast.success(`${newLiked ? "Liked" : "Unliked"} the post successfully!`);
+      const actionText = newLiked ? t("liked") : t("unliked");
+      toast.success(t("likeSuccess", { action: actionText }));
     } else {
-      toast.error("Failed to like the post. Please try again later.");
+      toast.error(t("likeError"));
     }
   };
 
@@ -55,12 +59,12 @@ export const PostControls: React.FC<PostProps> = ({ post, embed }) => {
           onClick={handleLike}
         >
           <Heart className={liked ? "fill-red-500 text-red-500" : undefined} />
-          {likesCount} Like{likesCount !== 1 ? "s" : ""}
+          {likesCount} {likesCount !== 1 ? tCommon("likes") : tCommon("like")}
         </Button>
         <div className="flex items-center text-sm text-gray-400">
           <MessageCircle className="h-4 w-4" />
           <span className="ml-2">
-            {post.commentsCount} Comment{post.commentsCount !== 1 ? "s" : ""}
+            {post.commentsCount} {post.commentsCount !== 1 ? tCommon("comments") : tCommon("comment")}
           </span>
         </div>
         <PostSettings post={post} user={user!} />
@@ -71,7 +75,7 @@ export const PostControls: React.FC<PostProps> = ({ post, embed }) => {
           className="hover:text-white"
           onClick={handleViewMore}
         >
-          View More
+          {tCommon("viewMore")}
         </Button>
       ) : null}
     </>
@@ -83,14 +87,16 @@ export const PostSettings: React.FC<{
   user: UserPrivateResponse;
 }> = ({ post, user }) => {
   const router = useRouter();
+  const t = useTranslations("PostControls");
+  const tCommon = useTranslations("Common");
 
   const handleDelete = async () => {
     const response = await PostService.deletePost(post.guid);
     if (response) {
-      toast.success("Post deleted successfully!");
+      toast.success(t("deleteSuccess"));
       router.push("/user/" + user?.username);
     } else {
-      toast.error("Failed to delete the post. Please try again later.");
+      toast.error(t("deleteError"));
     }
   };
 
@@ -102,19 +108,18 @@ export const PostSettings: React.FC<{
         </Button>
       </PopoverTrigger>
       <PopoverContent className="flex flex-col items-start justify-center gap-2">
-        <h3 className="text-base font-semibold uppercase">Quick Settings</h3>
+        <h3 className="text-base font-semibold uppercase">{t("quickSettings")}</h3>
         <Dialog>
           <DialogTrigger asChild>
             <Button variant={"destructive"} size={"sm"}>
-              Delete this Post
+              {t("deletePost")}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Are you absolutely sure?</DialogTitle>
+              <DialogTitle>{t("deleteConfirmTitle")}</DialogTitle>
               <DialogDescription>
-                This action cannot be undone. This will permanently delete this
-                post and remove its data from our servers.
+                {t("deleteConfirmDescription")}
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="flex w-full flex-row items-center justify-between">
@@ -124,12 +129,12 @@ export const PostSettings: React.FC<{
                   onClick={handleDelete}
                   variant={"destructive"}
                 >
-                  Permanently Delete
+                  {t("permanentlyDelete")}
                 </Button>
               </DialogClose>
               <DialogClose asChild>
                 <Button type="button" variant={"outline"}>
-                  Cancel
+                  {tCommon("cancel")}
                 </Button>
               </DialogClose>
             </DialogFooter>

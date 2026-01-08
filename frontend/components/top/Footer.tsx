@@ -1,8 +1,11 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { getTranslations } from 'next-intl/server';
 
-const Footer: React.FC = () => {
+const Footer = async () => {
+  const t = await getTranslations("Footer");
+
   return (
     <footer className="z-10 w-full border-t border-gray-100 bg-gray-50 px-4 py-12 md:px-8">
       <div className="mx-auto max-w-7xl">
@@ -25,25 +28,25 @@ const Footer: React.FC = () => {
               href="#"
               className="hover:text-primary-hover text-sm text-gray-600 transition-colors duration-200"
             >
-              About
+              {t("about")}
             </Link>
             <Link
               href="#"
               className="hover:text-primary-hover text-sm text-gray-600 transition-colors duration-200"
             >
-              Privacy
+              {t("privacy")}
             </Link>
             <Link
               href="#"
               className="hover:text-primary-hover text-sm text-gray-600 transition-colors duration-200"
             >
-              Terms and Conditions
+              {t("terms")}
             </Link>
             <Link
               href="#"
               className="hover:text-primary-hover text-sm text-gray-600 transition-colors duration-200"
             >
-              Contact
+              {t("contact")}
             </Link>
           </div>
         </div>
@@ -51,13 +54,13 @@ const Footer: React.FC = () => {
         {/* Bottom Section */}
         <div className="mt-8 flex flex-col items-center justify-between gap-4 md:flex-row">
           <p className="text-xs text-gray-600 md:text-sm">
-            &copy; 2025 TripTales. All rights reserved.
+            {t("copyright")}
           </p>
           <div className="flex items-center gap-3">
             <p className="text-xs text-gray-600 md:text-sm">
-              Made with
+              {t("madeWith")}
               <span className="text-primary-hover mx-1 animate-pulse">❤️</span>
-              by the TripTales Team
+              {t("byTeam")}
             </p>
             {/* Social Icons */}
             <div className="flex gap-3">
@@ -78,7 +81,7 @@ const Footer: React.FC = () => {
           </div>
         </div>
         <p className="text-gray-600 italic text-sm">
-          Homepage Picture by{" "}
+          {t("homepagePictureBy")}{" "}
           <Link
             target="_blank"
             className="underline"
@@ -86,7 +89,7 @@ const Footer: React.FC = () => {
           >
             NEOM
           </Link>{" "}
-          on{" "}
+          {t("on")}{" "}
           <Link
             target="_blank"
             className="underline"

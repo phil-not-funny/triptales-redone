@@ -11,25 +11,27 @@ import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { UserDetailedResponse } from "@/types/RequestTypes";
 import { FormInput } from "../low/FormInput";
-
-const formSchema = z.object({
-  username: z
-    .string()
-    .min(1, {
-      message: "Username is required",
-    })
-    .regex(/^[a-z0-9._]+$/, {
-      message:
-        "Username can only contain lowercase letters, numbers, dots, and underscores.",
-    }),
-  displayName: z.string().min(1, { message: "Display name is required." }),
-  biography: z.string().optional(),
-  placeOfResidence: z.string().optional(),
-  favoriteDestination: z.string().optional(),
-});
+import { useTranslations } from 'next-intl';
 
 export function UserFlavorForm({ user }: { user: UserDetailedResponse }) {
   const [loading, setLoading] = useState<boolean>(false);
+  const t = useTranslations("Forms.UserFlavorForm");
+  const tCommon = useTranslations("Common");
+
+  const formSchema = z.object({
+    username: z
+      .string()
+      .min(1, {
+        message: t("validation.usernameRequired"),
+      })
+      .regex(/^[a-z0-9._]+$/, {
+        message: t("validation.usernameFormat"),
+      }),
+    displayName: z.string().min(1, { message: t("validation.displayNameRequired") }),
+    biography: z.string().optional(),
+    placeOfResidence: z.string().optional(),
+    favoriteDestination: z.string().optional(),
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -48,34 +50,34 @@ export function UserFlavorForm({ user }: { user: UserDetailedResponse }) {
         <FormInput
           control={form.control}
           name="username"
-          label="Username"
+          label={t("username")}
           required
         />
         <FormInput
           control={form.control}
           name="displayName"
-          label="Display Name"
+          label={t("displayName")}
           required
         />
         <FormInput
           control={form.control}
           name="placeOfResidence"
-          label="Place of Residence"
+          label={t("placeOfResidence")}
         />
         <FormInput
           control={form.control}
           name="favoriteDestination"
-          label="Favorite Destination"
+          label={t("favoriteDestination")}
         />
         <FormInput
           control={form.control}
           name="biography"
-          label="Biography"
+          label={t("biography")}
           type="textarea"
           className="resize-none"
         />
         <Button type="submit" disabled={loading}>
-          {loading && <Loader2 className="animate-spin" />} Submit
+          {loading && <Loader2 className="animate-spin" />} {tCommon("submit")}
         </Button>
       </form>
     </Form>
@@ -86,9 +88,9 @@ export function UserFlavorForm({ user }: { user: UserDetailedResponse }) {
     setLoading(true);
     const response = await userService.putFlavor(values);
     if (response) {
-      toast.success("User updated successfully.");
+      toast.success(t("success"));
     } else {
-      toast.error("Failed to update user.");
+      toast.error(t("error"));
     }
     setLoading(false);
   }

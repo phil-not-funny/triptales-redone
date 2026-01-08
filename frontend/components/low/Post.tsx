@@ -18,6 +18,7 @@ import {
 import Avatar from "./Avatar";
 import { PostControls } from "./PostControls";
 import { MarkdownOnly } from "./MarkdownImplementation";
+import { getTranslations } from 'next-intl/server';
 
 interface EmbeddedPostProps {
   // props when embed is true
@@ -35,7 +36,10 @@ interface FullPostProps {
 
 export type PostProps = EmbeddedPostProps | FullPostProps;
 
-const Post: React.FC<PostProps> = ({ post, embed }) => {
+const Post = async ({ post, embed }: PostProps) => {
+  const t = await getTranslations("Post");
+  const tCommon = await getTranslations("Common");
+
   return (
     <Card className="mx-auto mb-6 gap-0 overflow-hidden rounded-xl border border-gray-100 bg-white py-0 shadow-sm transition-shadow duration-300 hover:shadow-md lg:w-2xl">
       <CardHeader className="relative border-b border-gray-100 p-6">
@@ -57,17 +61,17 @@ const Post: React.FC<PostProps> = ({ post, embed }) => {
             </Link>
           </div>
           <span className="mx-2">•</span>
-          <span>Posted on {formatDateString(post.createdAt)}</span>
+          <span>{t("postedOn")} {formatDateString(post.createdAt)}</span>
         </div>
         <div className="flex items-center space-x-4 rounded-lg bg-gray-50 p-3 text-sm text-gray-600">
           <Calendar className="h-4 w-4 text-gray-400" />
           <div>
-            <span className="font-medium">Start:</span>{" "}
+            <span className="font-medium">{t("start")}:</span>{" "}
             {formatDateString(post.startDate)}
           </div>
           <div className="h-2 w-2 rounded-full bg-gray-300"></div>
           <div>
-            <span className="font-medium">End:</span>{" "}
+            <span className="font-medium">{t("end")}:</span>{" "}
             {formatDateString(post.endDate)}
           </div>
         </div>
@@ -77,7 +81,7 @@ const Post: React.FC<PostProps> = ({ post, embed }) => {
         {!embed && post.days && post.days.length > 0 && (
           <div className="mt-6">
             <h3 className="mb-4 text-lg font-semibold text-gray-800">
-              Timeline of Days
+              {t("timelineOfDays")}
             </h3>
             <Accordion type="single" collapsible className="w-full">
               {post.days.map((day, index) => (
@@ -85,7 +89,7 @@ const Post: React.FC<PostProps> = ({ post, embed }) => {
                   <AccordionTrigger className="text-left">
                     <div className="flex w-full items-center justify-between">
                       <span className="font-medium text-gray-800">
-                        Day {index + 1}: {day.title}
+                        {tCommon("day")} {index + 1}: {day.title}
                       </span>
                       <span className="text-sm text-gray-500">
                         {beautifyDate(day.date)}

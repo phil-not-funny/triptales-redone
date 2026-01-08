@@ -1,0 +1,219 @@
+{
+  "Sidebar": {
+    "home": "Home",
+    "authentication": "Authentication",
+    "navigation": "Navigation",
+    "inbox": "Inbox",
+    "search": "Search",
+    "login": "Login",
+    "signup": "Sign up",
+    "settings": "Settings",
+    "newPost": "New Post",
+    "logout": "Logout",
+    "userOptions": "User Options",
+    "language": "Language"
+  },
+  "Home": {
+    "title": "Explore Posts",
+    "subheading": "Discover Stories from Every Corner of the World.",
+    "RandomPosts": {
+      "error": "We were unable to fetch posts from our server."
+    }
+  },
+  "Sorry": {
+    "error": "Please try again later or contact support if the problem persists.",
+    "postNotFound": "The post you were looking for doesn't exist.",
+    "userNotFound": "We were unable to find the user you provided.",
+    "pageNotFound": "The page you are looking for does not exist.",
+    "pleaseLogin": "Please Log In to Continue"
+  },
+  "Common": {
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "back": "Back",
+    "delete": "Delete",
+    "remove": "Remove",
+    "add": "Add",
+    "edit": "Edit",
+    "save": "Save",
+    "finish": "Finish",
+    "viewMore": "View More",
+    "toHomepage": "To Homepage",
+    "postedOn": "Posted on",
+    "start": "Start",
+    "end": "End",
+    "day": "Day",
+    "likes": "Likes",
+    "like": "Like",
+    "comments": "Comments",
+    "comment": "Comment",
+    "followers": "Followers",
+    "following": "Following",
+    "unfollow": "Unfollow",
+    "follow": "Follow",
+    "message": "Message",
+    "reply": "Reply",
+    "noCommentsYet": "No comments yet.",
+    "postComment": "Post Comment",
+    "postReply": "Post Reply",
+    "writeComment": "Write a comment...",
+    "writeReply": "Write a reply...",
+    "pickDate": "Pick a Date"
+  },
+  "Forms": {
+    "LoginForm": {
+      "title": "Login to an account",
+      "description": "Login to an existing TripTales account",
+      "username": "Username",
+      "password": "Password",
+      "validation": {
+        "usernameRequired": "Username is required",
+        "passwordRequired": "Password is required.",
+        "usernameFormat": "Username can only contain lowercase letters, numbers, dots, and underscores."
+      }
+    },
+    "RegisterForm": {
+      "title": "Register a new account",
+      "description": "Register a new TripTales account",
+      "username": "Username",
+      "password": "Password",
+      "confirmPassword": "Match Password",
+      "email": "Email",
+      "displayName": "Display Name",
+      "createAccount": "Create new Account",
+      "validation": {
+        "usernameMinLength": "Username must be at least 4 characters long.",
+        "passwordMinLength": "Password must be 8 characters long.",
+        "passwordFormat": "Password must contain at least one lower- and uppercase letter, number and special character.",
+        "confirmPasswordRequired": "Please confirm your password.",
+        "passwordsDoNotMatch": "The passwords do not match",
+        "emailInvalid": "Please enter a valid email address.",
+        "displayNameRequired": "Please enter a display name.",
+        "usernameFormat": "Username can only contain lowercase letters, numbers, dots, and underscores."
+      },
+      "success": "Account created successfully!"
+    },
+    "NewPostForm": {
+      "title": "Title",
+      "description": "Description / Content",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "validation": {
+        "titleRequired": "A title is required",
+        "descriptionRequired": "A description is required",
+        "endDateAfterStart": "The end date must be after the start date."
+      },
+      "success": "Post created successfully!",
+      "error": "Failed to create post!",
+      "day": {
+        "add": "Add a new Day",
+        "addDescription": "You're about to add a new in-detail day to your post.",
+        "edit": "Edit Day {day}",
+        "editDescription": "You're about to edit a day in your post."
+      }
+    },
+    "DayForm": {
+      "title": "Title",
+      "description": "Description",
+      "date": "Date",
+      "validation": {
+        "titleRequired": "A title is required",
+        "descriptionRequired": "A description is required"
+      }
+    },
+    "UserFlavorForm": {
+      "username": "Username",
+      "displayName": "Display Name",
+      "placeOfResidence": "Place of Residence",
+      "favoriteDestination": "Favorite Destination",
+      "biography": "Biography",
+      "validation": {
+        "usernameRequired": "Username is required",
+        "displayNameRequired": "Display name is required.",
+        "usernameFormat": "Username can only contain lowercase letters, numbers, dots, and underscores."
+      },
+      "success": "User updated successfully.",
+      "error": "Failed to update user."
+    }
+  },
+  "Post": {
+    "timelineOfDays": "Timeline of Days",
+    "postedOn": "Posted on",
+    "start": "Start",
+    "end": "End"
+  },
+  "PostControls": {
+    "liked": "Liked",
+    "unliked": "Unliked",
+    "likeSuccess": "{action} the post successfully!",
+    "likeError": "Failed to like the post. Please try again later.",
+    "quickSettings": "Quick Settings",
+    "deletePost": "Delete this Post",
+    "deleteConfirmTitle": "Are you absolutely sure?",
+    "deleteConfirmDescription": "This action cannot be undone. This will permanently delete this post and remove its data from our servers.",
+    "permanentlyDelete": "Permanently Delete",
+    "deleteSuccess": "Post deleted successfully!",
+    "deleteError": "Failed to delete the post. Please try again later."
+  },
+  "Comment": {
+    "likeError": "Failed to like the comment. Please try again later.",
+    "loadRepliesError": "Failed to load replies. Please try again later.",
+    "postSuccess": "Reply posted successfully!",
+    "postError": "Failed to post reply. Please try again later.",
+    "deleteSuccess": "Comment deleted successfully!",
+    "deleteError": "Failed to delete comment. Please try again later."
+  },
+  "UserProfile": {
+    "about": "About",
+    "noBiography": "{displayName} has not provided a biography yet.",
+    "joined": "Joined",
+    "placeOfResidence": "Place of Residence",
+    "favoriteDestination": "Favorite Destination",
+    "followSuccess": "You are {status} following {displayName}",
+    "followError": "Something went wrong. Please try again later.",
+    "now": "now",
+    "noLonger": "no longer"
+  },
+  "Settings": {
+    "title": "Settings",
+    "customization": "Customization",
+    "imagesCustomization": "Images Customization",
+    "selectProfilePicture": "Select ProfilePicture",
+    "selectBannerImage": "Select BannerImage",
+    "cropProfilePicture": "Crop ProfilePicture",
+    "cropBannerImage": "Crop BannerImage",
+    "uploadImages": "Upload Images",
+    "previewNote": "This is a preview. Click \"Upload Images\" to save these changes.",
+    "selectImageFirst": "Select an image first.",
+    "uploadSuccess": "Images uploaded!",
+    "uploadError": "Upload failed.",
+    "cropError": "Failed to crop image. Please try again.",
+    "imageFormatError": "Upload a valid image (JPEG, PNG, GIF)",
+    "imageSizeError": "Image must be < 25MB"
+  },
+  "Landing": {
+    "welcomeBack": "Welcome back",
+    "chooseOption": "Choose whether to log in or register",
+    "logIn": "Log In",
+    "signUp": "Sign Up"
+  },
+  "Pages": {
+    "settings": "Settings",
+    "newPost": "New Post",
+    "posts": "Posts"
+  },
+  "Footer": {
+    "about": "About",
+    "privacy": "Privacy",
+    "terms": "Terms and Conditions",
+    "contact": "Contact",
+    "copyright": "© 2025 TripTales. All rights reserved.",
+    "madeWith": "Made with",
+    "byTeam": "by the TripTales Team",
+    "homepagePictureBy": "Homepage Picture by",
+    "on": "on"
+  },
+  "Toasts": {
+    "fetchPostsError": "Failed to Fetch Posts from Server!"
+  }
+}

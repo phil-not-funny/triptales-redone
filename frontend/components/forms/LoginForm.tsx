@@ -11,25 +11,27 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { FormInput } from "../low/FormInput";
-
-const formSchema = z.object({
-  username: z
-    .string()
-    .min(1, {
-      message: "Username is required",
-    })
-    .regex(/^[a-z0-9._]+$/, {
-      message:
-        "Username can only contain lowercase letters, numbers, dots, and underscores.",
-    }),
-  password: z.string().min(1, {
-    message: "Password is required.",
-  }),
-});
+import { useTranslations } from 'next-intl';
 
 export function LoginForm() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const t = useTranslations("Forms.LoginForm");
+  const tCommon = useTranslations("Common");
+
+  const formSchema = z.object({
+    username: z
+      .string()
+      .min(1, {
+        message: t("validation.usernameRequired"),
+      })
+      .regex(/^[a-z0-9._]+$/, {
+        message: t("validation.usernameFormat"),
+      }),
+    password: z.string().min(1, {
+      message: t("validation.passwordRequired"),
+    }),
+  });
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -46,18 +48,18 @@ export function LoginForm() {
         <FormInput
           control={form.control}
           name="username"
-          label="Username"
+          label={t("username")}
           required
         />
         <FormInput
           control={form.control}
           name="password"
-          label="Password"
+          label={t("password")}
           textType="password"
           required
         />
         <Button type="submit" disabled={loading}>
-          {loading && <Loader2 className="animate-spin" />} Submit
+          {loading && <Loader2 className="animate-spin" />} {tCommon("submit")}
         </Button>
       </form>
     </Form>

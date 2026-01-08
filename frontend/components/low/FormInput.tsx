@@ -12,6 +12,7 @@ import { Input } from "../ui/input";
 import { HTMLInputTypeAttribute } from "react";
 import { Textarea } from "../ui/textarea";
 import { cn } from "@/lib/utils";
+import { useTranslations } from 'next-intl';
 
 type FormInputProps<T extends FieldValues> = {
   control: Control<T>;
@@ -34,6 +35,8 @@ export function FormInput<T extends FieldValues>({
   textType,
   className,
 }: FormInputProps<T>) {
+  const tCommon = useTranslations("Common");
+
   return (
     <FormField
       control={control}
@@ -46,7 +49,7 @@ export function FormInput<T extends FieldValues>({
           </FormLabel>
           <FormControl>
             {type === "date" ? (
-              <DatePicker {...field}>Pick a Date</DatePicker>
+              <DatePicker {...field}>{tCommon("pickDate")}</DatePicker>
             ) : type === "markdown" ? (
               <MDEditor
                 commands={commands

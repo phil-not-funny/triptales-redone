@@ -16,6 +16,7 @@ import {
 } from "../../ui/dialog";
 import Cropper, { Area } from "react-easy-crop";
 import { getCroppedImg } from "@/lib/utils";
+import { useTranslations } from 'next-intl';
 
 const ImageUploader = ({
   type,
@@ -34,6 +35,8 @@ const ImageUploader = ({
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedArea, setCroppedArea] = useState<Area | null>(null);
+  const t = useTranslations("Settings");
+  const tCommon = useTranslations("Common");
 
   const onCropComplete = (_: Area, areaPixels: Area) =>
     setCroppedArea(areaPixels);
@@ -56,7 +59,7 @@ const ImageUploader = ({
       setOpen(false);
       setPreview(URL.createObjectURL(file));
     } catch {
-      toast.error("Failed to crop image. Please try again.");
+      toast.error(t("cropError"));
     }
   };
 
@@ -68,9 +71,9 @@ const ImageUploader = ({
       file.type,
     );
     if (!isValidType)
-      return toast.error("Upload a valid image (JPEG, PNG, GIF)");
+      return toast.error(t("imageFormatError"));
     if (file.size > 25 * 1024 * 1024)
-      return toast.error("Image must be < 25MB");
+      return toast.error(t("imageSizeError"));
 
     setLoading(true);
     const reader = new FileReader();
@@ -86,13 +89,16 @@ const ImageUploader = ({
     reader.readAsDataURL(file);
   };
 
+  const selectLabel = type === "ProfilePicture" ? t("selectProfilePicture") : t("selectBannerImage");
+  const cropTitle = type === "ProfilePicture" ? t("cropProfilePicture") : t("cropBannerImage");
+
   return (
     <div className="flex flex-col">
       <label htmlFor={`upload-${type}`} className="mb-2 font-medium">
         {loading ? (
           <Loader2 className="inline-block animate-spin" />
         ) : (
-          `Select ${type}`
+          selectLabel
         )}
       </label>
       <Input
@@ -119,7 +125,7 @@ const ImageUploader = ({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Crop {type}</DialogTitle>
+            <DialogTitle>{cropTitle}</DialogTitle>
           </DialogHeader>
           <div className="relative h-64 w-full">
             <Cropper
@@ -134,7 +140,7 @@ const ImageUploader = ({
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={handleFinishCrop}>
-              Finish
+              {tCommon("finish")}
             </Button>
           </DialogFooter>
         </DialogContent>

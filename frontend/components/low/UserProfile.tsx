@@ -7,8 +7,12 @@ import { formatDateOnlyString } from "@/lib/utils";
 import Image from "next/image";
 import Avatar from "./Avatar";
 import UserProfileControls from "./UserProfileControls";
+import { getTranslations } from 'next-intl/server';
 
-const UserProfileCardContent: React.FC<UserProfileProps> = ({ user }) => {
+const UserProfileCardContent = async ({ user }: UserProfileProps) => {
+  const t = await getTranslations("UserProfile");
+  const tCommon = await getTranslations("Common");
+
   return (
     <>
       <CardHeader className="flex items-center gap-6 border-b border-gray-100 pb-6">
@@ -24,36 +28,36 @@ const UserProfileCardContent: React.FC<UserProfileProps> = ({ user }) => {
           <div className="mt-3 flex items-center gap-4 text-sm">
             <span>
               <span className="font-medium">{user.followerCount}</span>{" "}
-              Followers
+              {tCommon("followers")}
             </span>
           </div>
         </div>
       </CardHeader>
       <CardContent className="mt-6">
         <div className="px-4">
-          <h2 className="mb-2 text-lg font-medium">About</h2>
+          <h2 className="mb-2 text-lg font-medium">{t("about")}</h2>
           <p className="text-sm leading-relaxed">
             {user.biography ||
-              `${user.displayName} has not provided a biography yet.`}
+              t("noBiography", { displayName: user.displayName })}
           </p>
         </div>
 
         <div className="mt-6 grid grid-cols-1 gap-4 rounded-lg bg-gray-100 p-4 md:grid-cols-2">
           <div className="md:col-span-2">
-            <h3 className="text-sm font-medium">Joined</h3>
+            <h3 className="text-sm font-medium">{t("joined")}</h3>
             <p className="mt-1 text-xs">
               {formatDateOnlyString(user.memberSince)}
             </p>
           </div>
           {user.placeOfResidence && (
             <div>
-              <h3 className="text-sm font-medium">Place of Residence</h3>
+              <h3 className="text-sm font-medium">{t("placeOfResidence")}</h3>
               <p className="mt-1 text-xs">{user.placeOfResidence}</p>
             </div>
           )}
           {user.favoriteDestination && (
             <div>
-              <h3 className="text-sm font-medium">Favorite Destination</h3>
+              <h3 className="text-sm font-medium">{t("favoriteDestination")}</h3>
               <p className="mt-1 text-xs">{user.favoriteDestination}</p>
             </div>
           )}
@@ -71,10 +75,10 @@ export interface UserProfileProps {
   user: UserDetailedResponse;
 }
 
-export const UserProfile: React.FC<UserProfileProps & PropsWithClassName> = ({
+export const UserProfile = async ({
   user,
   className,
-}) => {
+}: UserProfileProps & PropsWithClassName) => {
   return (
     <Card className={`w-full max-w-3xl p-8 ${className}`}>
       <UserProfileCardContent user={user} />
@@ -87,9 +91,11 @@ interface UserProfileWithBannerProps {
   bannerImage?: string;
 }
 
-export const UserProfileWithBanner: React.FC<
-  UserProfileWithBannerProps & PropsWithClassName
-> = ({ user, bannerImage = "/images/default-background.jpg", className }) => {
+export const UserProfileWithBanner = async ({
+  user,
+  bannerImage = "/images/default-background.jpg",
+  className,
+}: UserProfileWithBannerProps & PropsWithClassName) => {
   return (
     <Card className={`w-full max-w-3xl pt-0 shadow-sm ${className}`}>
       <div className="relative mb-6 h-48 w-full overflow-hidden">

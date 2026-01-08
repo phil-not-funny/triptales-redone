@@ -14,30 +14,34 @@ import { DayForm } from "./DayForm";
 import { useDays } from "@/hooks/useDays";
 import { FormInput } from "../low/FormInput";
 import { beautifyDate } from "@/lib/utils";
-
-const formSchema = z
-  .object({
-    title: z.string().min(1, { message: "A title is required" }),
-    description: z.string().min(1, { message: "A description is required" }),
-    startDate: z.date(),
-    endDate: z.date(),
-  })
-  .superRefine(({ startDate, endDate }, ctx) => {
-    if (endDate < startDate) {
-      ctx.addIssue({
-        code: "custom",
-        message: "The end date must be after the start date.",
-        path: ["endDate"],
-      });
-    }
-  });
-
-type FormValues = z.infer<typeof formSchema>;
+import { useTranslations } from 'next-intl';
 
 export function NewPostForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const { days, addDay, editDay, removeDay, getDaysForApi } = useDays();
+  const t = useTranslations("Forms.NewPostForm");
+  const tCommon = useTranslations("Common");
+  const tDay = useTranslations("Forms.NewPostForm.day");
+
+  const formSchema = z
+    .object({
+      title: z.string().min(1, { message: t("validation.titleRequired") }),
+      description: z.string().min(1, { message: t("validation.descriptionRequired") }),
+      startDate: z.date(),
+      endDate: z.date(),
+    })
+    .superRefine(({ startDate, endDate }, ctx) => {
+      if (endDate < startDate) {
+        ctx.addIssue({
+          code: "custom",
+          message: t("validation.endDateAfterStart"),
+          path: ["endDate"],
+        });
+      }
+    });
+
+  type FormValues = z.infer<typeof formSchema>;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -54,10 +58,10 @@ export function NewPostForm() {
       days: getDaysForApi(),
     });
     if (response) {
-      toast.success("Post created successfully!");
+      toast.success(t("success"));
       router.push(`/post/${response}`);
     } else {
-      toast.error("Failed to create post!");
+      toast.error(t("error"));
     }
     setLoading(false);
   });
@@ -66,11 +70,11 @@ export function NewPostForm() {
     <div className="w-full space-y-3">
       <Form {...form}>
         <form onSubmit={handleSubmit} className="w-full space-y-3">
-          <FormInput control={form.control} name="title" label="Title" required />
+          <FormInput control={form.control} name="title" label={t("title")} required />
           <FormInput
             control={form.control}
             name="description"
-            label="Description / Content"
+            label={t("description")}
             type="markdown"
             required
           />
@@ -78,14 +82,14 @@ export function NewPostForm() {
             <FormInput
               control={form.control}
               name="startDate"
-              label="Start Date"
+              label={t("startDate")}
               type="date"
               required
             />
             <FormInput
               control={form.control}
               name="endDate"
-              label="End Date"
+              label={t("endDate")}
               type="date"
               required
             />
@@ -104,13 +108,13 @@ export function NewPostForm() {
                   }}
                   onSubmit={(values) => editDay(idx, values)}
                   headers={{
-                    title: `Edit Day ${idx + 1}`,
-                    description: "You're about to edit a day in your post.",
+                    title: tDay("edit", { day: idx + 1 }),
+                    description: tDay("editDescription"),
                   }}
                   removeBtn
                   onRemove={() => removeDay(idx)}
                 >
-                  <PenBox className="h-4 w-4" /> Day {idx + 1}{" "}
+                  <PenBox className="h-4 w-4" /> {tCommon("day")} {idx + 1}{" "}
                   <span className="text-gray-500">
                     {beautifyDate(day.date)}
                   </span>
@@ -120,7 +124,7 @@ export function NewPostForm() {
           )}
           <Button type="submit" disabled={loading}>
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Submit
+            {tCommon("submit")}
           </Button>
         </form>
       </Form>

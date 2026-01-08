@@ -11,46 +11,47 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormInput } from "../low/FormInput";
-
-const formSchema = z
-  .object({
-    username: z
-      .string()
-      .min(4, {
-        message: "Username must be at least 4 characters long.",
-      })
-      .regex(/^[a-z0-9._]+$/, {
-        message:
-          "Username can only contain lowercase letters, numbers, dots, and underscores.",
-      }),
-    password: z.string().min(8, {
-      message: "Password must be 8 characters long.",
-    }).regex(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/, {
-      message: "Password must contain at least one lower- and uppercase letter, number and special character."
-    }),
-    confirmPassword: z.string().min(1, {
-      message: "Please confirm your password.",
-    }),
-    email: z.string().email({
-      message: "Please enter a valid email address.",
-    }),
-    displayName: z.string().min(1, {
-      message: "Please enter a display name.",
-    }),
-  })
-  .superRefine(({ confirmPassword, password }, ctx) => {
-    if (confirmPassword !== password) {
-      ctx.addIssue({
-        code: "custom",
-        message: "The passwords do not match",
-        path: ["confirmPassword"],
-      });
-    }
-  });
+import { useTranslations } from 'next-intl';
 
 export function RegisterForm() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const t = useTranslations("Forms.RegisterForm");
+
+  const formSchema = z
+    .object({
+      username: z
+        .string()
+        .min(4, {
+          message: t("validation.usernameMinLength"),
+        })
+        .regex(/^[a-z0-9._]+$/, {
+          message: t("validation.usernameFormat"),
+        }),
+      password: z.string().min(8, {
+        message: t("validation.passwordMinLength"),
+      }).regex(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/, {
+        message: t("validation.passwordFormat")
+      }),
+      confirmPassword: z.string().min(1, {
+        message: t("validation.confirmPasswordRequired"),
+      }),
+      email: z.string().email({
+        message: t("validation.emailInvalid"),
+      }),
+      displayName: z.string().min(1, {
+        message: t("validation.displayNameRequired"),
+      }),
+    })
+    .superRefine(({ confirmPassword, password }, ctx) => {
+      if (confirmPassword !== password) {
+        ctx.addIssue({
+          code: "custom",
+          message: t("validation.passwordsDoNotMatch"),
+          path: ["confirmPassword"],
+        });
+      }
+    });
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -70,38 +71,38 @@ export function RegisterForm() {
         <FormInput
           control={form.control}
           name="username"
-          label="Username"
+          label={t("username")}
           required
         />
         <FormInput
           control={form.control}
           name="password"
-          label="Password"
+          label={t("password")}
           textType="password"
           required
         />
         <FormInput
           control={form.control}
           name="confirmPassword"
-          label="Match Password"
+          label={t("confirmPassword")}
           textType="password"
           required
         />
         <FormInput
           control={form.control}
           name="email"
-          label="Email"
+          label={t("email")}
           textType="email"
           required
         />
         <FormInput
           control={form.control}
           name="displayName"
-          label="Display Name"
+          label={t("displayName")}
           required
         />
         <Button type="submit" disabled={loading}>
-          {loading && <Loader2 className="animate-spin" />} Create new Account
+          {loading && <Loader2 className="animate-spin" />} {t("createAccount")}
         </Button>
       </form>
     </Form>
@@ -113,7 +114,7 @@ export function RegisterForm() {
     const response = await userService.register(values);
     setLoading(false);
     if (response.status === 200) {
-      toast.success("Account created successfully!");
+      toast.success(t("success"));
       router.push("/landing/login");
     } else {
       toast.error(response.message);

@@ -1,8 +1,11 @@
 import PageHead from "@/components/top/PageHead";
 import RandomPosts from "@/components/top/RandomPosts";
 import Image from "next/image";
+import { useTranslations } from 'next-intl';
 
 export default function Home() {
+  const t = useTranslations("Home");
+
   return (
     <PageHead className="flex min-h-screen flex-col items-center gap-6">
       <div className="relative mb-12 flex h-40 w-full items-center justify-center overflow-hidden object-cover shadow-lg sm:h-80">
@@ -15,10 +18,10 @@ export default function Home() {
         />
         <div className="absolute flex translate-y-1/2 flex-col items-center justify-center">
           <h1 className="text-primary-saturated text-3xl font-bold tracking-wider uppercase text-shadow-lg/30 md:text-5xl">
-            Explore Posts
+            {t("title")}
           </h1>
           <p className="text-primary-main text-lg tracking-tight text-shadow-lg/30">
-            Discover Stories from Every Corner of the World.
+            {t("subheading")}
           </p>
         </div>
       </div>

@@ -1,0 +1,219 @@
+{
+  "Sidebar": {
+    "home": "Startseite",
+    "authentication": "Authentifizierung",
+    "navigation": "Navigation",
+    "inbox": "Posteingang",
+    "search": "Suche",
+    "login": "Anmelden",
+    "signup": "Registrieren",
+    "settings": "Einstellungen",
+    "newPost": "Neuer Beitrag",
+    "logout": "Abmelden",
+    "userOptions": "Benutzeroptionen",
+    "language": "Sprache"
+  },
+  "Home": {
+    "title": "Beiträge entdecken",
+    "subheading": "Entdecke Geschichten aus allen Ecken der Welt.",
+    "RandomPosts": {
+      "error": "Wir konnten keine Beiträge von unserem Server abrufen."
+    }
+  },
+  "Sorry": {
+    "error": "Bitte versuchen Sie es später erneut oder wenden Sie sich an den Support, wenn das Problem weiterhin besteht.",
+    "postNotFound": "Der gesuchte Beitrag existiert nicht.",
+    "userNotFound": "Wir konnten den angegebenen Benutzer nicht finden.",
+    "pageNotFound": "Die gesuchte Seite existiert nicht.",
+    "pleaseLogin": "Bitte melden Sie sich an, um fortzufahren"
+  },
+  "Common": {
+    "submit": "Absenden",
+    "cancel": "Abbrechen",
+    "back": "Zurück",
+    "delete": "Löschen",
+    "remove": "Entfernen",
+    "add": "Hinzufügen",
+    "edit": "Bearbeiten",
+    "save": "Speichern",
+    "finish": "Fertig",
+    "viewMore": "Mehr anzeigen",
+    "toHomepage": "Zur Startseite",
+    "postedOn": "Veröffentlicht am",
+    "start": "Start",
+    "end": "Ende",
+    "day": "Tag",
+    "likes": "Likes",
+    "like": "Gefällt mir",
+    "comments": "Kommentare",
+    "comment": "Kommentar",
+    "followers": "Follower",
+    "following": "Folgen",
+    "unfollow": "Nicht mehr folgen",
+    "follow": "Folgen",
+    "message": "Nachricht",
+    "reply": "Antworten",
+    "noCommentsYet": "Noch keine Kommentare.",
+    "postComment": "Kommentar posten",
+    "postReply": "Antwort posten",
+    "writeComment": "Schreibe einen Kommentar...",
+    "writeReply": "Schreibe eine Antwort...",
+    "pickDate": "Datum auswählen"
+  },
+  "Forms": {
+    "LoginForm": {
+      "title": "Bei einem Konto anmelden",
+      "description": "Bei einem bestehenden TripTales-Konto anmelden",
+      "username": "Benutzername",
+      "password": "Passwort",
+      "validation": {
+        "usernameRequired": "Benutzername ist erforderlich",
+        "passwordRequired": "Passwort ist erforderlich.",
+        "usernameFormat": "Benutzername darf nur Kleinbuchstaben, Zahlen, Punkte und Unterstriche enthalten."
+      }
+    },
+    "RegisterForm": {
+      "title": "Ein neues Konto registrieren",
+      "description": "Ein neues TripTales-Konto registrieren",
+      "username": "Benutzername",
+      "password": "Passwort",
+      "confirmPassword": "Passwort bestätigen",
+      "email": "E-Mail",
+      "displayName": "Anzeigename",
+      "createAccount": "Neues Konto erstellen",
+      "validation": {
+        "usernameMinLength": "Benutzername muss mindestens 4 Zeichen lang sein.",
+        "passwordMinLength": "Passwort muss 8 Zeichen lang sein.",
+        "passwordFormat": "Passwort muss mindestens einen Klein- und Großbuchstaben, eine Zahl und ein Sonderzeichen enthalten.",
+        "confirmPasswordRequired": "Bitte bestätigen Sie Ihr Passwort.",
+        "passwordsDoNotMatch": "Die Passwörter stimmen nicht überein",
+        "emailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+        "displayNameRequired": "Bitte geben Sie einen Anzeigenamen ein.",
+        "usernameFormat": "Benutzername darf nur Kleinbuchstaben, Zahlen, Punkte und Unterstriche enthalten."
+      },
+      "success": "Konto erfolgreich erstellt!"
+    },
+    "NewPostForm": {
+      "title": "Titel",
+      "description": "Beschreibung / Inhalt",
+      "startDate": "Startdatum",
+      "endDate": "Enddatum",
+      "validation": {
+        "titleRequired": "Ein Titel ist erforderlich",
+        "descriptionRequired": "Eine Beschreibung ist erforderlich",
+        "endDateAfterStart": "Das Enddatum muss nach dem Startdatum liegen."
+      },
+      "success": "Beitrag erfolgreich erstellt!",
+      "error": "Beitrag konnte nicht erstellt werden!",
+      "day": {
+        "add": "Einen neuen Tag hinzufügen",
+        "addDescription": "Sie sind dabei, einen neuen detaillierten Tag zu Ihrem Beitrag hinzuzufügen.",
+        "edit": "Tag {day} bearbeiten",
+        "editDescription": "Sie sind dabei, einen Tag in Ihrem Beitrag zu bearbeiten."
+      }
+    },
+    "DayForm": {
+      "title": "Titel",
+      "description": "Beschreibung",
+      "date": "Datum",
+      "validation": {
+        "titleRequired": "Ein Titel ist erforderlich",
+        "descriptionRequired": "Eine Beschreibung ist erforderlich"
+      }
+    },
+    "UserFlavorForm": {
+      "username": "Benutzername",
+      "displayName": "Anzeigename",
+      "placeOfResidence": "Wohnort",
+      "favoriteDestination": "Lieblingsziel",
+      "biography": "Biografie",
+      "validation": {
+        "usernameRequired": "Benutzername ist erforderlich",
+        "displayNameRequired": "Anzeigename ist erforderlich.",
+        "usernameFormat": "Benutzername darf nur Kleinbuchstaben, Zahlen, Punkte und Unterstriche enthalten."
+      },
+      "success": "Benutzer erfolgreich aktualisiert.",
+      "error": "Benutzer konnte nicht aktualisiert werden."
+    }
+  },
+  "Post": {
+    "timelineOfDays": "Zeitlinie der Tage",
+    "postedOn": "Veröffentlicht am",
+    "start": "Start",
+    "end": "Ende"
+  },
+  "PostControls": {
+    "liked": "Gefällt mir",
+    "unliked": "Gefällt mir nicht mehr",
+    "likeSuccess": "Beitrag erfolgreich {action}!",
+    "likeError": "Beitrag konnte nicht bewertet werden. Bitte versuchen Sie es später erneut.",
+    "quickSettings": "Schnelleinstellungen",
+    "deletePost": "Diesen Beitrag löschen",
+    "deleteConfirmTitle": "Sind Sie sich absolut sicher?",
+    "deleteConfirmDescription": "Diese Aktion kann nicht rückgängig gemacht werden. Dies wird diesen Beitrag dauerhaft löschen und seine Daten von unseren Servern entfernen.",
+    "permanentlyDelete": "Dauerhaft löschen",
+    "deleteSuccess": "Beitrag erfolgreich gelöscht!",
+    "deleteError": "Beitrag konnte nicht gelöscht werden. Bitte versuchen Sie es später erneut."
+  },
+  "Comment": {
+    "likeError": "Kommentar konnte nicht bewertet werden. Bitte versuchen Sie es später erneut.",
+    "loadRepliesError": "Antworten konnten nicht geladen werden. Bitte versuchen Sie es später erneut.",
+    "postSuccess": "Antwort erfolgreich gepostet!",
+    "postError": "Antwort konnte nicht gepostet werden. Bitte versuchen Sie es später erneut.",
+    "deleteSuccess": "Kommentar erfolgreich gelöscht!",
+    "deleteError": "Kommentar konnte nicht gelöscht werden. Bitte versuchen Sie es später erneut."
+  },
+  "UserProfile": {
+    "about": "Über",
+    "noBiography": "{displayName} hat noch keine Biografie angegeben.",
+    "joined": "Beigetreten",
+    "placeOfResidence": "Wohnort",
+    "favoriteDestination": "Lieblingsziel",
+    "followSuccess": "Sie folgen {displayName} {status}",
+    "followError": "Etwas ist schief gelaufen. Bitte versuchen Sie es später erneut.",
+    "now": "jetzt",
+    "noLonger": "nicht mehr"
+  },
+  "Settings": {
+    "title": "Einstellungen",
+    "customization": "Anpassung",
+    "imagesCustomization": "Bildanpassung",
+    "selectProfilePicture": "Profilbild auswählen",
+    "selectBannerImage": "Bannerbild auswählen",
+    "cropProfilePicture": "Profilbild zuschneiden",
+    "cropBannerImage": "Bannerbild zuschneiden",
+    "uploadImages": "Bilder hochladen",
+    "previewNote": "Dies ist eine Vorschau. Klicken Sie auf \"Bilder hochladen\", um diese Änderungen zu speichern.",
+    "selectImageFirst": "Wählen Sie zuerst ein Bild aus.",
+    "uploadSuccess": "Bilder hochgeladen!",
+    "uploadError": "Upload fehlgeschlagen.",
+    "cropError": "Bild konnte nicht zugeschnitten werden. Bitte versuchen Sie es erneut.",
+    "imageFormatError": "Laden Sie ein gültiges Bild hoch (JPEG, PNG, GIF)",
+    "imageSizeError": "Bild muss < 25MB sein"
+  },
+  "Landing": {
+    "welcomeBack": "Willkommen zurück",
+    "chooseOption": "Wählen Sie, ob Sie sich anmelden oder registrieren möchten",
+    "logIn": "Anmelden",
+    "signUp": "Registrieren"
+  },
+  "Pages": {
+    "settings": "Einstellungen",
+    "newPost": "Neuer Beitrag",
+    "posts": "Beiträge"
+  },
+  "Footer": {
+    "about": "Über uns",
+    "privacy": "Datenschutz",
+    "terms": "Allgemeine Geschäftsbedingungen",
+    "contact": "Kontakt",
+    "copyright": "© 2025 TripTales. Alle Rechte vorbehalten.",
+    "madeWith": "Gemacht mit",
+    "byTeam": "vom TripTales Team",
+    "homepagePictureBy": "Startseitenbild von",
+    "on": "auf"
+  },
+  "Toasts": {
+    "fetchPostsError": "Beiträge konnten nicht vom Server abgerufen werden!"
+  }
+}

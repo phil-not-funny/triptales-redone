@@ -7,16 +7,21 @@ import { toast } from "sonner";
 import Post from "../low/Post";
 import Loading from "./Loading";
 import Sorry from "../low/Sorry";
+import { useTranslations } from 'next-intl';
 
 const RandomPosts: React.FC = () => {
   const [posts, setPosts] = useState<PostResponseSmall[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const t = useTranslations("Home");
+  const tToast = useTranslations("Toasts");
 
   const init = async () => {
     const response = await PostService.getRandom();
 
     if (response.success) setPosts(response.data);
-    else toast.error("Failed to Fetch Posts from Server!");
+    else {
+      toast.error(tToast("fetchPostsError"));
+    }
     setLoading(false);
   };
 
@@ -29,7 +34,7 @@ const RandomPosts: React.FC = () => {
   ) : posts.length ? (
     posts.map((p) => <Post key={p.guid} post={p} embed={true} />)
   ) : (
-    <Sorry>We were unable to fetch posts from our server.</Sorry>
+    <Sorry>{t("RandomPosts.error")}</Sorry>
   );
 };
 
