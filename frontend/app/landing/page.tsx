@@ -13,7 +13,13 @@ export default async function Landing() {
   const t = await getTranslations("Landing");
 
   return (
-    <div className="z-20 flex h-full w-full items-center justify-center">
+    <div className="relative z-20 flex h-full w-full items-center justify-center">
+      <div className="absolute top-5 left-5">
+        <Link href={'/'}>
+          <AnimatedButton variant={"outline"}>← {t("backHome")}</AnimatedButton>
+        </Link>
+      </div>
+
       <Card className="flex items-center justify-center bg-neutral-100 p-4 py-8 md:basis-1/2">
         <CardHeader className="w-full">
           <CardTitle className="font-title !text-primary-saturated border-primary-light border-b text-center text-3xl uppercase">

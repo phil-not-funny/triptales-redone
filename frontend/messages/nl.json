@@ -195,7 +195,8 @@
     "welcomeBack": "Welkom terug",
     "chooseOption": "Kies of u wilt inloggen of registreren",
     "logIn": "Inloggen",
-    "signUp": "Registreren"
+    "signUp": "Registreren",
+    "backHome": "Terug naar home"
   },
   "Pages": {
     "settings": "Instellingen",
