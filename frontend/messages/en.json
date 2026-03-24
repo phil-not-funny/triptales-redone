@@ -195,7 +195,8 @@
     "welcomeBack": "Welcome back",
     "chooseOption": "Choose whether to log in or register",
     "logIn": "Log In",
-    "signUp": "Sign Up"
+    "signUp": "Sign Up",
+    "backHome": "Back to Home"
   },
   "Pages": {
     "settings": "Settings",

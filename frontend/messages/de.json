@@ -195,7 +195,8 @@
     "welcomeBack": "Willkommen zurück",
     "chooseOption": "Wählen Sie, ob Sie sich anmelden oder registrieren möchten",
     "logIn": "Anmelden",
-    "signUp": "Registrieren"
+    "signUp": "Registrieren",
+    "backHome": "Zur Startseite"
   },
   "Pages": {
     "settings": "Einstellungen",

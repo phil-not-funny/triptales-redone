@@ -31,19 +31,11 @@ export default function LanguageSwitcher() {
       setOpen(false);
       return;
     }
-    
     setIsChanging(true);
-    
-    // Set cookie
     document.cookie = `locale=${locale}; path=/; max-age=31536000; SameSite=Lax`;
-    
-    // Close popover
     setOpen(false);
-    
-    // Refresh the page to apply the new locale
     router.refresh();
     
-    // Wait a bit for the refresh
     setTimeout(() => {
       setIsChanging(false);
     }, 100);
