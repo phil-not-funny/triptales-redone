@@ -67,7 +67,9 @@ export const PostControls: React.FC<PostProps> = ({ post, embed }) => {
             {post.commentsCount} {post.commentsCount !== 1 ? tCommon("comments") : tCommon("comment")}
           </span>
         </div>
-        <PostSettings post={post} user={user!} />
+        {post.author.guid === user?.guid ? (
+          <PostSettings post={post} user={user!} />
+        ) : null}
       </div>
       {embed ? (
         <Button
