@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { getTranslations } from 'next-intl/server';
 
@@ -16,7 +17,7 @@ export default async function Landing() {
     <div className="relative z-20 flex h-full w-full items-center justify-center">
       <div className="absolute top-5 left-5">
         <Link href={'/'}>
-          <AnimatedButton variant={"outline"}>← {t("backHome")}</AnimatedButton>
+          <AnimatedButton variant={"outline"}><ArrowLeft /> {t("backHome")}</AnimatedButton>
         </Link>
       </div>
 
