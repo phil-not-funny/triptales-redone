@@ -18,7 +18,8 @@ import {
 import Avatar from "./Avatar";
 import { PostControls } from "./PostControls";
 import { MarkdownOnly } from "./MarkdownImplementation";
-import { getTranslations } from 'next-intl/server';
+//import { useTranslations } from 'next-intl/server';
+import { useTranslations } from 'next-intl';
 
 interface EmbeddedPostProps {
   // props when embed is true
@@ -36,9 +37,9 @@ interface FullPostProps {
 
 export type PostProps = EmbeddedPostProps | FullPostProps;
 
-const Post = async ({ post, embed }: PostProps) => {
-  const t = await getTranslations("Post");
-  const tCommon = await getTranslations("Common");
+const Post: React.FC<PostProps> = ({ post, embed }) => {
+  const t = useTranslations("Post");
+  const tCommon = useTranslations("Common");
 
   return (
     <Card className="mx-auto mb-6 gap-0 overflow-hidden rounded-xl border border-gray-100 bg-white py-0 shadow-sm transition-shadow duration-300 hover:shadow-md lg:w-2xl">
