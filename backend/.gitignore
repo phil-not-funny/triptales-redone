@@ -122,3 +122,4 @@ src/.vs/config/applicationhost.config
 .idea/
 
 Images
+.env
