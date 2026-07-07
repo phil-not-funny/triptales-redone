@@ -26,11 +26,20 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddDbContext<TripTalesContext>(opt => opt.UseSqlite("DataSource=Triptales.db"));
-builder.Services.AddTransient<UserService>();
+
+// Register the current user context accessor
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserContext, CurrentUserContext>();
+
+// Register repositories
 builder.Services.AddTransient<UserRepository>();
 builder.Services.AddTransient<PostRepository>();
 builder.Services.AddTransient<CommentRepository>();
+
+// Register services
+builder.Services.AddTransient<UserService>();
 builder.Services.AddTransient<PostService>();
+builder.Services.AddTransient<CommentService>();
 builder.Services.AddTransient<ModelConversions>();
 builder.Services.AddTransient<IFileService, LocalFileService>();
 builder.Services.AddCors(options =>
@@ -56,6 +65,7 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
             : SameSiteMode.Strict;
     };
 });
+
 builder
     .Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(o =>
@@ -67,18 +77,10 @@ builder
         };
     });
 
-var app = builder.Build();
+// Register the database initializer to run on startup
+builder.Services.AddHostedService<DatabaseInitializerService>();
 
-using (var scope = app.Services.CreateScope())
-{
-    using (var db = scope.ServiceProvider.GetRequiredService<TripTalesContext>())
-    {
-        if (app.Environment.IsDevelopment())
-            db.Database.EnsureDeleted();
-        db.Database.EnsureCreated();
-        db.SeedDatabase();
-    }
-}
+var app = builder.Build();
 
 app.UseHttpsRedirection();
 

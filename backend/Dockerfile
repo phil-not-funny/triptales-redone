@@ -19,8 +19,8 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS final
 WORKDIR /app
 
 # Ports (optional: entferne EXPOSE wenn du's im Docker Compose regelst)
-EXPOSE 80
-EXPOSE 443
+EXPOSE 5000
+EXPOSE 5001
 
 RUN mkdir -p /https
 

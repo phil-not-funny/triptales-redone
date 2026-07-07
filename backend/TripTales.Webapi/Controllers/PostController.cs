@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Triptales.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Triptales.Application.Model;
-using Triptales.Webapi.Infrastructure;
 using Triptales.Application.Dtos;
 using Triptales.Application.Cmd;
 using Triptales.Webapi.Services;
@@ -18,130 +15,110 @@ namespace Triptales.Controllers
     [ApiController]
     public partial class PostController : ControllerBase
     {
-        private readonly TripTalesContext _db;
-        private readonly UserService _userService;
         private readonly PostService _postService;
         private readonly ModelConversions _modelConversions;
-        private readonly PostRepository _repository;
+        private readonly ICurrentUserContext _currentUserContext;
 
-        public PostController(TripTalesContext db, UserService userService, PostRepository repository, PostService postService, ModelConversions modelConversions)
+        public PostController(
+            PostService postService,
+            ModelConversions modelConversions,
+            ICurrentUserContext currentUserContext)
         {
-            _db = db;
-            _userService = userService;
-            _repository = repository;
             _postService = postService;
             _modelConversions = modelConversions;
-        }
-
-        private async Task<User?> GetAuthenticatedOrDefault()
-        {
-            var authenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
-            if (!authenticated) return null;
-            var username = HttpContext.User.Identity?.Name;
-            if (username is null) return null;
-
-            return await _userService.GetUserByUsername(username);
+            _currentUserContext = currentUserContext;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<PostSmallDto>>> GetPosts()
         {
-            var authenticated = await GetAuthenticatedOrDefault();
-            return Ok((await _repository.GetAll()).Select(a => _modelConversions.ToPostSmallDto(
-                a,
-                authenticated is not null && a.Likes.Any(u => u.Guid == authenticated.Guid))).ToList());
+            var posts = await _postService.GetAllPostsAsync();
+            var currentUser = await _currentUserContext.GetCurrentUserAsync();
+
+            var dtos = posts.Select(p => _modelConversions.ToPostSmallDto(
+                p,
+                currentUser is not null && p.Likes.Any(u => u.Guid == currentUser.Guid)
+            )).ToList();
+
+            return Ok(dtos);
         }
 
         [HttpGet("{guid:Guid}")]
         public async Task<ActionResult<PostDto>> GetPost(Guid guid)
         {
-            var authenticated = await GetAuthenticatedOrDefault();
-            var post = await _repository.GetFromGuid(guid);
+            var post = await _postService.GetPostByGuidAsync(guid);
             if (post is null)
-            {
-                return BadRequest("Post not found");
-            }
-            return Ok(_modelConversions.ToPostDto(
-                post,
-                authenticated is not null && post.Likes.Any(u => u.Guid == authenticated.Guid)));
+                return NotFound("Post not found");
+
+            var currentUser = await _currentUserContext.GetCurrentUserAsync();
+            var isLiked = currentUser is not null && post.Likes.Any(u => u.Guid == currentUser.Guid);
+
+            return Ok(_modelConversions.ToPostDto(post, isLiked));
         }
 
         [HttpPost]
         [Authorize]
         public async Task<ActionResult> AddPost([FromBody] AddPostCmd cmd)
         {
-            var user = await GetAuthenticatedOrDefault();
-            if (user is null) return Unauthorized("User not authenticated");
-            var post = new Post(cmd.Title, cmd.Description, user, DateOnly.Parse(cmd.StartDate), DateOnly.Parse(cmd.EndDate), cmd.Days.Select(d => new Post.Day(d.Title, d.Description, DateOnly.Parse(d.Date))).ToList());
-            return await _repository.Insert(post) ? Ok(post.Guid) : BadRequest("Insert failed! Check if the parameters are correct");
+            var user = await _currentUserContext.GetCurrentUserAsync();
+            if (user is null)
+                return Unauthorized();
+
+            var (success, postGuid, errorMessage) = await _postService.CreatePostAsync(user, cmd);
+            return success ? Ok(postGuid) : BadRequest(errorMessage);
         }
 
         [HttpDelete("{guid:Guid}")]
         [Authorize]
         public async Task<ActionResult> DeletePost(Guid guid)
         {
-            var authenticated = await GetAuthenticatedOrDefault();
-            if (authenticated is null) 
-                return Unauthorized("User not authenticated");
+            var currentUser = await _currentUserContext.GetCurrentUserAsync();
+            if (currentUser is null)
+                return Unauthorized();
 
-            var requested = await _repository.GetFromGuid(guid);
-            if (requested is null)
-                return NotFound("Post not found");
-
-            if (requested.Author.Guid != authenticated.Guid)
-                return Unauthorized("You are not authorized to delete this post");
-
-            return await _repository.Delete(guid) ? NoContent() : BadRequest("Delete failed! Check if the right Guid is used");
+            var (success, errorMessage) = await _postService.DeletePostAsync(guid, currentUser);
+            return success ? NoContent() : (ActionResult)BadRequest(errorMessage);
         }
 
         [HttpPut("{guid:Guid}")]
+        [Authorize]
         public async Task<ActionResult> UpdatePost(Guid guid, [FromBody] UpdatePostCmd cmd)
         {
-            var p = await _db.Posts.Include(a => a.Author).FirstOrDefaultAsync(p => p.Guid == guid);
-            if (p is null) return NotFound("Post not found");
-            var post = new Post(cmd.Title, cmd.Description, p.Author, DateOnly.Parse(cmd.StartDate), DateOnly.Parse(cmd.EndDate));
-            post.Guid = guid;
-            return await _repository.Update(post) ? NoContent() : BadRequest("Update failed! Check if the parameters are correct");
+            var currentUser = await _currentUserContext.GetCurrentUserAsync();
+            if (currentUser is null)
+                return Unauthorized();
+
+            var (success, errorMessage) = await _postService.UpdatePostAsync(guid, cmd, currentUser);
+            return success ? NoContent() : BadRequest(errorMessage);
         }
 
         [HttpGet("random")]
         public async Task<ActionResult<List<PostSmallDto>>> GetRandom([FromQuery] int size = 10)
         {
-            if (size <= 0) return BadRequest("Size must be greater than 0");
+            if (size <= 0)
+                return BadRequest("Size must be greater than 0");
 
-            var authenticated = await GetAuthenticatedOrDefault();
+            var posts = await _postService.GetRandomPostsAsync(size);
+            var currentUser = await _currentUserContext.GetCurrentUserAsync();
 
-            Random rand = new Random();
-            var take = (await _db.Posts.Include(p => p.Author)
-                .Include(p => p.Likes)
-                .Include(p => p.Comments)
-                .ToListAsync()).OrderBy(p => rand.Next())
-                .Take(size)
-                .Select(p =>
-                    _modelConversions.ToPostSmallDto(
-                        p,
-                        authenticated is not null && p.Likes.Any(u => u.Guid == authenticated.Guid))).ToList();
-            return Ok(take);
+            var dtos = posts.Select(p => _modelConversions.ToPostSmallDto(
+                p,
+                currentUser is not null && p.Likes.Any(u => u.Guid == currentUser.Guid)
+            )).ToList();
+
+            return Ok(dtos);
         }
 
         [HttpPost("like/{guid:Guid}")]
         [Authorize]
         public async Task<IActionResult> LikePost(Guid guid)
         {
-            var authenticated = await GetAuthenticatedOrDefault();
-            if (authenticated is null)
+            var currentUser = await _currentUserContext.GetCurrentUserAsync();
+            if (currentUser is null)
                 return Unauthorized();
 
-            var requested = await _repository.GetFromGuid(guid);
-            if (requested is null)
-                return NotFound();
-
-            if (requested.Likes.Any(u => u.Guid == authenticated.Guid))
-                requested.Likes.Remove(authenticated);
-            else
-                requested.Likes.Add(authenticated);
-            await _db.SaveChangesAsync();
-            return Ok();
+            var success = await _postService.ToggleLikeAsync(guid, currentUser);
+            return success ? Ok() : NotFound("Post not found");
         }
     }
 }
