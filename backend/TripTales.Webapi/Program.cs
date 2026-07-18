@@ -90,14 +90,26 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.UseCors("AllowDevServer");
 
-    if (!Directory.Exists(Path.Combine(builder.Environment.ContentRootPath, "Images")))
+    var imagesPath = Path.Combine(builder.Environment.ContentRootPath, "Images");
+    if (!Directory.Exists(imagesPath))
     {
-        Directory.CreateDirectory(Path.Combine(builder.Environment.ContentRootPath, "Images"));
+        Directory.CreateDirectory(imagesPath);
     }
+    else
+    {
+        foreach (var file in Directory.GetFiles(imagesPath))
+        {
+            File.Delete(file);
+        }
+        foreach (var directory in Directory.GetDirectories(imagesPath))
+        {
+            Directory.Delete(directory, true);
+        }
+    }
+
     app.UseStaticFiles(new StaticFileOptions
     {
-        FileProvider = new PhysicalFileProvider(
-               Path.Combine(builder.Environment.ContentRootPath, "Images")),
+        FileProvider = new PhysicalFileProvider(imagesPath),
         RequestPath = "/Images"
     });
 }
