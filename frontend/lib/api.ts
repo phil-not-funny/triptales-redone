@@ -13,4 +13,13 @@ const api = axios.create({
   })
 });
 
+if (typeof window === "undefined") {
+  api.interceptors.request.use(async (config) => {
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    config.headers.Cookie = cookieStore.toString();
+    return config;
+  });
+}
+
 export default api;
