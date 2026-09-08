@@ -95,13 +95,29 @@ namespace Triptales.Controllers
         }
 
         [HttpPut("{guid:Guid}")]
+        [Authorize]
         public async Task<ActionResult> UpdatePost(Guid guid, [FromBody] UpdatePostCmd cmd)
         {
-            var p = await _db.Posts.Include(a => a.Author).FirstOrDefaultAsync(p => p.Guid == guid);
-            if (p is null) return NotFound("Post not found");
-            var post = new Post(cmd.Title, cmd.Description, p.Author, DateOnly.Parse(cmd.StartDate), DateOnly.Parse(cmd.EndDate));
-            post.Guid = guid;
-            return await _repository.Update(post) ? NoContent() : BadRequest("Update failed! Check if the parameters are correct");
+            var authenticated = await GetAuthenticatedOrDefault();
+            if (authenticated is null)
+                return Unauthorized("User not authenticated");
+
+            var post = await _db.Posts.Include(a => a.Author).FirstOrDefaultAsync(p => p.Guid == guid);
+            if (post is null) return NotFound("Post not found");
+
+            if (post.Author.Guid != authenticated.Guid)
+                return Unauthorized("You are not authorized to edit this post");
+
+            if (!DateOnly.TryParse(cmd.StartDate, out var startDate) || !DateOnly.TryParse(cmd.EndDate, out var endDate))
+                return BadRequest("Update failed! Check if the parameters are correct");
+
+            post.Title = cmd.Title;
+            post.Description = cmd.Description;
+            post.StartDate = startDate;
+            post.EndDate = endDate;
+
+            await _db.SaveChangesAsync();
+            return NoContent();
         }
 
         [HttpGet("random")]

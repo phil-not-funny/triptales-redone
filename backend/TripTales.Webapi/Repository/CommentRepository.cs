@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Triptales.Application.Model;
@@ -19,9 +20,26 @@ namespace Triptales.Repository
         {
             var comment = await _db.Comments.FirstOrDefaultAsync(c => c.Guid == guid);
             if (comment is null) return false;
-            _db.Comments.Remove(comment);
+            await RemoveWithDescendants(comment);
             await _db.SaveChangesAsync();
             return true;
+        }
+
+        /// <summary>
+        /// Marks a comment, its complete reply tree and all of their like rows as
+        /// deleted, deepest reply first. Every foreign key in the model is configured
+        /// as RESTRICT (see TripTalesContext.OnModelCreating), so dependents have to be
+        /// removed explicitly or SQLite rejects the delete. Does not call SaveChanges.
+        /// </summary>
+        public async Task RemoveWithDescendants(Comment comment)
+        {
+            await _db.Entry(comment).Collection(c => c.Comments).LoadAsync();
+            foreach (var reply in comment.Comments.ToList())
+                await RemoveWithDescendants(reply);
+
+            await _db.Entry(comment).Collection(c => c.Likes).LoadAsync();
+            comment.Likes.Clear();
+            _db.Comments.Remove(comment);
         }
 
         public Task<List<Comment>> GetAll() =>
