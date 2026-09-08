@@ -8,7 +8,7 @@ import {
   UserPutFlavorRequest,
   UserUploadRequest,
 } from "@/types/RequestTypes";
-import api from "../api";
+import api, { clearToken, setToken } from "../api";
 import axios, { HttpStatusCode } from "axios";
 
 const toFormattedErrorMessage = (
@@ -59,16 +59,20 @@ type RegisterClientResponse = {
 const login = async (data: LoginRequest): Promise<LoginClientResponse> => {
   try {
     const response = await api.post("/User/login", data);
+    const { token, user } = response.data ?? {};
     if (
       response.status === HttpStatusCode.Ok &&
-      isUserPrivateResponse(response.data)
-    )
+      typeof token === "string" &&
+      user &&
+      isUserPrivateResponse(user)
+    ) {
+      setToken(token);
       return {
         status: response.status,
         message: "Login successful!",
-        data: response.data,
+        data: user,
       };
-    else throw new Error("Invalid response structure");
+    } else throw new Error("Invalid response structure");
   } catch (error) {
     return toFormattedErrorMessage(error);
   }
@@ -95,13 +99,8 @@ const me = async (): Promise<UserPrivateResponse | null> => {
 };
 
 const logout = async (): Promise<boolean> => {
-  try {
-    const response = await api.get("/User/logout");
-    return response.status === HttpStatusCode.NoContent;
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
+  clearToken();
+  return true;
 };
 
 const getByUsername = async (

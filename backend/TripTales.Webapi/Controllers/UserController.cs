@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Triptales.Repository;
 using Triptales.Application.Dtos;
 using Triptales.Webapi.Infrastructure;
@@ -24,13 +27,15 @@ namespace Triptales.Webapi.Controllers
         private readonly UserService _service;
         private readonly ModelConversions _modelConversions;
         private readonly UserRepository _repo;
+        private readonly IConfiguration _configuration;
 
-        public UserController(TripTalesContext db, UserService userService, UserRepository repo, ModelConversions modelConversions)
+        public UserController(TripTalesContext db, UserService userService, UserRepository repo, ModelConversions modelConversions, IConfiguration configuration)
         {
             _db = db;
             _service = userService;
             _repo = repo;
             _modelConversions = modelConversions;
+            _configuration = configuration;
         }
 
         private async Task<User?> GetAuthenticatedOrDefault()
@@ -41,6 +46,32 @@ namespace Triptales.Webapi.Controllers
             if (username is null) return null;
 
             return await _service.GetUserByUsername(username);
+        }
+
+        private string GenerateJwtToken(User user)
+        {
+            var jwt = _configuration.GetSection("Jwt");
+            var key = jwt["Key"] ?? throw new InvalidOperationException("Jwt:Key is not configured.");
+            var signingCredentials = new SigningCredentials(
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+                SecurityAlgorithms.HmacSha256);
+
+            var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, user.Username),
+                        new Claim(JwtRegisteredClaimNames.Sub, user.Guid.ToString()),
+                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                        //new Claim(ClaimTypes.Role, "admin")
+                    };
+
+            var token = new JwtSecurityToken(
+                issuer: jwt["Issuer"],
+                audience: jwt["Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddHours(double.TryParse(jwt["ExpiresInHours"], out var hours) ? hours : 3),
+                signingCredentials: signingCredentials);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         [HttpPost("register")]
@@ -57,38 +88,16 @@ namespace Triptales.Webapi.Controllers
             return await _repo.Insert(userCreated) ? Ok() : BadRequest("Register failed! Check for invaild credentials");
         }
 
-        [HttpGet("logout")]
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync();
-            return NoContent();
-        }
-
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginCmd credentials)
         {
             var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == credentials.Username);
             if (user is null || !user.CheckPassword(credentials.Password)) return BadRequest("The given password and username combination does not exist.");
-            var claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Name, credentials.Username),
-                        //new Claim(ClaimTypes.Role, "admin")
-                    };
-            var claimsIdentity = new ClaimsIdentity(
-                claims,
-                Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme);
-
-            var authProperties = new AuthenticationProperties
+            return Ok(new
             {
-                AllowRefresh = true,
-                ExpiresUtc = DateTimeOffset.UtcNow.AddHours(3),
-            };
-
-            await HttpContext.SignInAsync(
-                Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity),
-                authProperties);
-            return Ok(_modelConversions.ToUserPrivateDto(user));
+                token = GenerateJwtToken(user),
+                user = _modelConversions.ToUserPrivateDto(user)
+            });
         }
 
         [Authorize]
@@ -107,14 +116,15 @@ namespace Triptales.Webapi.Controllers
         [HttpGet("{username}")]
         public async Task<IActionResult> GetByUsername(string username)
         {
-            var user = await _service.GetUserByUsername(username);
+            var user = await _service.GetUserByUsername(username, includePostDetails: true);
             var authenticated = await GetAuthenticatedOrDefault(); //to know when to enable follow button
             return user is not null ? Ok(
                 _modelConversions.ToUserDetailedDto(
                     user, 
                     authenticated is not null && 
                     authenticated.Following.Any(
-                        f => f.Guid == user.Guid))
+                        f => f.Guid == user.Guid),
+                    authenticated?.Guid)
                 ) : NotFound();
         }
 

@@ -17,7 +17,7 @@ namespace Triptales.Webapi.Services
             _userService = userService;
         }
 
-        public UserDetailedDto ToUserDetailedDto(User user, bool userFollowing = false) =>
+        public UserDetailedDto ToUserDetailedDto(User user, bool userFollowing = false, Guid? authenticatedGuid = null) =>
             new(
                 user.Guid,
                 user.Username,
@@ -30,7 +30,9 @@ namespace Triptales.Webapi.Services
                 _userService.GetFollowers(user.Guid).Count,
                 user.ProfilePicture,
                 user.BannerImage,
-                user.Posts.Count > 0 ? user.Posts.Select(p => ToPostSmallDto(p)).ToList() : [],
+                user.Posts.Count > 0 ? user.Posts.Select(p => ToPostSmallDto(
+                    p,
+                    authenticatedGuid is not null && p.Likes.Any(u => u.Guid == authenticatedGuid))).ToList() : [],
                 userFollowing);
 
         public UserPublicSmallDto ToUserPublicSmallDto(User user) =>
