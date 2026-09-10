@@ -84,5 +84,17 @@ namespace Triptales.Repository
             await _db.SaveChangesAsync();
             return true;
         }
+
+        public async Task<bool> UploadDayImage(Post post, int index, UploadPostPictureCmd cmd)
+        {
+            if (cmd.Picture is not null)
+            {
+                var filename = $"{post.Guid}-day-{index}.jpg";
+                if (!await _fileService.UploadFile(cmd.Picture, filename)) return false;
+                post.Days[index].Picture = $"Images/{filename}";
+            }
+            await _db.SaveChangesAsync();
+            return true;
+        }
     }
 }

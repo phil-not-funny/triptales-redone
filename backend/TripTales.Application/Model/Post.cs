@@ -39,6 +39,7 @@ namespace Triptales.Application.Model
             public string Title { get; set; } = title;
             public string Description { get; set; } = description;
             public DateOnly Date { get; set; } = date;
+            public string? Picture { get; set; }
         }
     }
 }

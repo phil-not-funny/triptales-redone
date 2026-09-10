@@ -105,12 +105,23 @@
       },
       "success": "Bericht succesvol aangemaakt!",
       "error": "Bericht kon niet worden aangemaakt!",
+      "pictureError": "Bericht aangemaakt, maar sommige afbeeldingen konden niet worden geüpload.",
       "day": {
         "add": "Een nieuwe dag toevoegen",
         "addDescription": "U staat op het punt een nieuwe gedetailleerde dag aan uw bericht toe te voegen.",
         "edit": "Dag {day} bewerken",
         "editDescription": "U staat op het punt een dag in uw bericht te bewerken."
       }
+    },
+    "PictureForm": {
+      "button": "Afbeelding",
+      "add": "Een afbeelding toevoegen",
+      "addDescription": "Kies een afbeelding, snijd deze bij als u wilt en kies waar deze bij hoort.",
+      "select": "Afbeelding selecteren",
+      "original": "Origineel",
+      "crop": "Bijsnijden",
+      "belongsTo": "Hoort bij",
+      "wholePost": "Hele bericht"
     },
     "DayForm": {
       "title": "Titel",

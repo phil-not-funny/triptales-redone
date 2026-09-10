@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 
 namespace Triptales.Application.Dtos
 {
-    public record PostDayDto(string Title, string Description, string Date);
+    public record PostDayDto(string Title, string Description, string Date, string? Picture = null);
 }

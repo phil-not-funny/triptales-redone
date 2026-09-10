@@ -107,6 +107,7 @@ export type PostResponse = {
   commentsCount: number;
   comments: PostCommentResponse[];
   userCommented: boolean;
+  picture?: string;
 };
 
 export type PostResponseSmall = {
@@ -120,6 +121,7 @@ export type PostResponseSmall = {
   guid: string;
   userLiked: boolean;
   commentsCount: number;
+  picture?: string;
 };
 
 export type PostCommentResponse = {

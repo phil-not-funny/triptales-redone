@@ -84,6 +84,6 @@ namespace Triptales.Webapi.Services
                 c.Likes.Count,
                 userLiked);
 
-        public PostDayDto ToPostDayDto(Post.Day d) => new(d.Title, d.Description, d.Date.ToString());
+        public PostDayDto ToPostDayDto(Post.Day d) => new(d.Title, d.Description, d.Date.ToString(), d.Picture);
     }
 }
