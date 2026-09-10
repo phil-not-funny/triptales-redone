@@ -55,7 +55,8 @@ namespace Triptales.Webapi.Services
                 a.CreatedAt.ToString(),
                 a.Likes.Count,
                 userLiked,
-                a.Comments.Count);
+                a.Comments.Count,
+                a.Picture);
 
         public PostDto ToPostDto(Post a, bool userLiked = false, bool userCommented = false) => new(
                 a.Guid,
@@ -70,7 +71,8 @@ namespace Triptales.Webapi.Services
                 userLiked,
                 a.Comments.Count,
                 a.Comments.Count > 0 ? a.Comments.Select(c => ToPostCommentDto(c, subComments: false)).ToList() : [],
-                userCommented);
+                userCommented,
+                a.Picture);
 
         public PostCommentDto ToPostCommentDto(Comment c, bool userLiked = false, bool subComments = true) => new(
                 c.Guid,

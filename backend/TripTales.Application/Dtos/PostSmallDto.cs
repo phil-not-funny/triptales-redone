@@ -11,5 +11,6 @@ namespace Triptales.Application.Dtos
                           string CreatedAt,
                           int LikesCount,
                           bool UserLiked,
-                          int CommentsCount);
+                          int CommentsCount,
+                          string? Picture = null);
 }

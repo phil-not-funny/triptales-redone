@@ -51,13 +51,13 @@ namespace Triptales.Repository
             if (cmd.ProfilePicture is not null)
             {
                 var filename = $"{user.Guid}-profile.jpg";
-                await _fileService.UploadFile(cmd.ProfilePicture, filename);
+                if (!await _fileService.UploadFile(cmd.ProfilePicture, filename)) return false;
                 user.ProfilePicture = $"Images/{filename}";
             }
             if (cmd.BannerImage is not null)
             {
                 var filename = $"{user.Guid}-banner.jpg";
-                await _fileService.UploadFile(cmd.BannerImage, filename);
+                if (!await _fileService.UploadFile(cmd.BannerImage, filename)) return false;
                 user.BannerImage = $"Images/{filename}";
             }
             await _db.SaveChangesAsync();

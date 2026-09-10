@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Triptales.Application.Cmd;
 using Triptales.Application.Model;
 using Triptales.Webapi.Infrastructure;
+using Triptales.Webapi.Services;
 
 namespace Triptales.Repository
 {
@@ -12,11 +14,13 @@ namespace Triptales.Repository
     {
         private readonly TripTalesContext _db;
         private readonly CommentRepository _comments;
+        private readonly IFileService _fileService;
 
-        public PostRepository(TripTalesContext db, CommentRepository comments)
+        public PostRepository(TripTalesContext db, CommentRepository comments, IFileService fileService)
         {
             _db = db;
             _comments = comments;
+            _fileService = fileService;
         }
 
         public async Task<bool> Delete(Guid guid)
@@ -65,6 +69,18 @@ namespace Triptales.Repository
         public async Task<bool> Update(Post entity)
         {
             _db.Posts.Update(entity);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> UploadImage(Post post, UploadPostPictureCmd cmd)
+        {
+            if (cmd.Picture is not null)
+            {
+                var filename = $"{post.Guid}-post.jpg";
+                if (!await _fileService.UploadFile(cmd.Picture, filename)) return false;
+                post.Picture = $"Images/{filename}";
+            }
             await _db.SaveChangesAsync();
             return true;
         }

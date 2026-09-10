@@ -120,6 +120,24 @@ namespace Triptales.Controllers
             return NoContent();
         }
 
+        [Authorize]
+        [HttpPost("upload/{guid:Guid}")]
+        public async Task<IActionResult> UploadPicture(Guid guid, [FromForm] UploadPostPictureCmd cmd)
+        {
+            var authenticated = await GetAuthenticatedOrDefault();
+            if (authenticated is null) return Unauthorized("User not authenticated");
+
+            var post = await _db.Posts.Include(p => p.Author).FirstOrDefaultAsync(p => p.Guid == guid);
+            if (post is null) return NotFound("Post not found");
+
+            if (post.Author.Guid != authenticated.Guid)
+                return Unauthorized("You are not authorized to edit this post");
+
+            if (cmd.Picture is null) return BadRequest("No image provided");
+
+            return await _repository.UploadImage(post, cmd) ? Ok() : BadRequest("Upload failed! Please check if you uploaded the right picture");
+        }
+
         [HttpGet("random")]
         public async Task<ActionResult<List<PostSmallDto>>> GetRandom([FromQuery] int size = 10)
         {

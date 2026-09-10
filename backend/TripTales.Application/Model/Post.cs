@@ -29,6 +29,7 @@ namespace Triptales.Application.Model
         public DateOnly CreatedAt { get; set; } = DateOnly.FromDateTime(DateTime.Now);
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }
+        public string? Picture { get; set; }
         public List<User> Likes { get; } = new();
         public List<Day> Days { get; } = new();
         public List<Comment> Comments { get; } = new();
