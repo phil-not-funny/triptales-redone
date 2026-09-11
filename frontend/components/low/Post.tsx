@@ -1,4 +1,5 @@
-import { Calendar } from "lucide-react";
+/* eslint-disable @next/next/no-img-element */
+import { Calendar, Verified } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -37,6 +38,8 @@ interface FullPostProps {
 
 export type PostProps = EmbeddedPostProps | FullPostProps;
 
+const imageUrl = "https://localhost:5001";
+
 const Post: React.FC<PostProps> = ({ post, embed }) => {
   const t = useTranslations("Post");
   const tCommon = useTranslations("Common");
@@ -60,6 +63,9 @@ const Post: React.FC<PostProps> = ({ post, embed }) => {
             >
               {post.author.username}
             </Link>
+            {post.author.verified && (
+              <Verified className="text-primary-saturated h-4 w-4" />
+            )}
           </div>
           <span className="mx-2">•</span>
           <span>{t("postedOn")} {formatDateString(post.createdAt)}</span>
@@ -78,6 +84,13 @@ const Post: React.FC<PostProps> = ({ post, embed }) => {
         </div>
       </CardHeader>
       <CardContent data-color-mode="light" className="p-6">
+        {post.picture && (
+          <img
+            src={`${imageUrl}/${post.picture}`}
+            alt={post.title}
+            className="mb-6 h-auto w-full rounded-lg object-cover"
+          />
+        )}
         <MarkdownOnly source={post.description} />
         {!embed && post.days && post.days.length > 0 && (
           <div className="mt-6">
@@ -98,6 +111,13 @@ const Post: React.FC<PostProps> = ({ post, embed }) => {
                     </div>
                   </AccordionTrigger>
                   <AccordionContent>
+                    {day.picture && (
+                      <img
+                        src={`${imageUrl}/${day.picture}`}
+                        alt={day.title}
+                        className="mb-3 h-auto w-full rounded-lg object-cover"
+                      />
+                    )}
                     <p className="text-gray-700">{day.description}</p>
                   </AccordionContent>
                 </AccordionItem>

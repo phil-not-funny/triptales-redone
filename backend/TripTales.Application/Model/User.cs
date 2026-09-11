@@ -47,6 +47,12 @@ namespace Triptales.Application.Model
 
         public bool Verified { get; set; } = false;
 
+        public UserRole Role { get; set; } = UserRole.User;
+        public bool IsAdmin => Role == UserRole.Admin;
+
+        /// <summary>Admins may modify content owned by any user, everyone else only their own.</summary>
+        public bool CanModify(User owner) => IsAdmin || Guid == owner.Guid;
+
         public string? Salt { get; set; }
         public string? PasswordHash { get; set; }
 

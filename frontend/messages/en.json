@@ -105,12 +105,23 @@
       },
       "success": "Post created successfully!",
       "error": "Failed to create post!",
+      "pictureError": "Post created, but some pictures could not be uploaded.",
       "day": {
         "add": "Add a new Day",
         "addDescription": "You're about to add a new in-detail day to your post.",
         "edit": "Edit Day {day}",
         "editDescription": "You're about to edit a day in your post."
       }
+    },
+    "PictureForm": {
+      "button": "Picture",
+      "add": "Add a Picture",
+      "addDescription": "Choose an image, crop it if you like, and pick where it belongs.",
+      "select": "Select Picture",
+      "original": "Original",
+      "crop": "Crop",
+      "belongsTo": "Belongs to",
+      "wholePost": "Whole Post"
     },
     "DayForm": {
       "title": "Title",
@@ -172,7 +183,12 @@
     "followSuccess": "You are {status} following {displayName}",
     "followError": "Something went wrong. Please try again later.",
     "now": "now",
-    "noLonger": "no longer"
+    "noLonger": "no longer",
+    "verify": "Verify",
+    "unverify": "Remove Verification",
+    "verifySuccess": "{displayName} is now verified",
+    "unverifySuccess": "{displayName} is no longer verified",
+    "verifyError": "Failed to change the verified status. Please try again later."
   },
   "Settings": {
     "title": "Settings",

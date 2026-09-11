@@ -105,12 +105,23 @@
       },
       "success": "Beitrag erfolgreich erstellt!",
       "error": "Beitrag konnte nicht erstellt werden!",
+      "pictureError": "Beitrag erstellt, aber einige Bilder konnten nicht hochgeladen werden.",
       "day": {
         "add": "Einen neuen Tag hinzufügen",
         "addDescription": "Sie sind dabei, einen neuen detaillierten Tag zu Ihrem Beitrag hinzuzufügen.",
         "edit": "Tag {day} bearbeiten",
         "editDescription": "Sie sind dabei, einen Tag in Ihrem Beitrag zu bearbeiten."
       }
+    },
+    "PictureForm": {
+      "button": "Bild",
+      "add": "Ein Bild hinzufügen",
+      "addDescription": "Wählen Sie ein Bild, schneiden Sie es bei Bedarf zu und legen Sie fest, wozu es gehört.",
+      "select": "Bild auswählen",
+      "original": "Original",
+      "crop": "Zuschneiden",
+      "belongsTo": "Gehört zu",
+      "wholePost": "Ganzer Beitrag"
     },
     "DayForm": {
       "title": "Titel",
@@ -172,7 +183,12 @@
     "followSuccess": "Sie folgen {displayName} {status}",
     "followError": "Etwas ist schief gelaufen. Bitte versuchen Sie es später erneut.",
     "now": "jetzt",
-    "noLonger": "nicht mehr"
+    "noLonger": "nicht mehr",
+    "verify": "Verifizieren",
+    "unverify": "Verifizierung entfernen",
+    "verifySuccess": "{displayName} ist jetzt verifiziert",
+    "unverifySuccess": "{displayName} ist nicht mehr verifiziert",
+    "verifyError": "Verifizierungsstatus konnte nicht geändert werden. Bitte versuchen Sie es später erneut."
   },
   "Settings": {
     "title": "Einstellungen",

@@ -33,6 +33,7 @@ export type PostDay = {
   title: string;
   description: string;
   date: Date;
+  picture?: string;
 };
 
 export type PostComment = {

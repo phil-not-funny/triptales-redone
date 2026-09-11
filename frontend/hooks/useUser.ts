@@ -13,5 +13,5 @@ export default function useUser() {
     });
   }, []);
 
-  return { user, loggedIn: !!user, loading };
+  return { user, loggedIn: !!user, isAdmin: user?.role === "Admin", loading };
 }

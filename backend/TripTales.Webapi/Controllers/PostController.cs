@@ -88,20 +88,74 @@ namespace Triptales.Controllers
             if (requested is null)
                 return NotFound("Post not found");
 
-            if (requested.Author.Guid != authenticated.Guid)
+            if (!authenticated.CanModify(requested.Author))
                 return Unauthorized("You are not authorized to delete this post");
 
             return await _repository.Delete(guid) ? NoContent() : BadRequest("Delete failed! Check if the right Guid is used");
         }
 
         [HttpPut("{guid:Guid}")]
+        [Authorize]
         public async Task<ActionResult> UpdatePost(Guid guid, [FromBody] UpdatePostCmd cmd)
         {
-            var p = await _db.Posts.Include(a => a.Author).FirstOrDefaultAsync(p => p.Guid == guid);
-            if (p is null) return NotFound("Post not found");
-            var post = new Post(cmd.Title, cmd.Description, p.Author, DateOnly.Parse(cmd.StartDate), DateOnly.Parse(cmd.EndDate));
-            post.Guid = guid;
-            return await _repository.Update(post) ? NoContent() : BadRequest("Update failed! Check if the parameters are correct");
+            var authenticated = await GetAuthenticatedOrDefault();
+            if (authenticated is null)
+                return Unauthorized("User not authenticated");
+
+            var post = await _db.Posts.Include(a => a.Author).FirstOrDefaultAsync(p => p.Guid == guid);
+            if (post is null) return NotFound("Post not found");
+
+            if (!authenticated.CanModify(post.Author))
+                return Unauthorized("You are not authorized to edit this post");
+
+            if (!DateOnly.TryParse(cmd.StartDate, out var startDate) || !DateOnly.TryParse(cmd.EndDate, out var endDate))
+                return BadRequest("Update failed! Check if the parameters are correct");
+
+            post.Title = cmd.Title;
+            post.Description = cmd.Description;
+            post.StartDate = startDate;
+            post.EndDate = endDate;
+
+            await _db.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [Authorize]
+        [HttpPost("upload/{guid:Guid}")]
+        public async Task<IActionResult> UploadPicture(Guid guid, [FromForm] UploadPostPictureCmd cmd)
+        {
+            var authenticated = await GetAuthenticatedOrDefault();
+            if (authenticated is null) return Unauthorized("User not authenticated");
+
+            var post = await _db.Posts.Include(p => p.Author).FirstOrDefaultAsync(p => p.Guid == guid);
+            if (post is null) return NotFound("Post not found");
+
+            if (!authenticated.CanModify(post.Author))
+                return Unauthorized("You are not authorized to edit this post");
+
+            if (cmd.Picture is null) return BadRequest("No image provided");
+
+            return await _repository.UploadImage(post, cmd) ? Ok() : BadRequest("Upload failed! Please check if you uploaded the right picture");
+        }
+
+        [Authorize]
+        [HttpPost("upload/{guid:Guid}/day/{index:int}")]
+        public async Task<IActionResult> UploadDayPicture(Guid guid, int index, [FromForm] UploadPostPictureCmd cmd)
+        {
+            var authenticated = await GetAuthenticatedOrDefault();
+            if (authenticated is null) return Unauthorized("User not authenticated");
+
+            var post = await _db.Posts.Include(p => p.Author).FirstOrDefaultAsync(p => p.Guid == guid);
+            if (post is null) return NotFound("Post not found");
+
+            if (!authenticated.CanModify(post.Author))
+                return Unauthorized("You are not authorized to edit this post");
+
+            if (index < 0 || index >= post.Days.Count) return NotFound("Day not found");
+
+            if (cmd.Picture is null) return BadRequest("No image provided");
+
+            return await _repository.UploadDayImage(post, index, cmd) ? Ok() : BadRequest("Upload failed! Please check if you uploaded the right picture");
         }
 
         [HttpGet("random")]

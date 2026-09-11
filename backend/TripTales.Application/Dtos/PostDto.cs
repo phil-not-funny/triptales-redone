@@ -16,5 +16,6 @@ namespace Triptales.Application.Dtos
                           bool UserLiked,
                           int CommentsCount,
                           List<PostCommentDto> Comments,
-                          bool UserCommented);
+                          bool UserCommented,
+                          string? Picture = null);
 }

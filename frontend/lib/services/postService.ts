@@ -130,6 +130,29 @@ const deletePost = async (guid: string): Promise<boolean> => {
   }
 }
 
+const uploadPicture = async (
+  guid: string,
+  picture: File,
+  dayIndex?: number,
+): Promise<boolean> => {
+  try {
+    const formData = new FormData();
+    formData.append("Picture", picture);
+    const url =
+      dayIndex === undefined
+        ? `/Post/upload/${guid}`
+        : `/Post/upload/${guid}/day/${dayIndex}`;
+    const response = await api.post(url, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.status === 200;
+  } catch {
+    return false;
+  }
+};
+
 const PostService = {
   getRandom,
   createPost,
@@ -139,7 +162,8 @@ const PostService = {
   commentPost,
   deleteComment,
   likeComment,
-  getComment
+  getComment,
+  uploadPicture
 };
 
 export default PostService;

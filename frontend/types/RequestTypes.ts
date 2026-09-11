@@ -18,7 +18,10 @@ export type UserPrivateResponse = {
   displayName: string;
   email: string;
   profilePicture?: string;
+  role: UserRole;
 };
+
+export type UserRole = "User" | "Admin";
 
 export const isUserPrivateResponse = (u: any): u is UserPrivateResponse =>
   "guid" in u && "username" in u && "displayName" in u && "email" in u;
@@ -107,6 +110,7 @@ export type PostResponse = {
   commentsCount: number;
   comments: PostCommentResponse[];
   userCommented: boolean;
+  picture?: string;
 };
 
 export type PostResponseSmall = {
@@ -120,6 +124,7 @@ export type PostResponseSmall = {
   guid: string;
   userLiked: boolean;
   commentsCount: number;
+  picture?: string;
 };
 
 export type PostCommentResponse = {
