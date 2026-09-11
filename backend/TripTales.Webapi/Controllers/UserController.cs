@@ -175,5 +175,22 @@ namespace Triptales.Webapi.Controllers
 
             return await _repo.UploadImage(user, cmd) ? Ok() : BadRequest("Upload failed! Please check if you uploaded the right pictures");
         }
+
+        [Authorize]
+        [HttpPut("{guid:Guid}/verified")]
+        public async Task<IActionResult> SetVerified(Guid guid, [FromBody] UserVerifyCmd cmd)
+        {
+            // Role is read from the database rather than the token, so a demoted admin loses access immediately.
+            var authenticated = await GetAuthenticatedOrDefault();
+            if (authenticated is null) return Unauthorized();
+            if (!authenticated.IsAdmin) return Forbid();
+
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.Guid == guid);
+            if (user is null) return NotFound();
+
+            user.Verified = cmd.Verified;
+            await _db.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }

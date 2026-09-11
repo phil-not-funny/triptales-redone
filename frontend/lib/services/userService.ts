@@ -163,6 +163,16 @@ const userUpload = async (data: UserUploadRequest): Promise<boolean> => {
   }
 };
 
+// Admin only
+const setVerified = async (guid: string, verified: boolean): Promise<boolean> => {
+  try {
+    const response = await api.put(`/User/${guid}/verified`, { verified });
+    return response.status === HttpStatusCode.NoContent;
+  } catch {
+    return false;
+  }
+};
+
 const UserService = {
   register,
   login,
@@ -171,7 +181,8 @@ const UserService = {
   getByUsername,
   follow,
   putFlavor,
-  userUpload
+  userUpload,
+  setVerified
 };
 
 export default UserService;

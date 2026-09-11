@@ -44,7 +44,7 @@ const Comment: React.FC<CommentProps> = ({
   const [subComments, setSubComments] = useState<PostCommentResponse[]>([]);
   const [isExpandLoading, setIsExpandLoading] = useState<boolean>(false);
 
-  const { user, loggedIn } = useUser();
+  const { user, loggedIn, isAdmin } = useUser();
   const t = useTranslations("Comment");
   const tCommon = useTranslations("Common");
 
@@ -183,7 +183,7 @@ const Comment: React.FC<CommentProps> = ({
               {tCommon("reply")}
             </Button>
           )}
-          {user?.guid === comment.author.guid && (
+          {(user?.guid === comment.author.guid || isAdmin) && (
             <Button
               variant="ghost"
               size="sm"

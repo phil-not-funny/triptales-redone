@@ -18,7 +18,10 @@ export type UserPrivateResponse = {
   displayName: string;
   email: string;
   profilePicture?: string;
+  role: UserRole;
 };
+
+export type UserRole = "User" | "Admin";
 
 export const isUserPrivateResponse = (u: any): u is UserPrivateResponse =>
   "guid" in u && "username" in u && "displayName" in u && "email" in u;

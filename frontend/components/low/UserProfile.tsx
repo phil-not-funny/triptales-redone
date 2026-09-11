@@ -7,6 +7,7 @@ import { formatDateOnlyString } from "@/lib/utils";
 import Image from "next/image";
 import Avatar from "./Avatar";
 import UserProfileControls from "./UserProfileControls";
+import { FollowerCount, UserFollowProvider } from "./UserFollowContext";
 import { getTranslations } from 'next-intl/server';
 
 const UserProfileCardContent = async ({ user }: UserProfileProps) => {
@@ -14,7 +15,10 @@ const UserProfileCardContent = async ({ user }: UserProfileProps) => {
   const tCommon = await getTranslations("Common");
 
   return (
-    <>
+    <UserFollowProvider
+      initialFollowing={user.userFollowing}
+      initialFollowerCount={user.followerCount}
+    >
       <CardHeader className="flex items-center gap-6 border-b border-gray-100 pb-6">
         <Avatar user={user} className="!h-24 !w-24" textClassName="!text-4xl" />
         <div className="flex-1">
@@ -27,7 +31,7 @@ const UserProfileCardContent = async ({ user }: UserProfileProps) => {
           <p className="mt-1 text-sm text-gray-700">@{user.username}</p>
           <div className="mt-3 flex items-center gap-4 text-sm">
             <span>
-              <span className="font-medium">{user.followerCount}</span>{" "}
+              <FollowerCount />{" "}
               {tCommon("followers")}
             </span>
           </div>
@@ -67,7 +71,7 @@ const UserProfileCardContent = async ({ user }: UserProfileProps) => {
       <CardFooter className="mt-6 flex gap-3">
         <UserProfileControls user={user} />
       </CardFooter>
-    </>
+    </UserFollowProvider>
   );
 };
 

@@ -1,2 +1,5 @@
 git_stats.*
 docker-push.sh
+# Claude Code personal instructions
+CLAUDE.local.md
+.claude

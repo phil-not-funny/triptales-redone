@@ -183,7 +183,12 @@
     "followSuccess": "You are {status} following {displayName}",
     "followError": "Something went wrong. Please try again later.",
     "now": "now",
-    "noLonger": "no longer"
+    "noLonger": "no longer",
+    "verify": "Verify",
+    "unverify": "Remove Verification",
+    "verifySuccess": "{displayName} is now verified",
+    "unverifySuccess": "{displayName} is no longer verified",
+    "verifyError": "Failed to change the verified status. Please try again later."
   },
   "Settings": {
     "title": "Settings",

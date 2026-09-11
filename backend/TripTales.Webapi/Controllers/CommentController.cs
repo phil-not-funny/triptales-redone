@@ -92,7 +92,7 @@ namespace Triptales.Controllers
             if (comment is null)
                 return NotFound("Comment does not exist");
 
-            if (comment.Author.Guid != authorized.Guid)
+            if (!authorized.CanModify(comment.Author))
                 return Unauthorized("You are not the author of this comment");
 
             await _repository.Delete(guid);

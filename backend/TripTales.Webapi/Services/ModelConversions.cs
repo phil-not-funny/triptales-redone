@@ -43,7 +43,7 @@ namespace Triptales.Webapi.Services
             user.Following.Count > 0 ? user.Following.Select(ToUserPublicSmallDto).ToList() : []);
 
         public UserPrivateDto ToUserPrivateDto(User user) =>
-            new(user.Guid, user.Username, user.DisplayName, user.Email, user.ProfilePicture);
+            new(user.Guid, user.Username, user.DisplayName, user.Email, user.ProfilePicture, user.Role.ToString());
 
         public PostSmallDto ToPostSmallDto(Post a, bool userLiked = false) => new(
                 a.Guid,

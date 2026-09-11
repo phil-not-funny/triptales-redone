@@ -7,12 +7,17 @@ import UserService from "@/lib/services/userService";
 import { useState } from "react";
 import useUser from "@/hooks/useUser";
 import { useTranslations } from 'next-intl';
+import { useRouter } from "next/navigation";
+import { Verified } from "lucide-react";
+import { useUserFollow } from "./UserFollowContext";
 
 const UserProfileControls: React.FC<UserProfileProps> = ({ user }) => {
-  const [following, setFollowing] = useState<boolean>(user.userFollowing);
-  
-  const { user: client, loggedIn: loggedIn } = useUser();
+  const { following, setFollowing } = useUserFollow();
+  const [verified, setVerified] = useState<boolean>(!!user.verified);
+
+  const { user: client, loggedIn: loggedIn, isAdmin } = useUser();
   const canInteract = loggedIn && client?.username !== user.username;
+  const router = useRouter();
   const t = useTranslations("UserProfile");
   const tCommon = useTranslations("Common");
 
@@ -28,6 +33,21 @@ const UserProfileControls: React.FC<UserProfileProps> = ({ user }) => {
     }
   };
 
+  const handleVerify = async () => {
+    const newStatus = !verified;
+    const success = await UserService.setVerified(user.guid, newStatus);
+    if (success) {
+      setVerified(newStatus);
+      toast.success(
+        t(newStatus ? "verifySuccess" : "unverifySuccess", { displayName: user.displayName }),
+      );
+      // The verified badge is rendered on the server, refresh to update it
+      router.refresh();
+    } else {
+      toast.error(t("verifyError"));
+    }
+  };
+
   return (
     <>
       <Button
@@ -40,6 +60,12 @@ const UserProfileControls: React.FC<UserProfileProps> = ({ user }) => {
       <Button disabled={!canInteract} variant={"outline"}>
         {tCommon("message")}
       </Button>
+      {isAdmin && (
+        <Button onClick={handleVerify} variant={"outline"}>
+          <Verified />
+          {verified ? t("unverify") : t("verify")}
+        </Button>
+      )}
     </>
   );
 };

@@ -88,7 +88,7 @@ namespace Triptales.Controllers
             if (requested is null)
                 return NotFound("Post not found");
 
-            if (requested.Author.Guid != authenticated.Guid)
+            if (!authenticated.CanModify(requested.Author))
                 return Unauthorized("You are not authorized to delete this post");
 
             return await _repository.Delete(guid) ? NoContent() : BadRequest("Delete failed! Check if the right Guid is used");
@@ -105,7 +105,7 @@ namespace Triptales.Controllers
             var post = await _db.Posts.Include(a => a.Author).FirstOrDefaultAsync(p => p.Guid == guid);
             if (post is null) return NotFound("Post not found");
 
-            if (post.Author.Guid != authenticated.Guid)
+            if (!authenticated.CanModify(post.Author))
                 return Unauthorized("You are not authorized to edit this post");
 
             if (!DateOnly.TryParse(cmd.StartDate, out var startDate) || !DateOnly.TryParse(cmd.EndDate, out var endDate))
@@ -130,7 +130,7 @@ namespace Triptales.Controllers
             var post = await _db.Posts.Include(p => p.Author).FirstOrDefaultAsync(p => p.Guid == guid);
             if (post is null) return NotFound("Post not found");
 
-            if (post.Author.Guid != authenticated.Guid)
+            if (!authenticated.CanModify(post.Author))
                 return Unauthorized("You are not authorized to edit this post");
 
             if (cmd.Picture is null) return BadRequest("No image provided");
@@ -148,7 +148,7 @@ namespace Triptales.Controllers
             var post = await _db.Posts.Include(p => p.Author).FirstOrDefaultAsync(p => p.Guid == guid);
             if (post is null) return NotFound("Post not found");
 
-            if (post.Author.Guid != authenticated.Guid)
+            if (!authenticated.CanModify(post.Author))
                 return Unauthorized("You are not authorized to edit this post");
 
             if (index < 0 || index >= post.Days.Count) return NotFound("Day not found");

@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { Calendar } from "lucide-react";
+import { Calendar, Verified } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -63,6 +63,9 @@ const Post: React.FC<PostProps> = ({ post, embed }) => {
             >
               {post.author.username}
             </Link>
+            {post.author.verified && (
+              <Verified className="text-primary-saturated h-4 w-4" />
+            )}
           </div>
           <span className="mx-2">•</span>
           <span>{t("postedOn")} {formatDateString(post.createdAt)}</span>

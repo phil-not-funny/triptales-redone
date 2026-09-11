@@ -183,7 +183,12 @@
     "followSuccess": "U volgt {displayName} {status}",
     "followError": "Er is iets misgegaan. Probeer het later opnieuw.",
     "now": "nu",
-    "noLonger": "niet meer"
+    "noLonger": "niet meer",
+    "verify": "Verifiëren",
+    "unverify": "Verificatie verwijderen",
+    "verifySuccess": "{displayName} is nu geverifieerd",
+    "unverifySuccess": "{displayName} is niet meer geverifieerd",
+    "verifyError": "Verificatiestatus kon niet worden gewijzigd. Probeer het later opnieuw."
   },
   "Settings": {
     "title": "Instellingen",

@@ -111,14 +111,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.UseCors("AllowDevServer");
 
-    if (!Directory.Exists(Path.Combine(builder.Environment.ContentRootPath, "Images")))
-    {
-        Directory.CreateDirectory(Path.Combine(builder.Environment.ContentRootPath, "Images"));
-    }
+    // The database is recreated on every start in development, so previously uploaded pictures would be orphaned.
+    var imagesPath = Path.Combine(builder.Environment.ContentRootPath, "Images");
+    Directory.CreateDirectory(imagesPath);
+    foreach (var file in Directory.EnumerateFiles(imagesPath))
+        File.Delete(file);
+
     app.UseStaticFiles(new StaticFileOptions
     {
-        FileProvider = new PhysicalFileProvider(
-               Path.Combine(builder.Environment.ContentRootPath, "Images")),
+        FileProvider = new PhysicalFileProvider(imagesPath),
         RequestPath = "/Images"
     });
 }
