@@ -56,7 +56,7 @@ builder.Services.AddTransient<UserService>();
 builder.Services.AddTransient<UserRepository>();
 builder.Services.AddTransient<PostRepository>();
 builder.Services.AddTransient<CommentRepository>();
-builder.Services.AddTransient<PostService>();
+builder.Services.AddTransient<JwtTokenService>();
 builder.Services.AddTransient<ModelConversions>();
 builder.Services.AddTransient<IFileService, LocalFileService>();
 builder.Services.AddCors(options =>

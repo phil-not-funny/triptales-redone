@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +31,36 @@ namespace Triptales.Repository
 
         public async Task<User?> GetFromGuid(Guid guid) => 
             await _db.Users.Include(a => a.Posts).Include(a => a.LikedPosts).Include(a => a.Following).FirstOrDefaultAsync(u => u.Guid == guid);
+
+        public async Task<User?> FindByUsername(string username) =>
+            await _db.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+        public Task<bool> UsernameExists(string username) => _db.Users.AnyAsync(u => u.Username == username);
+
+        public Task<bool> EmailExists(string email) => _db.Users.AnyAsync(u => u.Email == email);
+
+        /// <summary>
+        /// Makes <paramref name="follower"/> follow <paramref name="target"/>, or unfollow if already following.
+        /// </summary>
+        public async Task ToggleFollow(User follower, User target)
+        {
+            follower.Following.Toggle(target);
+            await _db.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Sets the verified flag of a user.
+        /// </summary>
+        /// <returns><c>false</c> if no user with the given guid exists.</returns>
+        public async Task<bool> SetVerified(Guid guid, bool verified)
+        {
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.Guid == guid);
+            if (user is null) return false;
+
+            user.Verified = verified;
+            await _db.SaveChangesAsync();
+            return true;
+        }
 
         public async Task<bool> Insert(User entity)
         {

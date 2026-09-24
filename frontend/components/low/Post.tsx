@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { Calendar, Verified } from "lucide-react";
 import {
   Card,

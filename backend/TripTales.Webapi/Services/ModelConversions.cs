@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Triptales.Application.Dtos;
@@ -9,11 +9,9 @@ namespace Triptales.Webapi.Services
     public class ModelConversions
     {
         private readonly UserService _userService;
-        private readonly PostService _postService;
 
-        public ModelConversions(PostService postService, UserService userService)
+        public ModelConversions(UserService userService)
         {
-            _postService = postService;
             _userService = userService;
         }
 
@@ -30,9 +28,7 @@ namespace Triptales.Webapi.Services
                 _userService.GetFollowers(user.Guid).Count,
                 user.ProfilePicture,
                 user.BannerImage,
-                user.Posts.Count > 0 ? user.Posts.Select(p => ToPostSmallDto(
-                    p,
-                    authenticatedGuid is not null && p.Likes.Any(u => u.Guid == authenticatedGuid))).ToList() : [],
+                user.Posts.Count > 0 ? user.Posts.Select(p => ToPostSmallDto(p, p.IsLikedBy(authenticatedGuid))).ToList() : [],
                 userFollowing);
 
         public UserPublicSmallDto ToUserPublicSmallDto(User user) =>

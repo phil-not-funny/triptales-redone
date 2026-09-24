@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,6 +59,19 @@ namespace Triptales.Repository
                 .ThenInclude(c => c.Comments)
             .FirstOrDefaultAsync(p => p.Guid == guid);
 
+        public async Task<Post?> GetWithAuthor(Guid guid) =>
+            await _db.Posts.Include(p => p.Author).FirstOrDefaultAsync(p => p.Guid == guid);
+
+        /// <summary>
+        /// Returns up to <paramref name="size"/> posts in random order.
+        /// </summary>
+        public async Task<List<Post>> GetRandom(int size)
+        {
+            var random = new Random();
+            var posts = await GetAll();
+            return posts.OrderBy(_ => random.Next()).Take(size).ToList();
+        }
+
         public async Task<bool> Insert(Post entity)
         {
             _db.Posts.Add(entity);
@@ -71,6 +84,20 @@ namespace Triptales.Repository
             _db.Posts.Update(entity);
             await _db.SaveChangesAsync();
             return true;
+        }
+
+        /// <summary>
+        /// Persists changes already applied to a tracked post.
+        /// </summary>
+        public Task SaveChanges() => _db.SaveChangesAsync();
+
+        /// <summary>
+        /// Adds <paramref name="user"/> to the likes of <paramref name="post"/>, or removes the like if it exists.
+        /// </summary>
+        public async Task ToggleLike(Post post, User user)
+        {
+            post.Likes.Toggle(user);
+            await _db.SaveChangesAsync();
         }
 
         public async Task<bool> UploadImage(Post post, UploadPostPictureCmd cmd)

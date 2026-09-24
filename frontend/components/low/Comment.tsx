@@ -1,27 +1,16 @@
 "use client";
 
-import {
-  Heart,
-  Loader2,
-  MessageCircle,
-  MessageCirclePlus,
-  Minus,
-  Plus,
-} from "lucide-react";
-import {
-  PostCommentResponse,
-  PostResponse,
-} from "@/types/RequestTypes";
+import { Heart, Loader2, MessageCircle, Minus, Plus } from "lucide-react";
+import { PostCommentResponse, PostResponse } from "@/types/RequestTypes";
 import { formatDateString } from "@/lib/utils";
 import Link from "next/link";
 import { useState } from "react";
 import PostService from "@/lib/services/postService";
 import { toast } from "sonner";
-import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
-import { Textarea } from "../ui/textarea";
+import CommentReplyForm from "./CommentReplyForm";
 import useUser from "@/hooks/useUser";
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
 
 interface CommentProps {
   comment: PostCommentResponse;
@@ -40,7 +29,6 @@ const Comment: React.FC<CommentProps> = ({
   const [likesCount, setLikesCount] = useState<number>(comment.likesCount);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [isReplying, setIsReplying] = useState<boolean>(false);
-  const [replyContent, setReplyContent] = useState<string>("");
   const [subComments, setSubComments] = useState<PostCommentResponse[]>([]);
   const [isExpandLoading, setIsExpandLoading] = useState<boolean>(false);
 
@@ -74,15 +62,13 @@ const Comment: React.FC<CommentProps> = ({
     } else setIsExpanded(true);
   };
 
-  const handleReplySubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleReplySubmit = async (content: string) => {
     const response = await PostService.commentPost({
-      content: replyContent,
+      content,
       parent: comment.guid,
     });
     if (response) {
       setSubComments((prev) => [response, ...prev]);
-      setReplyContent("");
       setIsReplying(false);
       setIsExpanded(true);
       toast.success(t("postSuccess"));
@@ -101,10 +87,7 @@ const Comment: React.FC<CommentProps> = ({
     }
   };
 
-  const toggleReply = () => {
-    setIsReplying(!isReplying);
-    setReplyContent("");
-  };
+  const toggleReply = () => setIsReplying(!isReplying);
 
   const threadLineColor =
     level % 2 === 0 ? "border-gray-300" : "border-gray-400";
@@ -195,35 +178,10 @@ const Comment: React.FC<CommentProps> = ({
           )}
         </div>
         {isReplying && (
-          <form onSubmit={handleReplySubmit} className="mt-3">
-            <div className="flex space-x-3">
-              <Avatar className="h-8 w-8">
-                <AvatarFallback>{user?.username[0]}</AvatarFallback>
-              </Avatar>
-              <div className="flex-1">
-                <Textarea
-                  value={replyContent}
-                  onChange={(e) => setReplyContent(e.target.value)}
-                  placeholder={tCommon("writeReply")}
-                  className="w-full resize-none"
-                  rows={3}
-                />
-                <div className="mt-2 flex justify-end space-x-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={toggleReply}
-                  >
-                    {tCommon("cancel")}
-                  </Button>
-                  <Button type="submit" size="sm">
-                    <MessageCirclePlus /> {tCommon("postReply")}
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </form>
+          <CommentReplyForm
+            onSubmit={handleReplySubmit}
+            onCancel={toggleReply}
+          />
         )}
         {subComments.length > 0 && isExpanded && (
           <div className="mt-2">

@@ -1,14 +1,12 @@
-﻿using Triptales.Application.Model;
+using Triptales.Application.Model;
 using Triptales.Webapi.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Triptales.Application.Dtos;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
-using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using System.Linq;
 using System;
-using Microsoft.AspNetCore.Http;
 using System.Text.RegularExpressions;
 
 namespace Triptales.Webapi.Services

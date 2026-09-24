@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Triptales.Application.Model
 {
@@ -33,6 +34,9 @@ namespace Triptales.Application.Model
         public List<User> Likes { get; } = new();
         public List<Day> Days { get; } = new();
         public List<Comment> Comments { get; } = new();
+
+        /// <summary>Whether the user with the given guid liked this post; anonymous users never did.</summary>
+        public bool IsLikedBy(Guid? userGuid) => userGuid is not null && Likes.Any(u => u.Guid == userGuid);
 
         public class Day(string title, string description, DateOnly date)
         {

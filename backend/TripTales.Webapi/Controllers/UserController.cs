@@ -1,85 +1,38 @@
 using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using Triptales.Repository;
-using Triptales.Application.Dtos;
-using Triptales.Webapi.Infrastructure;
-using Triptales.Application.Model;
-using Triptales.Webapi.Services;
 using Triptales.Application.Cmd;
+using Triptales.Application.Dtos;
+using Triptales.Repository;
+using Triptales.Webapi.Services;
 
 namespace Triptales.Webapi.Controllers
 {
-    [ApiController]
-    [Route("/api/[controller]")]
-    public class UserController : ControllerBase
+    [Route("api/[controller]")]
+    public class UserController : ApiControllerBase
     {
-        private readonly TripTalesContext _db;
         private readonly UserService _service;
         private readonly ModelConversions _modelConversions;
         private readonly UserRepository _repo;
-        private readonly IConfiguration _configuration;
+        private readonly JwtTokenService _tokenService;
 
-        public UserController(TripTalesContext db, UserService userService, UserRepository repo, ModelConversions modelConversions, IConfiguration configuration)
+        public UserController(UserService userService, UserRepository repo, ModelConversions modelConversions, JwtTokenService tokenService)
+            : base(userService)
         {
-            _db = db;
             _service = userService;
             _repo = repo;
             _modelConversions = modelConversions;
-            _configuration = configuration;
-        }
-
-        private async Task<User?> GetAuthenticatedOrDefault()
-        {
-            var authenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
-            if (!authenticated) return null;
-            var username = HttpContext.User.Identity?.Name;
-            if (username is null) return null;
-
-            return await _service.GetUserByUsername(username);
-        }
-
-        private string GenerateJwtToken(User user)
-        {
-            var jwt = _configuration.GetSection("Jwt");
-            var key = jwt["Key"] ?? throw new InvalidOperationException("Jwt:Key is not configured.");
-            var signingCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
-                SecurityAlgorithms.HmacSha256);
-
-            var claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Name, user.Username),
-                        new Claim(JwtRegisteredClaimNames.Sub, user.Guid.ToString()),
-                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                        //new Claim(ClaimTypes.Role, "admin")
-                    };
-
-            var token = new JwtSecurityToken(
-                issuer: jwt["Issuer"],
-                audience: jwt["Audience"],
-                claims: claims,
-                expires: DateTime.UtcNow.AddHours(double.TryParse(jwt["ExpiresInHours"], out var hours) ? hours : 3),
-                signingCredentials: signingCredentials);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            _tokenService = tokenService;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegisterCmd user)
         {
-            if (await _db.Users.AnyAsync(u => u.Username == user.Username))
+            if (await _repo.UsernameExists(user.Username))
                 return BadRequest("Username already exists");
-            if (await _db.Users.AnyAsync(u => u.Email == user.Email))
+            if (await _repo.EmailExists(user.Email))
                 return BadRequest("Email already exists");
 
             if (!_service.IsUserValid(user, out var userCreated, out var results))
@@ -91,11 +44,11 @@ namespace Triptales.Webapi.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginCmd credentials)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == credentials.Username);
+            var user = await _repo.FindByUsername(credentials.Username);
             if (user is null || !user.CheckPassword(credentials.Password)) return BadRequest("The given password and username combination does not exist.");
             return Ok(new
             {
-                token = GenerateJwtToken(user),
+                token = _tokenService.Generate(user),
                 user = _modelConversions.ToUserPrivateDto(user)
             });
         }
@@ -120,8 +73,8 @@ namespace Triptales.Webapi.Controllers
             var authenticated = await GetAuthenticatedOrDefault(); //to know when to enable follow button
             return user is not null ? Ok(
                 _modelConversions.ToUserDetailedDto(
-                    user, 
-                    authenticated is not null && 
+                    user,
+                    authenticated is not null &&
                     authenticated.Following.Any(
                         f => f.Guid == user.Guid),
                     authenticated?.Guid)
@@ -139,11 +92,7 @@ namespace Triptales.Webapi.Controllers
             if (requested is null)
                 return NotFound();
 
-            if (authenticated.Following.Any(r => r.Guid == guid))
-                authenticated.Following.Remove(requested);
-            else
-                authenticated.Following.Add(requested);
-            await _db.SaveChangesAsync();
+            await _repo.ToggleFollow(authenticated, requested);
             return Ok();
         }
 
@@ -168,12 +117,10 @@ namespace Triptales.Webapi.Controllers
         {
             var authenticated = await GetAuthenticatedOrDefault();
             if (authenticated is null) return Unauthorized();
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Guid == authenticated.Guid);
-            if (user is null) return NotFound();
 
             if (cmd.ProfilePicture is null && cmd.BannerImage is null) return BadRequest("No image provided");
 
-            return await _repo.UploadImage(user, cmd) ? Ok() : BadRequest("Upload failed! Please check if you uploaded the right pictures");
+            return await _repo.UploadImage(authenticated, cmd) ? Ok() : BadRequest("Upload failed! Please check if you uploaded the right pictures");
         }
 
         [Authorize]
@@ -185,12 +132,7 @@ namespace Triptales.Webapi.Controllers
             if (authenticated is null) return Unauthorized();
             if (!authenticated.IsAdmin) return Forbid();
 
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Guid == guid);
-            if (user is null) return NotFound();
-
-            user.Verified = cmd.Verified;
-            await _db.SaveChangesAsync();
-            return NoContent();
+            return await _repo.SetVerified(guid, cmd.Verified) ? NoContent() : NotFound();
         }
     }
 }

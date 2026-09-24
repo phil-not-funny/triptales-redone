@@ -1,43 +1,28 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using System.Threading.Tasks;
 using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Triptales.Application.Cmd;
-using Triptales.Repository;
-using Triptales.Webapi.Infrastructure;
-using Triptales.Webapi.Services;
 using Triptales.Application.Model;
-using System.Linq;
+using Triptales.Repository;
+using Triptales.Webapi.Controllers;
+using Triptales.Webapi.Services;
 
 namespace Triptales.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public partial class CommentController : ControllerBase
+    public class CommentController : ApiControllerBase
     {
-        private readonly TripTalesContext _db;
         private readonly PostRepository _postRepository;
-        private readonly UserService _userService;
         private readonly ModelConversions _modelConversions;
         private readonly CommentRepository _repository;
 
-        public CommentController(TripTalesContext db, UserService userService, CommentRepository repository, PostRepository postService, ModelConversions modelConversions)
+        public CommentController(UserService userService, CommentRepository repository, PostRepository postRepository, ModelConversions modelConversions)
+            : base(userService)
         {
-            _db = db;
-            _userService = userService;
             _repository = repository;
-            _postRepository = postService;
+            _postRepository = postRepository;
             _modelConversions = modelConversions;
-        }
-
-        private async Task<User?> GetAuthenticatedOrDefault()
-        {
-            var authenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
-            if (!authenticated) return null;
-            var username = HttpContext.User.Identity?.Name;
-            if (username is null) return null;
-
-            return await _userService.GetUserByUsername(username);
         }
 
         [HttpPost()]
@@ -71,12 +56,7 @@ namespace Triptales.Controllers
             if (comment is null)
                 return NotFound("Comment does not exist");
 
-            if (comment.Likes.Any(u => u.Guid == authorized.Guid))
-                comment.Likes.Remove(authorized);
-            else
-                comment.Likes.Add(authorized);
-
-            await _db.SaveChangesAsync();
+            await _repository.ToggleLike(comment, authorized);
             return Ok();
         }
 
@@ -96,7 +76,6 @@ namespace Triptales.Controllers
                 return Unauthorized("You are not the author of this comment");
 
             await _repository.Delete(guid);
-            await _db.SaveChangesAsync();
             return NoContent();
         }
 

@@ -58,7 +58,8 @@ export function useDays() {
     toast.success("Day removed successfully!");
   };
 
-  const getDaysForApi = () => days.map(({ uuid, ...rest }) => rest);
+  const getDaysForApi = () =>
+    days.map(({ title, description, date }) => ({ title, description, date }));
 
   return { days, addDay, editDay, removeDay, getDaysForApi };
 }

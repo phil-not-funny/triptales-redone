@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -63,6 +63,15 @@ namespace Triptales.Repository
             .Include(c => c.Parent)
             .FirstOrDefaultAsync(c => c.Guid == guid);
 
+
+        /// <summary>
+        /// Adds <paramref name="user"/> to the likes of <paramref name="comment"/>, or removes the like if it exists.
+        /// </summary>
+        public async Task ToggleLike(Comment comment, User user)
+        {
+            comment.Likes.Toggle(user);
+            await _db.SaveChangesAsync();
+        }
 
         public Task<bool> Insert(Comment entity)
         {

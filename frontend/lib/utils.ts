@@ -38,12 +38,12 @@ export function beautifyDate(date: Date | string): string {
     month: "long",
     day: "numeric",
     year: "numeric",
-  }).format(new Date(date))
+  }).format(new Date(date));
 }
 
 export async function getCroppedImg(
   imageSrc: string,
-  pixelCrop: Area
+  pixelCrop: Area,
 ): Promise<Blob> {
   const image = new Image();
   image.src = imageSrc;
@@ -68,7 +68,7 @@ export async function getCroppedImg(
     0,
     0,
     pixelCrop.width,
-    pixelCrop.height
+    pixelCrop.height,
   );
 
   return new Promise((resolve) => {
@@ -77,3 +77,16 @@ export async function getCroppedImg(
     }, "image/jpeg");
   });
 }
+
+/**
+ * Type guard that checks whether a value is an object containing all given keys.
+ * Used as the building block for runtime validation of API responses.
+ *
+ * @param value - The value to inspect, typically parsed JSON of unknown shape.
+ * @param keys - Property names that have to be present.
+ */
+export const hasKeys = <K extends string>(
+  value: unknown,
+  ...keys: K[]
+): value is Record<K, unknown> =>
+  typeof value === "object" && value !== null && keys.every((k) => k in value);
