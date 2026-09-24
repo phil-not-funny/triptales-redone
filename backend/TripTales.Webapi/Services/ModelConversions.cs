@@ -52,7 +52,7 @@ namespace Triptales.Webapi.Services
                 a.Likes.Count,
                 userLiked,
                 a.Comments.Count,
-                a.Picture);
+                a.Pictures.FirstOrDefault());
 
         public PostDto ToPostDto(Post a, bool userLiked = false, bool userCommented = false) => new(
                 a.Guid,
@@ -68,7 +68,7 @@ namespace Triptales.Webapi.Services
                 a.Comments.Count,
                 a.Comments.Count > 0 ? a.Comments.Select(c => ToPostCommentDto(c, subComments: false)).ToList() : [],
                 userCommented,
-                a.Picture);
+                a.Pictures.ToList());
 
         public PostCommentDto ToPostCommentDto(Comment c, bool userLiked = false, bool subComments = true) => new(
                 c.Guid,
@@ -80,6 +80,6 @@ namespace Triptales.Webapi.Services
                 c.Likes.Count,
                 userLiked);
 
-        public PostDayDto ToPostDayDto(Post.Day d) => new(d.Title, d.Description, d.Date.ToString(), d.Picture);
+        public PostDayDto ToPostDayDto(Post.Day d) => new(d.Title, d.Description, d.Date.ToString(), d.Pictures.ToList());
     }
 }

@@ -33,6 +33,25 @@ export function formatDateOnlyString(date: string): string {
   });
 }
 
+/**
+ * Formats a date as `YYYY-MM-DD` using its local calendar day. `toISOString()`
+ * must not be used for this: it converts to UTC and shifts the day for
+ * timezones ahead of UTC.
+ */
+export function toDateOnlyString(date: Date): string {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+/**
+ * Parses a `YYYY-MM-DD` string into a date at local midnight, the counterpart
+ * of {@link toDateOnlyString}.
+ */
+export function parseDateOnlyString(date: string): Date {
+  const [year, month, day] = date.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
+
 export function beautifyDate(date: Date | string): string {
   return new Intl.DateTimeFormat("en-US", {
     month: "long",
@@ -90,3 +109,8 @@ export const hasKeys = <K extends string>(
   ...keys: K[]
 ): value is Record<K, unknown> =>
   typeof value === "object" && value !== null && keys.every((k) => k in value);
+
+/** Persists the chosen UI language for one year; the server reads it per request. */
+export function setLocaleCookie(locale: string): void {
+  document.cookie = `locale=${locale}; path=/; max-age=31536000; SameSite=Lax`;
+}

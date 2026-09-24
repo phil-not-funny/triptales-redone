@@ -27,8 +27,11 @@ const CommentReplyForm: React.FC<CommentReplyFormProps> = ({
   const { user } = useUser();
   const tCommon = useTranslations("Common");
 
+  const isEmpty = content.trim().length === 0;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (isEmpty) return;
     return onSubmit(content);
   };
 
@@ -55,7 +58,7 @@ const CommentReplyForm: React.FC<CommentReplyFormProps> = ({
             >
               {tCommon("cancel")}
             </Button>
-            <Button type="submit" size="sm">
+            <Button type="submit" size="sm" disabled={isEmpty}>
               <MessageCirclePlus /> {tCommon("postReply")}
             </Button>
           </div>

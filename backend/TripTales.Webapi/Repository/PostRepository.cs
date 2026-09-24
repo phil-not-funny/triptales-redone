@@ -100,28 +100,40 @@ namespace Triptales.Repository
             await _db.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Stores an uploaded picture and appends it to the pictures of the post.
+        /// </summary>
         public async Task<bool> UploadImage(Post post, UploadPostPictureCmd cmd)
         {
-            if (cmd.Picture is not null)
-            {
-                var filename = $"{post.Guid}-post.jpg";
-                if (!await _fileService.UploadFile(cmd.Picture, filename)) return false;
-                post.Picture = $"Images/{filename}";
-            }
+            var path = await StorePicture(cmd, $"{post.Guid}-post");
+            if (path is null) return false;
+
+            post.Pictures.Add(path);
             await _db.SaveChangesAsync();
             return true;
         }
 
+        /// <summary>
+        /// Stores an uploaded picture and appends it to the pictures of the day at <paramref name="index"/>.
+        /// </summary>
         public async Task<bool> UploadDayImage(Post post, int index, UploadPostPictureCmd cmd)
         {
-            if (cmd.Picture is not null)
-            {
-                var filename = $"{post.Guid}-day-{index}.jpg";
-                if (!await _fileService.UploadFile(cmd.Picture, filename)) return false;
-                post.Days[index].Picture = $"Images/{filename}";
-            }
+            var path = await StorePicture(cmd, $"{post.Guid}-day-{index}");
+            if (path is null) return false;
+
+            post.Days[index].Pictures.Add(path);
             await _db.SaveChangesAsync();
             return true;
+        }
+
+        /// <returns>The public path of the stored file, or <c>null</c> if it could not be stored.</returns>
+        private async Task<string?> StorePicture(UploadPostPictureCmd cmd, string namePrefix)
+        {
+            if (cmd.Picture is null) return null;
+
+            // A post can hold any number of pictures, so every file needs its own name.
+            var filename = $"{namePrefix}-{Guid.NewGuid():N}.jpg";
+            return await _fileService.UploadFile(cmd.Picture, filename) ? $"Images/{filename}" : null;
         }
     }
 }

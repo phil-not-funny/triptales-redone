@@ -58,7 +58,9 @@
     "postReply": "Antwort posten",
     "writeComment": "Schreibe einen Kommentar...",
     "writeReply": "Schreibe eine Antwort...",
-    "pickDate": "Datum auswählen"
+    "pickDate": "Datum auswählen",
+    "pickDateRange": "Zeitraum auswählen",
+    "daysCount": "{count, plural, one {# Tag} other {# Tage}}"
   },
   "Forms": {
     "LoginForm": {
@@ -96,12 +98,11 @@
     "NewPostForm": {
       "title": "Titel",
       "description": "Beschreibung / Inhalt",
-      "startDate": "Startdatum",
-      "endDate": "Enddatum",
       "validation": {
         "titleRequired": "Ein Titel ist erforderlich",
         "descriptionRequired": "Eine Beschreibung ist erforderlich",
-        "endDateAfterStart": "Das Enddatum muss nach dem Startdatum liegen."
+        "dateRangeRequired": "Bitte wähle Start- und Enddatum aus.",
+        "daysOutsideRange": "Mindestens ein Tag liegt außerhalb des Reisezeitraums."
       },
       "success": "Beitrag erfolgreich erstellt!",
       "error": "Beitrag konnte nicht erstellt werden!",
@@ -111,6 +112,15 @@
         "addDescription": "Sie sind dabei, einen neuen detaillierten Tag zu Ihrem Beitrag hinzuzufügen.",
         "edit": "Tag {day} bearbeiten",
         "editDescription": "Sie sind dabei, einen Tag in Ihrem Beitrag zu bearbeiten."
+      },
+      "dateRange": "Reisezeitraum",
+      "upload": {
+        "creating": "Beitrag wird erstellt …",
+        "uploading": "Bild {current} von {total} wird hochgeladen …",
+        "processing": "Bild {current} von {total} wird verarbeitet …",
+        "done": "Fertig! Dein Beitrag ist veröffentlicht.",
+        "failed": "{count, plural, one {# Bild konnte} other {# Bilder konnten}} nicht hochgeladen werden.",
+        "toPost": "Zum Beitrag"
       }
     },
     "PictureForm": {
@@ -129,7 +139,9 @@
       "date": "Datum",
       "validation": {
         "titleRequired": "Ein Titel ist erforderlich",
-        "descriptionRequired": "Eine Beschreibung ist erforderlich"
+        "descriptionRequired": "Eine Beschreibung ist erforderlich",
+        "dateRequired": "Bitte wähle ein Datum aus.",
+        "dateOutsideRange": "Der Tag muss innerhalb des Reisezeitraums liegen."
       }
     },
     "UserFlavorForm": {
@@ -151,7 +163,10 @@
     "timelineOfDays": "Zeitlinie der Tage",
     "postedOn": "Veröffentlicht am",
     "start": "Start",
-    "end": "Ende"
+    "end": "Ende",
+    "enlargePicture": "Bild {index} vergrößern",
+    "previousPicture": "Vorheriges Bild",
+    "nextPicture": "Nächstes Bild"
   },
   "PostControls": {
     "liked": "Gefällt mir",

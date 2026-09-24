@@ -33,6 +33,9 @@ namespace Triptales.Controllers
             if (cmd.Post is null && cmd.Parent is null)
                 return BadRequest("Post or Parent must be specified");
 
+            if (string.IsNullOrWhiteSpace(cmd.Content))
+                return BadRequest("Comment must not be empty");
+
             var authorized = await GetAuthenticatedOrDefault();
             if (authorized is null)
                 return Unauthorized();

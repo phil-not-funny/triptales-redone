@@ -111,7 +111,7 @@ export type PostResponse = {
   commentsCount: number;
   comments: PostCommentResponse[];
   userCommented: boolean;
-  picture?: string;
+  pictures: string[];
 };
 
 export type PostResponseSmall = {
@@ -151,12 +151,14 @@ export const isPostResponse = (p: unknown): p is PostResponse =>
     "endDate",
     "likesCount",
     "days",
+    "pictures",
     "userLiked",
     "commentsCount",
     "comments",
     "userCommented",
   ) &&
   Array.isArray(p.days) &&
+  Array.isArray(p.pictures) &&
   Array.isArray(p.comments) &&
   p.comments.every(isPostCommentResponse);
 

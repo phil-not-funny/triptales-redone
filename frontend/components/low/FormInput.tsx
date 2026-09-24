@@ -8,21 +8,26 @@ import {
   FormMessage,
 } from "../ui/form";
 import { DatePicker } from "../ui/datepicker";
+import { DateRangePicker } from "../ui/daterangepicker";
 import { Input } from "../ui/input";
 import { HTMLInputTypeAttribute } from "react";
 import { Textarea } from "../ui/textarea";
 import { cn } from "@/lib/utils";
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
 
 type FormInputProps<T extends FieldValues> = {
   control: Control<T>;
   name: Path<T>;
   label: string;
-  type?: "text" | "date" | "markdown" | "textarea";
+  type?: "text" | "date" | "dateRange" | "markdown" | "textarea";
   placeholder?: string;
   textType?: HTMLInputTypeAttribute | undefined;
   required?: boolean;
   className?: string;
+  /** Earliest selectable day, for `type="date"`. */
+  minDate?: Date;
+  /** Latest selectable day, for `type="date"`. */
+  maxDate?: Date;
 };
 
 export function FormInput<T extends FieldValues>({
@@ -34,6 +39,8 @@ export function FormInput<T extends FieldValues>({
   required = false,
   textType,
   className,
+  minDate,
+  maxDate,
 }: FormInputProps<T>) {
   const tCommon = useTranslations("Common");
 
@@ -49,7 +56,17 @@ export function FormInput<T extends FieldValues>({
           </FormLabel>
           <FormControl>
             {type === "date" ? (
-              <DatePicker {...field}>{tCommon("pickDate")}</DatePicker>
+              <DatePicker {...field} minDate={minDate} maxDate={maxDate}>
+                {tCommon("pickDate")}
+              </DatePicker>
+            ) : type === "dateRange" ? (
+              <DateRangePicker
+                value={field.value}
+                onChange={field.onChange}
+                formatDuration={(count) => tCommon("daysCount", { count })}
+              >
+                {tCommon("pickDateRange")}
+              </DateRangePicker>
             ) : type === "markdown" ? (
               <MDEditor
                 commands={commands

@@ -58,7 +58,9 @@
     "postReply": "Reactie plaatsen",
     "writeComment": "Schrijf een reactie...",
     "writeReply": "Schrijf een antwoord...",
-    "pickDate": "Kies een datum"
+    "pickDate": "Kies een datum",
+    "pickDateRange": "Kies een periode",
+    "daysCount": "{count, plural, one {# dag} other {# dagen}}"
   },
   "Forms": {
     "LoginForm": {
@@ -96,12 +98,11 @@
     "NewPostForm": {
       "title": "Titel",
       "description": "Beschrijving / Inhoud",
-      "startDate": "Startdatum",
-      "endDate": "Einddatum",
       "validation": {
         "titleRequired": "Een titel is verplicht",
         "descriptionRequired": "Een beschrijving is verplicht",
-        "endDateAfterStart": "De einddatum moet na de startdatum liggen."
+        "dateRangeRequired": "Kies een start- en einddatum.",
+        "daysOutsideRange": "Minstens één dag ligt buiten de reisperiode."
       },
       "success": "Bericht succesvol aangemaakt!",
       "error": "Bericht kon niet worden aangemaakt!",
@@ -111,6 +112,15 @@
         "addDescription": "U staat op het punt een nieuwe gedetailleerde dag aan uw bericht toe te voegen.",
         "edit": "Dag {day} bewerken",
         "editDescription": "U staat op het punt een dag in uw bericht te bewerken."
+      },
+      "dateRange": "Reisperiode",
+      "upload": {
+        "creating": "Bericht wordt aangemaakt …",
+        "uploading": "Foto {current} van {total} wordt geüpload …",
+        "processing": "Foto {current} van {total} wordt verwerkt …",
+        "done": "Klaar! Je bericht is gepubliceerd.",
+        "failed": "{count, plural, one {# foto kon} other {# foto's konden}} niet worden geüpload.",
+        "toPost": "Naar bericht"
       }
     },
     "PictureForm": {
@@ -129,7 +139,9 @@
       "date": "Datum",
       "validation": {
         "titleRequired": "Een titel is verplicht",
-        "descriptionRequired": "Een beschrijving is verplicht"
+        "descriptionRequired": "Een beschrijving is verplicht",
+        "dateRequired": "Kies een datum.",
+        "dateOutsideRange": "De dag moet binnen de reisperiode liggen."
       }
     },
     "UserFlavorForm": {
@@ -151,7 +163,10 @@
     "timelineOfDays": "Tijdlijn van dagen",
     "postedOn": "Geplaatst op",
     "start": "Start",
-    "end": "Einde"
+    "end": "Einde",
+    "enlargePicture": "Foto {index} vergroten",
+    "previousPicture": "Vorige foto",
+    "nextPicture": "Volgende foto"
   },
   "PostControls": {
     "liked": "Vind ik leuk",

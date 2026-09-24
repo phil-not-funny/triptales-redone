@@ -27,15 +27,11 @@ const DynamicPostComments: React.FC<Props> = ({ post }) => {
   const t = useTranslations("Comment");
   const tCommon = useTranslations("Common");
 
-  const init = async () => {
-    const response = await PostService.getPost(post.guid);
-    if (response.success && response.data != null) {
-      setComments(response.data.comments);
-    }
-  };
+  const isEmpty = commentContent.trim().length === 0;
 
   const handleCommentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isEmpty) return;
     const response = await PostService.commentPost({
       content: commentContent,
       post: post!.guid,
@@ -60,8 +56,15 @@ const DynamicPostComments: React.FC<Props> = ({ post }) => {
   };
 
   useEffect(() => {
-    init();
-  }, []);
+    let cancelled = false;
+    PostService.getPost(post.guid).then((response) => {
+      if (!cancelled && response.success && response.data != null)
+        setComments(response.data.comments);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [post.guid]);
 
   return (
     <Card className="mx-auto mb-6 rounded-xl border border-gray-100 bg-white p-6 shadow-sm lg:w-2xl">
@@ -82,7 +85,7 @@ const DynamicPostComments: React.FC<Props> = ({ post }) => {
                   rows={3}
                 />
                 <div className="mt-2 flex justify-end">
-                  <Button type="submit" size="sm">
+                  <Button type="submit" size="sm" disabled={isEmpty}>
                     <MessageCirclePlus /> {tCommon("postComment")}
                   </Button>
                 </div>

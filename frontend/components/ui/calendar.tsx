@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { DayPicker } from "react-day-picker"
+import { DayButton, DayPicker } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
@@ -18,45 +18,31 @@ function Calendar({
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
       classNames={{
-        months: "flex flex-col sm:flex-row gap-2",
-        month: "flex flex-col gap-4",
-        caption: "flex justify-center pt-1 relative items-center w-full",
-        caption_label: "text-sm font-medium",
-        nav: "flex items-center gap-1",
-        nav_button: cn(
+        root: "w-fit",
+        months: "relative flex flex-col gap-4 sm:flex-row",
+        month: "flex flex-col gap-3",
+        nav: "absolute inset-x-0 top-0 flex w-full items-center justify-between",
+        button_previous: cn(
           buttonVariants({ variant: "outline" }),
           "size-7 bg-transparent p-0 opacity-50 hover:opacity-100"
         ),
-        nav_button_previous: "absolute left-1",
-        nav_button_next: "absolute right-1",
-        table: "w-full border-collapse space-x-1",
-        head_row: "flex",
-        head_cell:
-          "text-muted-foreground rounded-md w-8 font-normal text-[0.8rem]",
-        row: "flex w-full mt-2",
-        cell: cn(
-          "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent [&:has([aria-selected].day-range-end)]:rounded-r-md",
-          props.mode === "range"
-            ? "[&:has(>.day-range-end)]:rounded-r-md [&:has(>.day-range-start)]:rounded-l-md first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md"
-            : "[&:has([aria-selected])]:rounded-md"
+        button_next: cn(
+          buttonVariants({ variant: "outline" }),
+          "size-7 bg-transparent p-0 opacity-50 hover:opacity-100"
         ),
-        day: cn(
-          buttonVariants({ variant: "ghost" }),
-          "size-8 p-0 font-normal aria-selected:opacity-100"
-        ),
-        day_range_start:
-          "day-range-start aria-selected:bg-primary aria-selected:text-primary-foreground",
-        day_range_end:
-          "day-range-end aria-selected:bg-primary aria-selected:text-primary-foreground",
-        day_selected:
-          "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
-        day_today: "bg-accent text-accent-foreground",
-        day_outside:
-          "day-outside text-muted-foreground aria-selected:text-muted-foreground",
-        day_disabled: "text-muted-foreground opacity-50",
-        day_range_middle:
-          "aria-selected:bg-accent aria-selected:text-accent-foreground",
-        day_hidden: "invisible",
+        month_caption: "flex h-7 items-center justify-center",
+        caption_label: "text-sm font-medium",
+        month_grid: "w-full border-collapse",
+        weekdays: "flex",
+        weekday: "text-muted-foreground w-8 rounded-md text-[0.8rem] font-normal",
+        week: "mt-2 flex w-full",
+        day: "relative p-0 text-center text-sm",
+        range_start: "rounded-l-full bg-green-100",
+        range_middle: "bg-green-100",
+        range_end: "rounded-r-full bg-green-100",
+        outside: "text-muted-foreground opacity-50",
+        disabled: "text-muted-foreground opacity-40",
+        hidden: "invisible",
         ...classNames,
       }}
       components={{
@@ -66,7 +52,54 @@ function Calendar({
           }
           return <ChevronRight className="size-4" {...props} />
         },
+        DayButton: CalendarDayButton,
       }}
+      {...props}
+    />
+  )
+}
+
+/**
+ * Day cell button. The selection look is derived from the day's modifiers, so
+ * a range reads as one continuous band with filled start and end days.
+ */
+function CalendarDayButton({
+  className,
+  // `day` must not reach the DOM element, but is not needed otherwise
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  day,
+  modifiers,
+  ...props
+}: React.ComponentProps<typeof DayButton>) {
+  const ref = React.useRef<HTMLButtonElement>(null)
+  React.useEffect(() => {
+    if (modifiers.focused) ref.current?.focus()
+  }, [modifiers.focused])
+
+  // `previewStart`/`previewEnd` are set by the range picker while the end of a
+  // range is being chosen and mark the span up to the hovered day.
+  const isRangeEdge =
+    modifiers.range_start ||
+    modifiers.range_end ||
+    modifiers.previewStart ||
+    modifiers.previewEnd
+  const isInRange = isRangeEdge || modifiers.range_middle || modifiers.preview
+
+  return (
+    <button
+      ref={ref}
+      type="button"
+      className={cn(
+        buttonVariants({ variant: "ghost" }),
+        "size-8 p-0 font-normal",
+        modifiers.range_middle || modifiers.preview
+          ? "rounded-none bg-transparent text-green-900 hover:bg-green-200"
+          : undefined,
+        (isRangeEdge || (modifiers.selected && !isInRange)) &&
+          "rounded-full bg-green-600 text-white hover:bg-green-600 hover:text-white",
+        modifiers.today && !modifiers.selected && "bg-accent text-accent-foreground",
+        className
+      )}
       {...props}
     />
   )

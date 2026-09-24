@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useTranslations } from 'next-intl';
 import { useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn, setLocaleCookie } from "@/lib/utils";
 
 const languages = [
   { code: "en", name: "English", flag: "🇬🇧" },
@@ -32,7 +32,7 @@ export default function LanguageSwitcher() {
       return;
     }
     setIsChanging(true);
-    document.cookie = `locale=${locale}; path=/; max-age=31536000; SameSite=Lax`;
+    setLocaleCookie(locale);
     setOpen(false);
     router.refresh();
     

@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { Form } from "../ui/form";
 import { Button } from "../ui/button";
@@ -11,43 +11,54 @@ import { useState } from "react";
 import { Loader2, PenBox } from "lucide-react";
 import PostService from "@/lib/services/postService";
 import { DayForm } from "./DayForm";
-import {
-  PictureForm,
-  PictureTarget,
-  PictureValues,
-  POST_TARGET,
-} from "./PictureForm";
+import { PictureForm, PictureTarget, POST_TARGET } from "./PictureForm";
+import { PictureList } from "./PictureList";
 import { useDays } from "@/hooks/useDays";
+import { usePictures } from "@/hooks/usePictures";
+import { usePictureUpload, UploadJob } from "@/hooks/usePictureUpload";
 import { FormInput } from "../low/FormInput";
-import { beautifyDate } from "@/lib/utils";
-import { useTranslations } from 'next-intl';
+import {
+  SubmitPhase,
+  UploadProgressOverlay,
+} from "../low/UploadProgressOverlay";
+import {
+  beautifyDate,
+  parseDateOnlyString,
+  toDateOnlyString,
+} from "@/lib/utils";
+import { useTranslations } from "next-intl";
+
+/** How long the finished state stays visible before leaving for the new post. */
+const DONE_DISPLAY_MS = 900;
 
 export function NewPostForm() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [pictures, setPictures] = useState<PictureValues[]>([]);
+  const [phase, setPhase] = useState<SubmitPhase>("idle");
+  const [createdGuid, setCreatedGuid] = useState<string | null>(null);
+  const { pictures, addPictures, removePicture, removePicturesOfTarget } =
+    usePictures();
+  const { progress, upload } = usePictureUpload();
   const { days, addDay, editDay, removeDay, getDaysForApi } = useDays();
   const t = useTranslations("Forms.NewPostForm");
   const tCommon = useTranslations("Common");
   const tDay = useTranslations("Forms.NewPostForm.day");
   const tPicture = useTranslations("Forms.PictureForm");
 
-  const formSchema = z
-    .object({
-      title: z.string().min(1, { message: t("validation.titleRequired") }),
-      description: z.string().min(1, { message: t("validation.descriptionRequired") }),
-      startDate: z.date(),
-      endDate: z.date(),
-    })
-    .superRefine(({ startDate, endDate }, ctx) => {
-      if (endDate < startDate) {
-        ctx.addIssue({
-          code: "custom",
-          message: t("validation.endDateAfterStart"),
-          path: ["endDate"],
-        });
-      }
-    });
+  const rangeError = t("validation.dateRangeRequired");
+  const formSchema = z.object({
+    title: z.string().min(1, { message: t("validation.titleRequired") }),
+    description: z
+      .string()
+      .min(1, { message: t("validation.descriptionRequired") }),
+    // The calendar reports a half-chosen range while only the start is picked.
+    dateRange: z.custom<{ from: Date; to: Date }>(
+      (value) => {
+        const range = value as Partial<{ from: Date; to: Date }> | undefined;
+        return !!range?.from && !!range?.to;
+      },
+      { message: rangeError },
+    ),
+  });
 
   type FormValues = z.infer<typeof formSchema>;
 
@@ -56,7 +67,13 @@ export function NewPostForm() {
     defaultValues: { title: "", description: "" },
   });
 
-  // One picture per target: the whole post, or a day. Days are identified by their
+  // Days may only lie within the trip, so they are unlocked by choosing the range.
+  const range = useWatch({ control: form.control, name: "dateRange" });
+  const minDate = range?.from;
+  const maxDate = range?.to;
+  const hasRange = !!minDate && !!maxDate;
+
+  // Pictures belong to the whole post or to a day. Days are identified by their
   // uuid, so a picture follows its day when the days get re-sorted by date.
   const pictureTargets: PictureTarget[] = [
     { value: POST_TARGET, label: tPicture("wholePost") },
@@ -64,67 +81,76 @@ export function NewPostForm() {
       value: day.uuid,
       label: `${tCommon("day")} ${idx + 1}`,
     })),
-  ].map((target) => ({
-    ...target,
-    taken: pictures.some((p) => p.target === target.value),
-  }));
-
-  const addPicture = (values: PictureValues) =>
-    setPictures((prev) => [
-      ...prev.filter((p) => p.target !== values.target),
-      values,
-    ]);
-
-  const removePicture = (target: string) => {
-    pictures
-      .filter((p) => p.target === target)
-      .forEach((p) => URL.revokeObjectURL(p.previewUrl));
-    setPictures((prev) => prev.filter((p) => p.target !== target));
-  };
+  ];
 
   const handleRemoveDay = (idx: number) => {
-    removePicture(days[idx].uuid);
+    removePicturesOfTarget(days[idx].uuid);
     removeDay(idx);
   };
 
-  const uploadPictures = async (guid: string): Promise<boolean> => {
-    let allUploaded = true;
-    for (const picture of pictures) {
+  const toUploadJobs = (): UploadJob[] =>
+    pictures.map((picture) => ({
+      file: picture.file,
       // days are sent to the API in exactly this order, so the index matches the backend
-      const dayIndex =
+      dayIndex:
         picture.target === POST_TARGET
           ? undefined
-          : days.findIndex((d) => d.uuid === picture.target);
-      if (!(await PostService.uploadPicture(guid, picture.file, dayIndex)))
-        allUploaded = false;
-    }
-    return allUploaded;
-  };
+          : days.findIndex((d) => d.uuid === picture.target),
+    }));
 
   const handleSubmit = form.handleSubmit(async (values) => {
-    setLoading(true);
-    const response = await PostService.createPost({
+    const outsideRange = days.some(
+      (day) =>
+        parseDateOnlyString(day.date) < values.dateRange.from ||
+        parseDateOnlyString(day.date) > values.dateRange.to,
+    );
+    if (outsideRange) return toast.error(t("validation.daysOutsideRange"));
+
+    setPhase("creating");
+    const guid = await PostService.createPost({
       title: values.title,
       description: values.description,
-      startDate: values.startDate.toISOString().split("T")[0],
-      endDate: values.endDate.toISOString().split("T")[0],
+      startDate: toDateOnlyString(values.dateRange.from),
+      endDate: toDateOnlyString(values.dateRange.to),
       days: getDaysForApi(),
     });
-    if (response) {
-      if (await uploadPictures(response)) toast.success(t("success"));
-      else toast.error(t("pictureError"));
-      router.push(`/post/${response}`);
-    } else {
+    if (!guid) {
       toast.error(t("error"));
+      return setPhase("idle");
     }
-    setLoading(false);
+
+    const jobs = toUploadJobs();
+    setPhase("uploading");
+    const failed = jobs.length > 0 ? await upload(guid, jobs) : 0;
+
+    if (failed > 0) {
+      toast.error(t("pictureError"));
+      setCreatedGuid(guid);
+      return setPhase("failed");
+    }
+
+    toast.success(t("success"));
+    setPhase("done");
+    if (jobs.length > 0)
+      await new Promise((resolve) => setTimeout(resolve, DONE_DISPLAY_MS));
+    router.push(`/post/${guid}`);
   });
 
   return (
     <div className="w-full space-y-3">
+      <UploadProgressOverlay
+        phase={phase}
+        progress={progress}
+        onContinue={() => router.push(`/post/${createdGuid}`)}
+      />
       <Form {...form}>
         <form onSubmit={handleSubmit} className="w-full space-y-3">
-          <FormInput control={form.control} name="title" label={t("title")} required />
+          <FormInput
+            control={form.control}
+            name="title"
+            label={t("title")}
+            required
+          />
           <FormInput
             control={form.control}
             name="description"
@@ -132,23 +158,19 @@ export function NewPostForm() {
             type="markdown"
             required
           />
-          <div className="flex flex-col items-center md:flex-row md:justify-between gap-2">
-            <FormInput
-              control={form.control}
-              name="startDate"
-              label={t("startDate")}
-              type="date"
-              required
-            />
-            <FormInput
-              control={form.control}
-              name="endDate"
-              label={t("endDate")}
-              type="date"
-              required
-            />
-          </div>
-          <DayForm onSubmit={addDay} />
+          <FormInput
+            control={form.control}
+            name="dateRange"
+            label={t("dateRange")}
+            type="dateRange"
+            required
+          />
+          <DayForm
+            onSubmit={addDay}
+            minDate={minDate}
+            maxDate={maxDate}
+            disabled={!hasRange}
+          />
 
           {days.length > 0 && (
             <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
@@ -156,7 +178,7 @@ export function NewPostForm() {
                 <DayForm
                   key={day.uuid}
                   defaultValues={{
-                    date: new Date(day.date),
+                    date: parseDateOnlyString(day.date),
                     title: day.title,
                     description: day.description,
                   }}
@@ -165,52 +187,31 @@ export function NewPostForm() {
                     title: tDay("edit", { day: idx + 1 }),
                     description: tDay("editDescription"),
                   }}
+                  minDate={minDate}
+                  maxDate={maxDate}
                   removeBtn
                   onRemove={() => handleRemoveDay(idx)}
                 >
                   <PenBox className="h-4 w-4" /> {tCommon("day")} {idx + 1}{" "}
                   <span className="text-gray-500">
-                    {beautifyDate(day.date)}
+                    {beautifyDate(parseDateOnlyString(day.date))}
                   </span>
                 </DayForm>
               ))}
             </div>
           )}
 
-          <PictureForm targets={pictureTargets} onSubmit={addPicture} />
+          <PictureForm targets={pictureTargets} onSubmit={addPictures} />
+          <PictureList
+            pictures={pictures}
+            targets={pictureTargets}
+            onRemove={removePicture}
+          />
 
-          {pictures.length > 0 && (
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-              {pictures.map((picture) => (
-                <div
-                  key={picture.target}
-                  className="flex flex-col gap-2 rounded-md border p-2 shadow-xs"
-                >
-                  <img
-                    src={picture.previewUrl}
-                    alt="Preview"
-                    className="h-32 w-full rounded-md object-cover"
-                  />
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-sm text-gray-500">
-                      {pictureTargets.find((x) => x.value === picture.target)?.label}
-                    </span>
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => removePicture(picture.target)}
-                    >
-                      {tCommon("remove")}
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <Button type="submit" disabled={loading}>
-            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <Button type="submit" disabled={phase !== "idle"}>
+            {phase !== "idle" && (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            )}
             {tCommon("submit")}
           </Button>
         </form>

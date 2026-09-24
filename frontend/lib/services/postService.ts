@@ -82,13 +82,17 @@ const deletePost = (guid: string): Promise<boolean> =>
   succeeds(() => api.delete(`/Post/${guid}`), HttpStatusCode.NoContent);
 
 /**
- * Uploads the title picture of a post, or the picture of one of its days
- * when `dayIndex` is given.
+ * Uploads one picture to a post, or to one of its days when `dayIndex` is
+ * given. The picture is appended to the ones already stored.
+ *
+ * @param onProgress - Receives the fraction (0..1) of the request body sent so
+ * far. It reaches 1 before the server has finished processing the picture.
  */
 const uploadPicture = (
   guid: string,
   picture: File,
   dayIndex?: number,
+  onProgress?: (fraction: number) => void,
 ): Promise<boolean> => {
   const formData = new FormData();
   formData.append("Picture", picture);
@@ -100,6 +104,9 @@ const uploadPicture = (
     api.post(url, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
+      },
+      onUploadProgress: (event) => {
+        if (event.total) onProgress?.(event.loaded / event.total);
       },
     }),
   );

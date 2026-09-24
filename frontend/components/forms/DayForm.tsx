@@ -4,6 +4,7 @@ import { z } from "zod";
 import { Form } from "../ui/form";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,9 +15,13 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { FormInput } from "../low/FormInput";
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
 
-type DayFormValues = z.infer<ReturnType<typeof getDayFormSchema>>;
+type DayFormValues = {
+  title: string;
+  description: string;
+  date: Date;
+};
 
 interface DayFormProps {
   onSubmit: (values: DayFormValues) => void;
@@ -25,23 +30,44 @@ interface DayFormProps {
   headers?: { title: string; description: string };
   removeBtn?: boolean;
   onRemove?: () => void;
+  /** Earliest day the user may pick, usually the start of the trip. */
+  minDate?: Date;
+  /** Latest day the user may pick, usually the end of the trip. */
+  maxDate?: Date;
+  disabled?: boolean;
 }
 
-function getDayFormSchema(t: ReturnType<typeof useTranslations<"Forms.DayForm">>) {
+function getDayFormSchema(
+  t: ReturnType<typeof useTranslations<"Forms.DayForm">>,
+  minDate?: Date,
+  maxDate?: Date,
+) {
   return z.object({
     title: z.string().min(1, { message: t("validation.titleRequired") }),
-    description: z.string().min(1, { message: t("validation.descriptionRequired") }),
-    date: z.date(),
+    description: z
+      .string()
+      .min(1, { message: t("validation.descriptionRequired") }),
+    date: z
+      .date({ message: t("validation.dateRequired") })
+      .refine((date) => !minDate || date >= minDate, {
+        message: t("validation.dateOutsideRange"),
+      })
+      .refine((date) => !maxDate || date <= maxDate, {
+        message: t("validation.dateOutsideRange"),
+      }),
   });
 }
 
 export function DayForm({
   onSubmit,
-  defaultValues = { title: "", description: "" },
+  defaultValues,
   children,
   headers,
   removeBtn = false,
   onRemove,
+  minDate,
+  maxDate,
+  disabled = false,
 }: DayFormProps) {
   const t = useTranslations("Forms.DayForm");
   const tCommon = useTranslations("Common");
@@ -53,21 +79,27 @@ export function DayForm({
   };
 
   const finalHeaders = headers || defaultHeaders;
-  const daysFormSchema = getDayFormSchema(t);
+  const daysFormSchema = getDayFormSchema(t, minDate, maxDate);
+
+  const [open, setOpen] = useState(false);
+  // A form without initial values adds a new day and starts empty next time.
+  const isNewDay = defaultValues === undefined;
 
   const form = useForm<DayFormValues>({
     resolver: zodResolver(daysFormSchema),
-    defaultValues,
+    defaultValues: defaultValues ?? { title: "", description: "" },
   });
 
   const handleSubmit = form.handleSubmit((values) => {
     onSubmit(values);
+    if (isNewDay) form.reset();
+    setOpen(false);
   });
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-full">
+        <Button variant="outline" className="w-full" disabled={disabled}>
           {children || (
             <>
               <Plus className="h-4 w-4" /> {tCommon("day")}
@@ -106,6 +138,8 @@ export function DayForm({
               name="date"
               label={t("date")}
               type="date"
+              minDate={minDate}
+              maxDate={maxDate}
               required
             />
             <DialogFooter
