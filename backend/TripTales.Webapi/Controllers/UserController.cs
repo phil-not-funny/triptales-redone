@@ -1,54 +1,38 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Triptales.Repository;
-using Triptales.Application.Dtos;
-using Triptales.Webapi.Infrastructure;
-using Triptales.Application.Model;
-using Triptales.Webapi.Services;
 using Triptales.Application.Cmd;
+using Triptales.Application.Dtos;
+using Triptales.Repository;
+using Triptales.Webapi.Services;
 
 namespace Triptales.Webapi.Controllers
 {
-    [ApiController]
-    [Route("/api/[controller]")]
-    public class UserController : ControllerBase
+    [Route("api/[controller]")]
+    public class UserController : ApiControllerBase
     {
-        private readonly TripTalesContext _db;
         private readonly UserService _service;
         private readonly ModelConversions _modelConversions;
         private readonly UserRepository _repo;
+        private readonly JwtTokenService _tokenService;
 
-        public UserController(TripTalesContext db, UserService userService, UserRepository repo, ModelConversions modelConversions)
+        public UserController(UserService userService, UserRepository repo, ModelConversions modelConversions, JwtTokenService tokenService)
+            : base(userService)
         {
-            _db = db;
             _service = userService;
             _repo = repo;
             _modelConversions = modelConversions;
-        }
-
-        private async Task<User?> GetAuthenticatedOrDefault()
-        {
-            var authenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
-            if (!authenticated) return null;
-            var username = HttpContext.User.Identity?.Name;
-            if (username is null) return null;
-
-            return await _service.GetUserByUsername(username);
+            _tokenService = tokenService;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegisterCmd user)
         {
-            if (await _db.Users.AnyAsync(u => u.Username == user.Username))
+            if (await _repo.UsernameExists(user.Username))
                 return BadRequest("Username already exists");
-            if (await _db.Users.AnyAsync(u => u.Email == user.Email))
+            if (await _repo.EmailExists(user.Email))
                 return BadRequest("Email already exists");
 
             if (!_service.IsUserValid(user, out var userCreated, out var results))
@@ -57,38 +41,16 @@ namespace Triptales.Webapi.Controllers
             return await _repo.Insert(userCreated) ? Ok() : BadRequest("Register failed! Check for invaild credentials");
         }
 
-        [HttpGet("logout")]
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync();
-            return NoContent();
-        }
-
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginCmd credentials)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == credentials.Username);
+            var user = await _repo.FindByUsername(credentials.Username);
             if (user is null || !user.CheckPassword(credentials.Password)) return BadRequest("The given password and username combination does not exist.");
-            var claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Name, credentials.Username),
-                        //new Claim(ClaimTypes.Role, "admin")
-                    };
-            var claimsIdentity = new ClaimsIdentity(
-                claims,
-                Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme);
-
-            var authProperties = new AuthenticationProperties
+            return Ok(new
             {
-                AllowRefresh = true,
-                ExpiresUtc = DateTimeOffset.UtcNow.AddHours(3),
-            };
-
-            await HttpContext.SignInAsync(
-                Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity),
-                authProperties);
-            return Ok(_modelConversions.ToUserPrivateDto(user));
+                token = _tokenService.Generate(user),
+                user = _modelConversions.ToUserPrivateDto(user)
+            });
         }
 
         [Authorize]
@@ -107,14 +69,15 @@ namespace Triptales.Webapi.Controllers
         [HttpGet("{username}")]
         public async Task<IActionResult> GetByUsername(string username)
         {
-            var user = await _service.GetUserByUsername(username);
+            var user = await _service.GetUserByUsername(username, includePostDetails: true);
             var authenticated = await GetAuthenticatedOrDefault(); //to know when to enable follow button
             return user is not null ? Ok(
                 _modelConversions.ToUserDetailedDto(
-                    user, 
-                    authenticated is not null && 
+                    user,
+                    authenticated is not null &&
                     authenticated.Following.Any(
-                        f => f.Guid == user.Guid))
+                        f => f.Guid == user.Guid),
+                    authenticated?.Guid)
                 ) : NotFound();
         }
 
@@ -129,11 +92,7 @@ namespace Triptales.Webapi.Controllers
             if (requested is null)
                 return NotFound();
 
-            if (authenticated.Following.Any(r => r.Guid == guid))
-                authenticated.Following.Remove(requested);
-            else
-                authenticated.Following.Add(requested);
-            await _db.SaveChangesAsync();
+            await _repo.ToggleFollow(authenticated, requested);
             return Ok();
         }
 
@@ -158,12 +117,22 @@ namespace Triptales.Webapi.Controllers
         {
             var authenticated = await GetAuthenticatedOrDefault();
             if (authenticated is null) return Unauthorized();
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Guid == authenticated.Guid);
-            if (user is null) return NotFound();
 
             if (cmd.ProfilePicture is null && cmd.BannerImage is null) return BadRequest("No image provided");
 
-            return await _repo.UploadImage(user, cmd) ? Ok() : BadRequest("Upload failed! Please check if you uploaded the right pictures");
+            return await _repo.UploadImage(authenticated, cmd) ? Ok() : BadRequest("Upload failed! Please check if you uploaded the right pictures");
+        }
+
+        [Authorize]
+        [HttpPut("{guid:Guid}/verified")]
+        public async Task<IActionResult> SetVerified(Guid guid, [FromBody] UserVerifyCmd cmd)
+        {
+            // Role is read from the database rather than the token, so a demoted admin loses access immediately.
+            var authenticated = await GetAuthenticatedOrDefault();
+            if (authenticated is null) return Unauthorized();
+            if (!authenticated.IsAdmin) return Forbid();
+
+            return await _repo.SetVerified(guid, cmd.Verified) ? NoContent() : NotFound();
         }
     }
 }

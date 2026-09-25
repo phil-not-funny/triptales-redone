@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "cypress:open": "cypress open --e2e --browser electron",
     "cypress:run": "cypress run --e2e --browser electron",
     "test": "start-server-and-test dev http://localhost:3000 cypress:run"

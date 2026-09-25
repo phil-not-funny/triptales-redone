@@ -17,23 +17,28 @@ export interface UserSettingsProps {
 
 const SettingsPage: React.FC = () => {
   const { user: savedUser } = useUser();
-  const [user, setUser] = useState<UserDetailedResponse | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  // The loaded profile is stored with the username it belongs to, so a change
+  // of the logged-in user shows the loading state again without extra state.
+  const [loaded, setLoaded] = useState<{
+    username: string;
+    user: UserDetailedResponse | null;
+  } | null>(null);
   const t = useTranslations("Sorry");
 
-  const init = async () => {
-    if (!savedUser || !savedUser?.username) return;
-    setLoading(true);
-    const response = await UserService.getByUsername(savedUser?.username);
-    if (response) {
-      setUser(response);
-    }
-    setLoading(false);
-  };
+  const username = savedUser?.username;
+  const loading = !username || loaded?.username !== username;
+  const user = loaded?.user ?? null;
 
   useEffect(() => {
-    init();
-  }, [savedUser]);
+    if (!username) return;
+    let cancelled = false;
+    UserService.getByUsername(username).then((response) => {
+      if (!cancelled) setLoaded({ username, user: response });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [username]);
 
   return loading ? (
     <Loading />

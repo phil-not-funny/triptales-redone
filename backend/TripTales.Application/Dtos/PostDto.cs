@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Triptales.Application.Model;
 
@@ -16,5 +16,6 @@ namespace Triptales.Application.Dtos
                           bool UserLiked,
                           int CommentsCount,
                           List<PostCommentDto> Comments,
-                          bool UserCommented);
+                          bool UserCommented,
+                          List<string> Pictures);
 }

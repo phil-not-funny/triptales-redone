@@ -45,7 +45,7 @@ export default function AppSidebar() {
   const navItems: Item[] = [
     { title: t("home"), url: "/", icon: Home },
     { title: t("inbox"), url: "#", icon: Inbox },
-    { title: t("search"), url: "#", icon: Search },
+    { title: t("search"), url: "/search", icon: Search },
   ];
 
   const onlyLoggedIn: Item[] = [

@@ -1,3 +1,4 @@
+import { hasKeys } from "@/lib/utils";
 import { PostDay } from "./ModelTypes";
 
 export type LoginRequest = {
@@ -18,10 +19,13 @@ export type UserPrivateResponse = {
   displayName: string;
   email: string;
   profilePicture?: string;
+  role: UserRole;
 };
 
-export const isUserPrivateResponse = (u: any): u is UserPrivateResponse =>
-  "guid" in u && "username" in u && "displayName" in u && "email" in u;
+export type UserRole = "User" | "Admin";
+
+export const isUserPrivateResponse = (u: unknown): u is UserPrivateResponse =>
+  hasKeys(u, "guid", "username", "displayName", "email");
 
 export type UserPublicResponse = {
   guid: string;
@@ -40,12 +44,8 @@ export type UserPublicResponseSmall = {
   profilePicture?: string;
 };
 
-export const isUserPublicResponse = (u: any): u is UserPublicResponse =>
-  "guid" in u &&
-  "username" in u &&
-  "displayName" in u &&
-  "verified" in u &&
-  "following" in u &&
+export const isUserPublicResponse = (u: unknown): u is UserPublicResponse =>
+  hasKeys(u, "guid", "username", "displayName", "verified", "following") &&
   Array.isArray(u.following);
 
 export type UserDetailedResponse = {
@@ -64,19 +64,23 @@ export type UserDetailedResponse = {
   bannerImage?: string;
 };
 
-export const isUserDetailedResponse = (u: any): u is UserDetailedResponse =>
-  "guid" in u &&
-  "username" in u &&
-  "displayName" in u &&
-  "verified" in u &&
-  "biography" in u &&
-  "placeOfResidence" in u &&
-  "favoriteDestination" in u &&
-  "memberSince" in u &&
-  "followerCount" in u &&
+export const isUserDetailedResponse = (u: unknown): u is UserDetailedResponse =>
+  hasKeys(
+    u,
+    "guid",
+    "username",
+    "displayName",
+    "verified",
+    "biography",
+    "placeOfResidence",
+    "favoriteDestination",
+    "memberSince",
+    "followerCount",
+    "posts",
+    "userFollowing",
+  ) &&
   Array.isArray(u.posts) &&
-  u.posts.every(isPostResponseSmall) &&
-  "userFollowing" in u;
+  u.posts.every(isPostResponseSmall);
 
 export type UserPutFlavorRequest = {
   username?: string;
@@ -89,7 +93,7 @@ export type UserPutFlavorRequest = {
 export type UserUploadRequest = {
   ProfilePicture: File | null;
   BannerImage: File | null;
-}
+};
 
 // ANCHOR POST SECTION
 
@@ -107,6 +111,7 @@ export type PostResponse = {
   commentsCount: number;
   comments: PostCommentResponse[];
   userCommented: boolean;
+  pictures: string[];
 };
 
 export type PostResponseSmall = {
@@ -120,6 +125,7 @@ export type PostResponseSmall = {
   guid: string;
   userLiked: boolean;
   commentsCount: number;
+  picture?: string;
 };
 
 export type PostCommentResponse = {
@@ -133,46 +139,68 @@ export type PostCommentResponse = {
   comments: PostCommentResponse[];
 };
 
-export const isPostResponse = (p: any): p is PostResponse =>
-  "guid" in p &&
-  "title" in p &&
-  "description" in p &&
-  "author" in p &&
-  "createdAt" in p &&
-  "startDate" in p &&
-  "endDate" in p &&
-  "likesCount" in p &&
-  "days" in p &&
+export const isPostResponse = (p: unknown): p is PostResponse =>
+  hasKeys(
+    p,
+    "guid",
+    "title",
+    "description",
+    "author",
+    "createdAt",
+    "startDate",
+    "endDate",
+    "likesCount",
+    "days",
+    "pictures",
+    "userLiked",
+    "commentsCount",
+    "comments",
+    "userCommented",
+  ) &&
   Array.isArray(p.days) &&
-  "userLiked" in p &&
-  "commentsCount" in p &&
-  "comments" in p &&
+  Array.isArray(p.pictures) &&
   Array.isArray(p.comments) &&
-  p.comments.every(isPostCommentResponse) &&
-  "userCommented" in p;
+  p.comments.every(isPostCommentResponse);
 
-export const isPostResponseSmall = (p: any): p is PostResponse =>
-  "guid" in p &&
-  "title" in p &&
-  "description" in p &&
-  "author" in p &&
-  "createdAt" in p &&
-  "startDate" in p &&
-  "endDate" in p &&
-  "likesCount" in p &&
-  "userLiked" in p &&
-  "commentsCount" in p;
+export const isPostResponseSmall = (p: unknown): p is PostResponseSmall =>
+  hasKeys(
+    p,
+    "guid",
+    "title",
+    "description",
+    "author",
+    "createdAt",
+    "startDate",
+    "endDate",
+    "likesCount",
+    "userLiked",
+    "commentsCount",
+  );
 
-export const isPostCommentResponse = (p: any): p is PostCommentResponse =>
-  "author" in p &&
-  "content" in p &&
-  "createdAt" in p &&
-  "likesCount" in p &&
-  "commentsCount" in p &&
-  "comments" in p &&
+export const isPostCommentResponse = (p: unknown): p is PostCommentResponse =>
+  hasKeys(
+    p,
+    "author",
+    "content",
+    "createdAt",
+    "likesCount",
+    "commentsCount",
+    "comments",
+    "userLiked",
+  ) &&
   Array.isArray(p.comments) &&
-  p.comments.every(isPostCommentResponse) &&
-  "userLiked" in p;
+  p.comments.every(isPostCommentResponse);
+
+export type SearchResponse = {
+  users: UserPublicResponseSmall[];
+  posts: PostResponseSmall[];
+};
+
+export const isSearchResponse = (s: unknown): s is SearchResponse =>
+  hasKeys(s, "users", "posts") &&
+  Array.isArray(s.users) &&
+  Array.isArray(s.posts) &&
+  s.posts.every(isPostResponseSmall);
 
 export type CreatePostRequest = {
   title: string;
@@ -192,4 +220,4 @@ export type CommentPostRequest = {
   parent?: string;
   post?: string;
   content: string;
-}
+};

@@ -2,6 +2,7 @@ import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
 import { CreatePostRequestDay } from "@/types/RequestTypes";
+import { toDateOnlyString } from "@/lib/utils";
 
 type NCreatePostRequestDay = CreatePostRequestDay & {
   uuid: string;
@@ -31,7 +32,7 @@ export function useDays() {
       const newDay = {
         title,
         description,
-        date: date.toISOString().split("T")[0],
+        date: toDateOnlyString(date),
         uuid: uuidv4(),
       };
       const updatedDays = [...prev, newDay];
@@ -46,7 +47,7 @@ export function useDays() {
       newDays[index] = {
         title,
         description,
-        date: date.toISOString().split("T")[0],
+        date: toDateOnlyString(date),
         uuid: newDays[index].uuid,
       };
       return sortDaysByDate(newDays);
@@ -58,7 +59,8 @@ export function useDays() {
     toast.success("Day removed successfully!");
   };
 
-  const getDaysForApi = () => days.map(({ uuid, ...rest }) => rest);
+  const getDaysForApi = () =>
+    days.map(({ title, description, date }) => ({ title, description, date }));
 
   return { days, addDay, editDay, removeDay, getDaysForApi };
 }

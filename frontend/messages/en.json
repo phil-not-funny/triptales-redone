@@ -58,7 +58,9 @@
     "postReply": "Post Reply",
     "writeComment": "Write a comment...",
     "writeReply": "Write a reply...",
-    "pickDate": "Pick a Date"
+    "pickDate": "Pick a Date",
+    "pickDateRange": "Pick a date range",
+    "daysCount": "{count, plural, one {# day} other {# days}}"
   },
   "Forms": {
     "LoginForm": {
@@ -96,21 +98,40 @@
     "NewPostForm": {
       "title": "Title",
       "description": "Description / Content",
-      "startDate": "Start Date",
-      "endDate": "End Date",
       "validation": {
         "titleRequired": "A title is required",
         "descriptionRequired": "A description is required",
-        "endDateAfterStart": "The end date must be after the start date."
+        "dateRangeRequired": "Please pick a start and an end date.",
+        "daysOutsideRange": "At least one day lies outside of the travel period."
       },
       "success": "Post created successfully!",
       "error": "Failed to create post!",
+      "pictureError": "Post created, but some pictures could not be uploaded.",
       "day": {
         "add": "Add a new Day",
         "addDescription": "You're about to add a new in-detail day to your post.",
         "edit": "Edit Day {day}",
         "editDescription": "You're about to edit a day in your post."
+      },
+      "dateRange": "Travel period",
+      "upload": {
+        "creating": "Creating your post …",
+        "uploading": "Uploading picture {current} of {total} …",
+        "processing": "Processing picture {current} of {total} …",
+        "done": "Done! Your post is published.",
+        "failed": "{count, plural, one {# picture} other {# pictures}} could not be uploaded.",
+        "toPost": "Go to post"
       }
+    },
+    "PictureForm": {
+      "button": "Picture",
+      "add": "Add a Picture",
+      "addDescription": "Choose an image, crop it if you like, and pick where it belongs.",
+      "select": "Select Picture",
+      "original": "Original",
+      "crop": "Crop",
+      "belongsTo": "Belongs to",
+      "wholePost": "Whole Post"
     },
     "DayForm": {
       "title": "Title",
@@ -118,7 +139,9 @@
       "date": "Date",
       "validation": {
         "titleRequired": "A title is required",
-        "descriptionRequired": "A description is required"
+        "descriptionRequired": "A description is required",
+        "dateRequired": "Please pick a date.",
+        "dateOutsideRange": "The day must be within the travel period."
       }
     },
     "UserFlavorForm": {
@@ -140,7 +163,10 @@
     "timelineOfDays": "Timeline of Days",
     "postedOn": "Posted on",
     "start": "Start",
-    "end": "End"
+    "end": "End",
+    "enlargePicture": "Enlarge picture {index}",
+    "previousPicture": "Previous picture",
+    "nextPicture": "Next picture"
   },
   "PostControls": {
     "liked": "Liked",
@@ -172,7 +198,12 @@
     "followSuccess": "You are {status} following {displayName}",
     "followError": "Something went wrong. Please try again later.",
     "now": "now",
-    "noLonger": "no longer"
+    "noLonger": "no longer",
+    "verify": "Verify",
+    "unverify": "Remove Verification",
+    "verifySuccess": "{displayName} is now verified",
+    "unverifySuccess": "{displayName} is no longer verified",
+    "verifyError": "Failed to change the verified status. Please try again later."
   },
   "Settings": {
     "title": "Settings",
@@ -198,6 +229,13 @@
     "signUp": "Sign Up",
     "backHome": "Back to Home"
   },
+  "Search": {
+    "placeholder": "Search users or posts …",
+    "users": "Users",
+    "posts": "Posts",
+    "noResults": "No results for \"{term}\".",
+    "hint": "Enter a search term to find users and posts."
+  },
   "Pages": {
     "settings": "Settings",
     "newPost": "New Post",
@@ -215,6 +253,7 @@
     "on": "on"
   },
   "Toasts": {
-    "fetchPostsError": "Failed to Fetch Posts from Server!"
+    "fetchPostsError": "Failed to Fetch Posts from Server!",
+    "searchError": "Search failed!"
   }
 }

@@ -8,8 +8,20 @@ import {
   UserPutFlavorRequest,
   UserUploadRequest,
 } from "@/types/RequestTypes";
-import api from "../api";
+import api, { clearToken, setToken } from "../api";
 import axios, { HttpStatusCode } from "axios";
+import { fetchValidated, succeeds } from "./requestHelpers";
+
+type RegisterClientResponse = {
+  status: HttpStatusCode;
+  message: string;
+};
+
+type LoginClientResponse = {
+  status: HttpStatusCode;
+  message: string;
+  data?: UserPrivateResponse;
+};
 
 const toFormattedErrorMessage = (
   error: unknown,
@@ -51,118 +63,70 @@ const register = async (
   }
 };
 
-type RegisterClientResponse = {
-  status: HttpStatusCode;
-  message: string;
-};
-
 const login = async (data: LoginRequest): Promise<LoginClientResponse> => {
   try {
     const response = await api.post("/User/login", data);
+    const { token, user } = response.data ?? {};
     if (
       response.status === HttpStatusCode.Ok &&
-      isUserPrivateResponse(response.data)
-    )
+      typeof token === "string" &&
+      user &&
+      isUserPrivateResponse(user)
+    ) {
+      setToken(token);
       return {
         status: response.status,
         message: "Login successful!",
-        data: response.data,
+        data: user,
       };
-    else throw new Error("Invalid response structure");
+    } else throw new Error("Invalid response structure");
   } catch (error) {
     return toFormattedErrorMessage(error);
   }
 };
 
-type LoginClientResponse = {
-  status: HttpStatusCode;
-  message: string;
-  data?: UserPrivateResponse;
-};
-
-const me = async (): Promise<UserPrivateResponse | null> => {
-  try {
-    const response = await api.get("/User/me");
-    if (
-      response.status === HttpStatusCode.Ok &&
-      isUserPrivateResponse(response.data)
-    )
-      return response.data;
-    else throw new Error("Invalid response structure");
-  } catch {
-    return null;
-  }
-};
+const me = (): Promise<UserPrivateResponse | null> =>
+  fetchValidated(() => api.get("/User/me"), isUserPrivateResponse);
 
 const logout = async (): Promise<boolean> => {
-  try {
-    const response = await api.get("/User/logout");
-    return response.status === HttpStatusCode.NoContent;
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
+  clearToken();
+  return true;
 };
 
-const getByUsername = async (
+const getByUsername = (
   username: string,
-): Promise<UserDetailedResponse | null> => {
-  try {
-    
-    const response = await api.get(`/User/${username}`);
-    if (
-      response.status === HttpStatusCode.Ok &&
-      isUserDetailedResponse(response.data)
-    )
-      return response.data;
-    else throw new Error("Invalid response structure");
-  } catch {
-    return null;
-  }
-};
+): Promise<UserDetailedResponse | null> =>
+  fetchValidated(() => api.get(`/User/${username}`), isUserDetailedResponse);
 
-const follow = async (guid: string): Promise<boolean> => {
-  try {
-    const response = await api.post(`/User/follow/${guid}`);
-    if (response.status === HttpStatusCode.Ok) {
-      return true;
-    } else return false;
-  } catch {
-    return false;
-  }
-};
+const follow = (guid: string): Promise<boolean> =>
+  succeeds(() => api.post(`/User/follow/${guid}`));
 
-const putFlavor = async (data: UserPutFlavorRequest): Promise<boolean> => {
-  try {
-    const response = await api.put("/User", data);
-    if (response.status === HttpStatusCode.Ok) {
-      return true;
-    } else return false;
-  } catch {
-    return false;
-  }
-};
+const putFlavor = (data: UserPutFlavorRequest): Promise<boolean> =>
+  succeeds(() => api.put("/User", data));
 
-const userUpload = async (data: UserUploadRequest): Promise<boolean> => {
-  try {
-    const formData = new FormData();
-    if (data.ProfilePicture) {
-      formData.append("ProfilePicture", data.ProfilePicture);
-    }
-    if (data.BannerImage) {
-      formData.append("BannerImage", data.BannerImage);
-    }
-    const response = await api.post("/User/upload", formData, {
+const userUpload = (data: UserUploadRequest): Promise<boolean> => {
+  const formData = new FormData();
+  if (data.ProfilePicture) {
+    formData.append("ProfilePicture", data.ProfilePicture);
+  }
+  if (data.BannerImage) {
+    formData.append("BannerImage", data.BannerImage);
+  }
+  return succeeds(() =>
+    api.post("/User/upload", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
-    });
-    return response.status === HttpStatusCode.Ok;
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
+    }),
+  );
 };
+
+/** Admin only. */
+const setVerified = (guid: string, verified: boolean): Promise<boolean> =>
+  succeeds(
+    () => api.put(`/User/${guid}/verified`, { verified }),
+    HttpStatusCode.NoContent,
+  );
 
 const UserService = {
   register,
@@ -172,7 +136,8 @@ const UserService = {
   getByUsername,
   follow,
   putFlavor,
-  userUpload
+  userUpload,
+  setVerified,
 };
 
 export default UserService;

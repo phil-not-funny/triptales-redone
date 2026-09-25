@@ -15,18 +15,17 @@ const RandomPosts: React.FC = () => {
   const t = useTranslations("Home");
   const tToast = useTranslations("Toasts");
 
-  const init = async () => {
-    const response = await PostService.getRandom();
-
-    if (response.success) setPosts(response.data);
-    else {
-      toast.error(tToast("fetchPostsError"));
-    }
-    setLoading(false);
-  };
-
   useEffect(() => {
-    init();
+    let cancelled = false;
+    PostService.getRandom().then((response) => {
+      if (cancelled) return;
+      if (response.success) setPosts(response.data);
+      else toast.error(tToast("fetchPostsError"));
+      setLoading(false);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return loading ? (

@@ -1,55 +1,56 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Triptales.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Triptales.Application.Model;
-using Triptales.Webapi.Infrastructure;
-using Triptales.Application.Dtos;
-using Triptales.Application.Cmd;
-using Triptales.Webapi.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Triptales.Application.Cmd;
+using Triptales.Application.Dtos;
+using Triptales.Application.Model;
+using Triptales.Repository;
+using Triptales.Webapi.Controllers;
+using Triptales.Webapi.Services;
 
 namespace Triptales.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public partial class PostController : ControllerBase
+    public class PostController : ApiControllerBase
     {
-        private readonly TripTalesContext _db;
-        private readonly UserService _userService;
-        private readonly PostService _postService;
         private readonly ModelConversions _modelConversions;
         private readonly PostRepository _repository;
 
-        public PostController(TripTalesContext db, UserService userService, PostRepository repository, PostService postService, ModelConversions modelConversions)
+        public PostController(UserService userService, PostRepository repository, ModelConversions modelConversions)
+            : base(userService)
         {
-            _db = db;
-            _userService = userService;
             _repository = repository;
-            _postService = postService;
             _modelConversions = modelConversions;
         }
 
-        private async Task<User?> GetAuthenticatedOrDefault()
+        /// <summary>
+        /// Loads a post the authenticated user is allowed to edit.
+        /// </summary>
+        /// <returns>The post, or the error response to return when authentication, lookup or authorization fails.</returns>
+        private async Task<(Post? Post, IActionResult? Error)> GetEditablePost(Guid guid)
         {
-            var authenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
-            if (!authenticated) return null;
-            var username = HttpContext.User.Identity?.Name;
-            if (username is null) return null;
+            var authenticated = await GetAuthenticatedOrDefault();
+            if (authenticated is null) return (null, Unauthorized("User not authenticated"));
 
-            return await _userService.GetUserByUsername(username);
+            var post = await _repository.GetWithAuthor(guid);
+            if (post is null) return (null, NotFound("Post not found"));
+
+            if (!authenticated.CanModify(post.Author))
+                return (null, Unauthorized("You are not authorized to edit this post"));
+
+            return (post, null);
         }
 
         [HttpGet]
         public async Task<ActionResult<List<PostSmallDto>>> GetPosts()
         {
             var authenticated = await GetAuthenticatedOrDefault();
-            return Ok((await _repository.GetAll()).Select(a => _modelConversions.ToPostSmallDto(
-                a,
-                authenticated is not null && a.Likes.Any(u => u.Guid == authenticated.Guid))).ToList());
+            return Ok((await _repository.GetAll())
+                .Select(p => _modelConversions.ToPostSmallDto(p, p.IsLikedBy(authenticated?.Guid)))
+                .ToList());
         }
 
         [HttpGet("{guid:Guid}")]
@@ -61,9 +62,7 @@ namespace Triptales.Controllers
             {
                 return BadRequest("Post not found");
             }
-            return Ok(_modelConversions.ToPostDto(
-                post,
-                authenticated is not null && post.Likes.Any(u => u.Guid == authenticated.Guid)));
+            return Ok(_modelConversions.ToPostDto(post, post.IsLikedBy(authenticated?.Guid)));
         }
 
         [HttpPost]
@@ -81,27 +80,62 @@ namespace Triptales.Controllers
         public async Task<ActionResult> DeletePost(Guid guid)
         {
             var authenticated = await GetAuthenticatedOrDefault();
-            if (authenticated is null) 
+            if (authenticated is null)
                 return Unauthorized("User not authenticated");
 
             var requested = await _repository.GetFromGuid(guid);
             if (requested is null)
                 return NotFound("Post not found");
 
-            if (requested.Author.Guid != authenticated.Guid)
+            if (!authenticated.CanModify(requested.Author))
                 return Unauthorized("You are not authorized to delete this post");
 
             return await _repository.Delete(guid) ? NoContent() : BadRequest("Delete failed! Check if the right Guid is used");
         }
 
         [HttpPut("{guid:Guid}")]
-        public async Task<ActionResult> UpdatePost(Guid guid, [FromBody] UpdatePostCmd cmd)
+        [Authorize]
+        public async Task<IActionResult> UpdatePost(Guid guid, [FromBody] UpdatePostCmd cmd)
         {
-            var p = await _db.Posts.Include(a => a.Author).FirstOrDefaultAsync(p => p.Guid == guid);
-            if (p is null) return NotFound("Post not found");
-            var post = new Post(cmd.Title, cmd.Description, p.Author, DateOnly.Parse(cmd.StartDate), DateOnly.Parse(cmd.EndDate));
-            post.Guid = guid;
-            return await _repository.Update(post) ? NoContent() : BadRequest("Update failed! Check if the parameters are correct");
+            var (post, error) = await GetEditablePost(guid);
+            if (error is not null) return error;
+
+            if (!DateOnly.TryParse(cmd.StartDate, out var startDate) || !DateOnly.TryParse(cmd.EndDate, out var endDate))
+                return BadRequest("Update failed! Check if the parameters are correct");
+
+            post!.Title = cmd.Title;
+            post.Description = cmd.Description;
+            post.StartDate = startDate;
+            post.EndDate = endDate;
+
+            await _repository.SaveChanges();
+            return NoContent();
+        }
+
+        [Authorize]
+        [HttpPost("upload/{guid:Guid}")]
+        public async Task<IActionResult> UploadPicture(Guid guid, [FromForm] UploadPostPictureCmd cmd)
+        {
+            var (post, error) = await GetEditablePost(guid);
+            if (error is not null) return error;
+
+            if (cmd.Picture is null) return BadRequest("No image provided");
+
+            return await _repository.UploadImage(post!, cmd) ? Ok() : BadRequest("Upload failed! Please check if you uploaded the right picture");
+        }
+
+        [Authorize]
+        [HttpPost("upload/{guid:Guid}/day/{index:int}")]
+        public async Task<IActionResult> UploadDayPicture(Guid guid, int index, [FromForm] UploadPostPictureCmd cmd)
+        {
+            var (post, error) = await GetEditablePost(guid);
+            if (error is not null) return error;
+
+            if (index < 0 || index >= post!.Days.Count) return NotFound("Day not found");
+
+            if (cmd.Picture is null) return BadRequest("No image provided");
+
+            return await _repository.UploadDayImage(post, index, cmd) ? Ok() : BadRequest("Upload failed! Please check if you uploaded the right picture");
         }
 
         [HttpGet("random")]
@@ -110,18 +144,9 @@ namespace Triptales.Controllers
             if (size <= 0) return BadRequest("Size must be greater than 0");
 
             var authenticated = await GetAuthenticatedOrDefault();
-
-            Random rand = new Random();
-            var take = (await _db.Posts.Include(p => p.Author)
-                .Include(p => p.Likes)
-                .Include(p => p.Comments)
-                .ToListAsync()).OrderBy(p => rand.Next())
-                .Take(size)
-                .Select(p =>
-                    _modelConversions.ToPostSmallDto(
-                        p,
-                        authenticated is not null && p.Likes.Any(u => u.Guid == authenticated.Guid))).ToList();
-            return Ok(take);
+            return Ok((await _repository.GetRandom(size))
+                .Select(p => _modelConversions.ToPostSmallDto(p, p.IsLikedBy(authenticated?.Guid)))
+                .ToList());
         }
 
         [HttpPost("like/{guid:Guid}")]
@@ -136,11 +161,7 @@ namespace Triptales.Controllers
             if (requested is null)
                 return NotFound();
 
-            if (requested.Likes.Any(u => u.Guid == authenticated.Guid))
-                requested.Likes.Remove(authenticated);
-            else
-                requested.Likes.Add(authenticated);
-            await _db.SaveChangesAsync();
+            await _repository.ToggleLike(requested, authenticated);
             return Ok();
         }
     }

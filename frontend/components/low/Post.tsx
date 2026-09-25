@@ -1,4 +1,4 @@
-import { Calendar } from "lucide-react";
+import { Calendar, Verified } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -18,8 +18,9 @@ import {
 import Avatar from "./Avatar";
 import { PostControls } from "./PostControls";
 import { MarkdownOnly } from "./MarkdownImplementation";
+import { PictureGallery } from "./PictureGallery";
 //import { useTranslations } from 'next-intl/server';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
 
 interface EmbeddedPostProps {
   // props when embed is true
@@ -60,9 +61,14 @@ const Post: React.FC<PostProps> = ({ post, embed }) => {
             >
               {post.author.username}
             </Link>
+            {post.author.verified && (
+              <Verified className="text-primary-saturated h-4 w-4" />
+            )}
           </div>
           <span className="mx-2">•</span>
-          <span>{t("postedOn")} {formatDateString(post.createdAt)}</span>
+          <span>
+            {t("postedOn")} {formatDateString(post.createdAt)}
+          </span>
         </div>
         <div className="flex items-center space-x-4 rounded-lg bg-gray-50 p-3 text-sm text-gray-600">
           <Calendar className="h-4 w-4 text-gray-400" />
@@ -78,6 +84,13 @@ const Post: React.FC<PostProps> = ({ post, embed }) => {
         </div>
       </CardHeader>
       <CardContent data-color-mode="light" className="p-6">
+        <PictureGallery
+          pictures={
+            embed ? (post.picture ? [post.picture] : []) : post.pictures
+          }
+          alt={post.title}
+          className="mb-6"
+        />
         <MarkdownOnly source={post.description} />
         {!embed && post.days && post.days.length > 0 && (
           <div className="mt-6">
@@ -98,6 +111,11 @@ const Post: React.FC<PostProps> = ({ post, embed }) => {
                     </div>
                   </AccordionTrigger>
                   <AccordionContent>
+                    <PictureGallery
+                      pictures={day.pictures}
+                      alt={day.title}
+                      className="mb-3"
+                    />
                     <p className="text-gray-700">{day.description}</p>
                   </AccordionContent>
                 </AccordionItem>

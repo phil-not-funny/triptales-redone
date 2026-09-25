@@ -3,7 +3,7 @@
 import { AnimatePresence } from "framer-motion";
 import { MotionDiv } from "../Motion";
 import { usePathname } from "next/navigation";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useState } from "react";
 import { LayoutRouterContext } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 interface Props {
@@ -13,6 +13,9 @@ interface Props {
   deltaY?: number;
 }
 
+const isAuthPage = (path: string) =>
+  path.includes("signup") || path.includes("login");
+
 const CardPageTransistion: React.FC<Props> = ({
   children,
   className,
@@ -20,17 +23,26 @@ const CardPageTransistion: React.FC<Props> = ({
   deltaY = 500,
 }) => {
   const key = usePathname();
-  const [y, setY] = useState<number>(deltaY);
-  useEffect(() => {
-    if (key.includes("signup") || key.includes("login")) setY((y) => y * -1);
-  }, [key]);
+
+  // Every visit of the login or signup page mirrors the slide direction of the
+  // pages that follow it. `sign` is the direction a page enters with; it is
+  // adjusted while rendering, when the path changes.
+  const [current, setCurrent] = useState({ key, sign: 1 });
+  if (current.key !== key) {
+    setCurrent({
+      key,
+      sign: isAuthPage(current.key) ? -current.sign : current.sign,
+    });
+  }
+  const enterY = deltaY * current.sign;
+  const exitY = isAuthPage(current.key) ? enterY : -enterY;
 
   return (
     <AnimatePresence mode="popLayout">
       <MotionDiv
-        initial={{ y: y, opacity: 0 }}
+        initial={{ y: enterY, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        exit={{ y: y * -1, opacity: 0 }}
+        exit={{ y: exitY, opacity: 0 }}
         transition={{ ease: "easeOut", duration }}
         className={className}
         key={key}
@@ -42,7 +54,8 @@ const CardPageTransistion: React.FC<Props> = ({
 };
 function FrozenRouter(props: { children: React.ReactNode }) {
   const context = useContext(LayoutRouterContext ?? {});
-  const frozen = useRef(context).current;
+  // The context of the page being animated out must not follow the new route.
+  const [frozen] = useState(context);
 
   return (
     <LayoutRouterContext.Provider value={frozen}>

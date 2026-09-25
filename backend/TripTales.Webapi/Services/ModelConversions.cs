@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Triptales.Application.Dtos;
@@ -9,15 +9,13 @@ namespace Triptales.Webapi.Services
     public class ModelConversions
     {
         private readonly UserService _userService;
-        private readonly PostService _postService;
 
-        public ModelConversions(PostService postService, UserService userService)
+        public ModelConversions(UserService userService)
         {
-            _postService = postService;
             _userService = userService;
         }
 
-        public UserDetailedDto ToUserDetailedDto(User user, bool userFollowing = false) =>
+        public UserDetailedDto ToUserDetailedDto(User user, bool userFollowing = false, Guid? authenticatedGuid = null) =>
             new(
                 user.Guid,
                 user.Username,
@@ -30,7 +28,7 @@ namespace Triptales.Webapi.Services
                 _userService.GetFollowers(user.Guid).Count,
                 user.ProfilePicture,
                 user.BannerImage,
-                user.Posts.Count > 0 ? user.Posts.Select(p => ToPostSmallDto(p)).ToList() : [],
+                user.Posts.Count > 0 ? user.Posts.Select(p => ToPostSmallDto(p, p.IsLikedBy(authenticatedGuid))).ToList() : [],
                 userFollowing);
 
         public UserPublicSmallDto ToUserPublicSmallDto(User user) =>
@@ -41,7 +39,7 @@ namespace Triptales.Webapi.Services
             user.Following.Count > 0 ? user.Following.Select(ToUserPublicSmallDto).ToList() : []);
 
         public UserPrivateDto ToUserPrivateDto(User user) =>
-            new(user.Guid, user.Username, user.DisplayName, user.Email, user.ProfilePicture);
+            new(user.Guid, user.Username, user.DisplayName, user.Email, user.ProfilePicture, user.Role.ToString());
 
         public PostSmallDto ToPostSmallDto(Post a, bool userLiked = false) => new(
                 a.Guid,
@@ -53,7 +51,8 @@ namespace Triptales.Webapi.Services
                 a.CreatedAt.ToString(),
                 a.Likes.Count,
                 userLiked,
-                a.Comments.Count);
+                a.Comments.Count,
+                a.Pictures.FirstOrDefault());
 
         public PostDto ToPostDto(Post a, bool userLiked = false, bool userCommented = false) => new(
                 a.Guid,
@@ -68,7 +67,8 @@ namespace Triptales.Webapi.Services
                 userLiked,
                 a.Comments.Count,
                 a.Comments.Count > 0 ? a.Comments.Select(c => ToPostCommentDto(c, subComments: false)).ToList() : [],
-                userCommented);
+                userCommented,
+                a.Pictures.ToList());
 
         public PostCommentDto ToPostCommentDto(Comment c, bool userLiked = false, bool subComments = true) => new(
                 c.Guid,
@@ -80,6 +80,6 @@ namespace Triptales.Webapi.Services
                 c.Likes.Count,
                 userLiked);
 
-        public PostDayDto ToPostDayDto(Post.Day d) => new(d.Title, d.Description, d.Date.ToString());
+        public PostDayDto ToPostDayDto(Post.Day d) => new(d.Title, d.Description, d.Date.ToString(), d.Pictures.ToList());
     }
 }

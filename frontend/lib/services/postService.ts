@@ -8,11 +8,18 @@ import {
   PostResponse,
   PostResponseSmall,
 } from "@/types/RequestTypes";
+import { HttpStatusCode } from "axios";
 import api from "../api";
+import { fetchValidated, succeeds } from "./requestHelpers";
 
 type GetRandomPostsClientResponse = {
   success: boolean;
   data: PostResponseSmall[];
+};
+
+type GetPostClientResponse = {
+  success: boolean;
+  data: PostResponse | null;
 };
 
 const getRandom = async (
@@ -46,89 +53,64 @@ const createPost = async (data: CreatePostRequest): Promise<string | null> => {
   }
 };
 
-type GetPostClientResponse = {
-  success: boolean;
-  data: PostResponse | null;
-};
-
 const getPost = async (guid: string): Promise<GetPostClientResponse> => {
-  try {
-    const response = await api.get<PostResponse>(`/Post/${guid}`);
-    console.log(response.data);
-
-    if (response.status === 200 && isPostResponse(response.data))
-      return { success: true, data: response.data };
-    else throw new Error("Invalid response structure");
-  } catch {
-    return { success: false, data: null };
-  }
+  const post = await fetchValidated(
+    () => api.get(`/Post/${guid}`),
+    isPostResponse,
+  );
+  return { success: post !== null, data: post };
 };
 
-const likePost = async (guid: string): Promise<boolean> => {
-  try {
-    const response = await api.post(`/Post/like/${guid}`);
-    if (response.status === 200) return true;
-    else return false;
-  } catch {
-    return false;
-  }
-};
+const likePost = (guid: string): Promise<boolean> =>
+  succeeds(() => api.post(`/Post/like/${guid}`));
 
-const commentPost = async (
+const commentPost = (
   data: CommentPostRequest,
-): Promise<PostCommentResponse | null> => {
-  try {
-    const response = await api.post(`/Comment`, data);
-    if (response.status === 200 && isPostCommentResponse(response.data))
-      return response.data;
-    else throw new Error("Invalid response structure");
-  } catch {
-    return null;
-  }
-};
+): Promise<PostCommentResponse | null> =>
+  fetchValidated(() => api.post(`/Comment`, data), isPostCommentResponse);
 
-const deleteComment = async (guid: string): Promise<boolean> => {
-  try {
-    const response = await api.delete(`/Comment/${guid}`);
-    if (response.status === 204) return true;
-    else return false;
-  } catch {
-    return false;
-  }
-};
+const deleteComment = (guid: string): Promise<boolean> =>
+  succeeds(() => api.delete(`/Comment/${guid}`), HttpStatusCode.NoContent);
 
-const likeComment = async (guid: string): Promise<boolean> => {
-  try {
-    const response = await api.post(`/Comment/like/${guid}`);
-    if (response.status === 200) return true;
-    else return false;
-  } catch {
-    return false;
-  }
-};
+const likeComment = (guid: string): Promise<boolean> =>
+  succeeds(() => api.post(`/Comment/like/${guid}`));
 
-const getComment = async (
+const getComment = (guid: string): Promise<PostCommentResponse | null> =>
+  fetchValidated(() => api.get(`/Comment/${guid}`), isPostCommentResponse);
+
+const deletePost = (guid: string): Promise<boolean> =>
+  succeeds(() => api.delete(`/Post/${guid}`), HttpStatusCode.NoContent);
+
+/**
+ * Uploads one picture to a post, or to one of its days when `dayIndex` is
+ * given. The picture is appended to the ones already stored.
+ *
+ * @param onProgress - Receives the fraction (0..1) of the request body sent so
+ * far. It reaches 1 before the server has finished processing the picture.
+ */
+const uploadPicture = (
   guid: string,
-): Promise<PostCommentResponse | null> => {
-  try {
-    const response = await api.get<PostCommentResponse>(`/Comment/${guid}`);
-    if (response.status === 200 && isPostCommentResponse(response.data))
-      return response.data;
-    else throw new Error("Invalid response structure");
-  } catch {
-    return null;
-  }
+  picture: File,
+  dayIndex?: number,
+  onProgress?: (fraction: number) => void,
+): Promise<boolean> => {
+  const formData = new FormData();
+  formData.append("Picture", picture);
+  const url =
+    dayIndex === undefined
+      ? `/Post/upload/${guid}`
+      : `/Post/upload/${guid}/day/${dayIndex}`;
+  return succeeds(() =>
+    api.post(url, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      onUploadProgress: (event) => {
+        if (event.total) onProgress?.(event.loaded / event.total);
+      },
+    }),
+  );
 };
-
-const deletePost = async (guid: string): Promise<boolean> => {
-  try {
-    const response = await api.delete(`/Post/${guid}`);
-    if (response.status === 204) return true;
-    else return false;
-  } catch {
-    return false;
-  }
-}
 
 const PostService = {
   getRandom,
@@ -139,7 +121,8 @@ const PostService = {
   commentPost,
   deleteComment,
   likeComment,
-  getComment
+  getComment,
+  uploadPicture,
 };
 
 export default PostService;

@@ -92,9 +92,10 @@ namespace Triptales.Webapi.Infrastructure
                                 f.Address.County());
             }).Generate(5).ToList();
 
-            var admin = new User("admin", "admin@triptales.at", "admin", "Administrator", "This is THE REAL Administrator Account.", "Spendergasse", "Vienna")
+            var admin = new User("admin", "admin@triptales.at", "admin", "Administrator", "This is THE REAL Administrator Account.", "Spengergasse", "Vienna")
             {
-                Verified = true
+                Verified = true,
+                Role = UserRole.Admin
             };
             Users.Add(admin);
             Users.AddRange(users);

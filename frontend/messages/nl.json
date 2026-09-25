@@ -58,7 +58,9 @@
     "postReply": "Reactie plaatsen",
     "writeComment": "Schrijf een reactie...",
     "writeReply": "Schrijf een antwoord...",
-    "pickDate": "Kies een datum"
+    "pickDate": "Kies een datum",
+    "pickDateRange": "Kies een periode",
+    "daysCount": "{count, plural, one {# dag} other {# dagen}}"
   },
   "Forms": {
     "LoginForm": {
@@ -96,21 +98,40 @@
     "NewPostForm": {
       "title": "Titel",
       "description": "Beschrijving / Inhoud",
-      "startDate": "Startdatum",
-      "endDate": "Einddatum",
       "validation": {
         "titleRequired": "Een titel is verplicht",
         "descriptionRequired": "Een beschrijving is verplicht",
-        "endDateAfterStart": "De einddatum moet na de startdatum liggen."
+        "dateRangeRequired": "Kies een start- en einddatum.",
+        "daysOutsideRange": "Minstens één dag ligt buiten de reisperiode."
       },
       "success": "Bericht succesvol aangemaakt!",
       "error": "Bericht kon niet worden aangemaakt!",
+      "pictureError": "Bericht aangemaakt, maar sommige afbeeldingen konden niet worden geüpload.",
       "day": {
         "add": "Een nieuwe dag toevoegen",
         "addDescription": "U staat op het punt een nieuwe gedetailleerde dag aan uw bericht toe te voegen.",
         "edit": "Dag {day} bewerken",
         "editDescription": "U staat op het punt een dag in uw bericht te bewerken."
+      },
+      "dateRange": "Reisperiode",
+      "upload": {
+        "creating": "Bericht wordt aangemaakt …",
+        "uploading": "Foto {current} van {total} wordt geüpload …",
+        "processing": "Foto {current} van {total} wordt verwerkt …",
+        "done": "Klaar! Je bericht is gepubliceerd.",
+        "failed": "{count, plural, one {# foto kon} other {# foto's konden}} niet worden geüpload.",
+        "toPost": "Naar bericht"
       }
+    },
+    "PictureForm": {
+      "button": "Afbeelding",
+      "add": "Een afbeelding toevoegen",
+      "addDescription": "Kies een afbeelding, snijd deze bij als u wilt en kies waar deze bij hoort.",
+      "select": "Afbeelding selecteren",
+      "original": "Origineel",
+      "crop": "Bijsnijden",
+      "belongsTo": "Hoort bij",
+      "wholePost": "Hele bericht"
     },
     "DayForm": {
       "title": "Titel",
@@ -118,7 +139,9 @@
       "date": "Datum",
       "validation": {
         "titleRequired": "Een titel is verplicht",
-        "descriptionRequired": "Een beschrijving is verplicht"
+        "descriptionRequired": "Een beschrijving is verplicht",
+        "dateRequired": "Kies een datum.",
+        "dateOutsideRange": "De dag moet binnen de reisperiode liggen."
       }
     },
     "UserFlavorForm": {
@@ -140,7 +163,10 @@
     "timelineOfDays": "Tijdlijn van dagen",
     "postedOn": "Geplaatst op",
     "start": "Start",
-    "end": "Einde"
+    "end": "Einde",
+    "enlargePicture": "Foto {index} vergroten",
+    "previousPicture": "Vorige foto",
+    "nextPicture": "Volgende foto"
   },
   "PostControls": {
     "liked": "Vind ik leuk",
@@ -172,7 +198,12 @@
     "followSuccess": "U volgt {displayName} {status}",
     "followError": "Er is iets misgegaan. Probeer het later opnieuw.",
     "now": "nu",
-    "noLonger": "niet meer"
+    "noLonger": "niet meer",
+    "verify": "Verifiëren",
+    "unverify": "Verificatie verwijderen",
+    "verifySuccess": "{displayName} is nu geverifieerd",
+    "unverifySuccess": "{displayName} is niet meer geverifieerd",
+    "verifyError": "Verificatiestatus kon niet worden gewijzigd. Probeer het later opnieuw."
   },
   "Settings": {
     "title": "Instellingen",
@@ -198,6 +229,13 @@
     "signUp": "Registreren",
     "backHome": "Terug naar home"
   },
+  "Search": {
+    "placeholder": "Zoek gebruikers of berichten …",
+    "users": "Gebruikers",
+    "posts": "Berichten",
+    "noResults": "Geen resultaten voor \"{term}\".",
+    "hint": "Voer een zoekterm in om gebruikers en berichten te vinden."
+  },
   "Pages": {
     "settings": "Instellingen",
     "newPost": "Nieuw bericht",
@@ -215,6 +253,7 @@
     "on": "op"
   },
   "Toasts": {
-    "fetchPostsError": "Berichten konden niet van de server worden opgehaald!"
+    "fetchPostsError": "Berichten konden niet van de server worden opgehaald!",
+    "searchError": "Zoeken mislukt!"
   }
 }

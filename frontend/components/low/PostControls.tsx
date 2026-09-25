@@ -20,7 +20,6 @@ import {
 } from "../ui/dialog";
 import { DialogClose } from "@radix-ui/react-dialog";
 import useUser from "@/hooks/useUser";
-import { UserPrivateResponse } from "@/types/RequestTypes";
 import { useTranslations } from 'next-intl';
 
 export const PostControls: React.FC<PostProps> = ({ post, embed }) => {
@@ -30,7 +29,7 @@ export const PostControls: React.FC<PostProps> = ({ post, embed }) => {
   const t = useTranslations("PostControls");
   const tCommon = useTranslations("Common");
 
-  const { loggedIn, user } = useUser();
+  const { loggedIn, user, isAdmin } = useUser();
 
   const handleViewMore = () => {
     router.push(`/post/${post.guid}`);
@@ -67,8 +66,8 @@ export const PostControls: React.FC<PostProps> = ({ post, embed }) => {
             {post.commentsCount} {post.commentsCount !== 1 ? tCommon("comments") : tCommon("comment")}
           </span>
         </div>
-        {post.author.guid === user?.guid ? (
-          <PostSettings post={post} user={user!} />
+        {post.author.guid === user?.guid || isAdmin ? (
+          <PostSettings post={post} />
         ) : null}
       </div>
       {embed ? (
@@ -86,8 +85,7 @@ export const PostControls: React.FC<PostProps> = ({ post, embed }) => {
 
 export const PostSettings: React.FC<{
   post: PostProps["post"];
-  user: UserPrivateResponse;
-}> = ({ post, user }) => {
+}> = ({ post }) => {
   const router = useRouter();
   const t = useTranslations("PostControls");
   const tCommon = useTranslations("Common");
@@ -96,7 +94,7 @@ export const PostSettings: React.FC<{
     const response = await PostService.deletePost(post.guid);
     if (response) {
       toast.success(t("deleteSuccess"));
-      router.push("/user/" + user?.username);
+      router.push("/user/" + post.author.username);
     } else {
       toast.error(t("deleteError"));
     }

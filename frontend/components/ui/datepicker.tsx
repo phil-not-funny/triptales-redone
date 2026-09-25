@@ -16,52 +16,56 @@ import {
 type DatePickerProps = React.PropsWithChildren & {
   value?: Date;
   onChange?: (date: Date | undefined) => void;
-  initialDate?: Date;
+  /** Earliest selectable day. */
+  minDate?: Date;
+  /** Latest selectable day. */
+  maxDate?: Date;
 };
 
+/**
+ * Single-day picker in a popover. Days outside `minDate`..`maxDate` are
+ * disabled, and the calendar opens on the selected day or the earliest
+ * selectable one.
+ */
 export function DatePicker({
   children,
-  initialDate,
   value,
   onChange,
+  minDate,
+  maxDate,
 }: DatePickerProps) {
-  const [date, setDate] = React.useState<Date | undefined>(
-    value || initialDate || undefined,
-  );
+  const [open, setOpen] = React.useState(false);
 
-  // Sync local state with form value
-  React.useEffect(() => {
-    setDate(value || undefined);
-  }, [value]);
-
-  // Handle date selection and propagate to form
   const handleSelect = (selectedDate: Date | undefined) => {
-    setDate(selectedDate);
-    if (onChange) {
-      onChange(selectedDate);
-    }
+    onChange?.(selectedDate);
+    if (selectedDate) setOpen(false);
   };
 
   return (
-    <Popover modal>
+    <Popover modal open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant={"outline"}
           className={cn(
             "w-[280px] justify-start text-left font-normal",
-            !date && "text-muted-foreground",
+            !value && "text-muted-foreground",
           )}
         >
           <CalendarIcon />
-          {date ? format(date, "PPP") : <span>{children}</span>}
+          {value ? format(value, "PPP") : <span>{children}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
         <Calendar
           mode="single"
-          selected={date}
+          selected={value}
           onSelect={handleSelect}
-          initialFocus
+          defaultMonth={value ?? minDate}
+          disabled={[
+            ...(minDate ? [{ before: minDate }] : []),
+            ...(maxDate ? [{ after: maxDate }] : []),
+          ]}
+          autoFocus
         />
       </PopoverContent>
     </Popover>
