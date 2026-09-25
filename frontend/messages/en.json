@@ -229,6 +229,13 @@
     "signUp": "Sign Up",
     "backHome": "Back to Home"
   },
+  "Search": {
+    "placeholder": "Search users or posts …",
+    "users": "Users",
+    "posts": "Posts",
+    "noResults": "No results for \"{term}\".",
+    "hint": "Enter a search term to find users and posts."
+  },
   "Pages": {
     "settings": "Settings",
     "newPost": "New Post",
@@ -246,6 +253,7 @@
     "on": "on"
   },
   "Toasts": {
-    "fetchPostsError": "Failed to Fetch Posts from Server!"
+    "fetchPostsError": "Failed to Fetch Posts from Server!",
+    "searchError": "Search failed!"
   }
 }

@@ -47,6 +47,22 @@ namespace Triptales.Repository
         public async Task<List<Post>> GetAll() =>
             await _db.Posts.Include(p => p.Author).Include(p => p.Likes).Include(p => p.Comments).ToListAsync();
 
+        /// <summary>
+        /// Finds posts whose title, description or author's username contains <paramref name="term"/> (case-insensitive), newest first.
+        /// </summary>
+        public async Task<List<Post>> Search(string term, int limit)
+        {
+            var lowered = term.ToLower();
+            return await _db.Posts
+                .Include(p => p.Author).Include(p => p.Likes).Include(p => p.Comments)
+                .Where(p => p.Title.ToLower().Contains(lowered)
+                    || p.Description.ToLower().Contains(lowered)
+                    || p.Author.Username.ToLower().Contains(lowered))
+                .OrderByDescending(p => p.CreatedAt)
+                .Take(limit)
+                .ToListAsync();
+        }
+
         public async Task<Post?> GetFromGuid(Guid guid) =>
             await _db.Posts
             .Include(p => p.Author)

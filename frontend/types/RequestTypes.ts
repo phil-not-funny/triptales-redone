@@ -191,6 +191,17 @@ export const isPostCommentResponse = (p: unknown): p is PostCommentResponse =>
   Array.isArray(p.comments) &&
   p.comments.every(isPostCommentResponse);
 
+export type SearchResponse = {
+  users: UserPublicResponseSmall[];
+  posts: PostResponseSmall[];
+};
+
+export const isSearchResponse = (s: unknown): s is SearchResponse =>
+  hasKeys(s, "users", "posts") &&
+  Array.isArray(s.users) &&
+  Array.isArray(s.posts) &&
+  s.posts.every(isPostResponseSmall);
+
 export type CreatePostRequest = {
   title: string;
   description: string;

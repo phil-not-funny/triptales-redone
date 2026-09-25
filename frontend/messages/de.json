@@ -229,6 +229,13 @@
     "signUp": "Registrieren",
     "backHome": "Zur Startseite"
   },
+  "Search": {
+    "placeholder": "Nach Benutzern oder Beiträgen suchen …",
+    "users": "Benutzer",
+    "posts": "Beiträge",
+    "noResults": "Keine Treffer für „{term}“.",
+    "hint": "Gib einen Suchbegriff ein, um Benutzer und Beiträge zu finden."
+  },
   "Pages": {
     "settings": "Einstellungen",
     "newPost": "Neuer Beitrag",
@@ -246,6 +253,7 @@
     "on": "auf"
   },
   "Toasts": {
-    "fetchPostsError": "Beiträge konnten nicht vom Server abgerufen werden!"
+    "fetchPostsError": "Beiträge konnten nicht vom Server abgerufen werden!",
+    "searchError": "Suche fehlgeschlagen!"
   }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Triptales.Webapi.Infrastructure;
@@ -34,6 +35,19 @@ namespace Triptales.Repository
 
         public async Task<User?> FindByUsername(string username) =>
             await _db.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+        /// <summary>
+        /// Finds users whose username or display name contains <paramref name="term"/> (case-insensitive).
+        /// </summary>
+        public async Task<List<User>> Search(string term, int limit)
+        {
+            var lowered = term.ToLower();
+            return await _db.Users
+                .Where(u => u.Username.ToLower().Contains(lowered) || u.DisplayName.ToLower().Contains(lowered))
+                .OrderBy(u => u.Username)
+                .Take(limit)
+                .ToListAsync();
+        }
 
         public Task<bool> UsernameExists(string username) => _db.Users.AnyAsync(u => u.Username == username);
 

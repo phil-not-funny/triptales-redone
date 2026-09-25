@@ -229,6 +229,13 @@
     "signUp": "Registreren",
     "backHome": "Terug naar home"
   },
+  "Search": {
+    "placeholder": "Zoek gebruikers of berichten …",
+    "users": "Gebruikers",
+    "posts": "Berichten",
+    "noResults": "Geen resultaten voor \"{term}\".",
+    "hint": "Voer een zoekterm in om gebruikers en berichten te vinden."
+  },
   "Pages": {
     "settings": "Instellingen",
     "newPost": "Nieuw bericht",
@@ -246,6 +253,7 @@
     "on": "op"
   },
   "Toasts": {
-    "fetchPostsError": "Berichten konden niet van de server worden opgehaald!"
+    "fetchPostsError": "Berichten konden niet van de server worden opgehaald!",
+    "searchError": "Zoeken mislukt!"
   }
 }
