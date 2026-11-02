@@ -85,7 +85,7 @@
       "createAccount": "Create new Account",
       "validation": {
         "usernameMinLength": "Username must be at least 4 characters long.",
-        "passwordMinLength": "Password must be 8 characters long.",
+        "passwordMinLength": "Password must be at least 8 characters long.",
         "passwordFormat": "Password must contain at least one lower- and uppercase letter, number and special character.",
         "confirmPasswordRequired": "Please confirm your password.",
         "passwordsDoNotMatch": "The passwords do not match",
