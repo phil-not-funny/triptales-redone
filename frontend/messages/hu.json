@@ -1,0 +1,259 @@
+{
+  "Sidebar": {
+    "home": "Otthon",
+    "authentication": "Hitelesités",
+    "navigation": "Navigáció",
+    "inbox": "Értesitések",
+    "search": "Keresés",
+    "login": "Bejelentkezés",
+    "signup": "Regisztrácio",
+    "settings": "Beállitások",
+    "newPost": "Új bejegyzés",
+    "logout": "Kijelentkezés",
+    "userOptions": "Felhasználói beállitások",
+    "language": "Nyelv"
+  },
+  "Home": {
+    "title": "Fedezz fel",
+    "subheading": "Fedezz fel történeket a világ minden sarkábol.",
+    "RandomPosts": {
+      "error": "Nem tudtuk lekérni a bejegyzéseket a szerverünkről."
+    }
+  },
+  "Sorry": {
+    "error": "Probálja kesőbb újra, vagy vegye fel a kapcsolatot ügyfélszolgálatunkal.",
+    "postNotFound": "A bejegyzés, amit keresett, nem létezik.",
+    "userNotFound": "Nem tudtuk megtalálni a megadott felhasználót",
+    "pageNotFound": "A keresett oldal nem létezik",
+    "pleaseLogin": "Jelentkezzen be a folytatáshoz"
+  },
+  "Common": {
+    "submit": "Közzététel",
+    "cancel": "Mégse",
+    "back": "Vissza",
+    "delete": "Törlés",
+    "remove": "Eltávolítás",
+    "add": "Hozzáadás",
+    "edit": "Szerkesztés",
+    "save": "Mentés",
+    "finish": "Befejezés",
+    "viewMore": "Többet látni",
+    "toHomepage": "Főoldalra",
+    "postedOn": "Közzétéve",
+    "start": "Kezdet",
+    "end": "Vége",
+    "day": "Nap",
+    "likes": "Kedvelések",
+    "like": "Kedvelés",
+    "comments": "Hozzászolások",
+    "comment": "Hozzászolás",
+    "followers": "Követők",
+    "following": "Követed",
+    "unfollow": "Követés abbahagyása",
+    "follow": "Követni",
+    "message": "Üzenet",
+    "reply": "Válasz",
+    "noCommentsYet": "Még nincsenek hozzászólások",
+    "postComment": "Hozzászólni",
+    "postReply": "Válaszolni",
+    "writeComment": "Hozzászólást írni...",
+    "writeReply": "Választ írni...",
+    "pickDate": "Válasszon egy dátumot",
+    "pickDateRange": "Válasszon dátumtartományt",
+    "daysCount": "{count, plural, one {# Nap} other {# Nap}}"
+  },
+  "Forms": {
+    "LoginForm": {
+      "title": "Bejelentkezés",
+      "description": "Bejelentkezés egy meglévő TripTales-fiókba",
+      "username": "Felhasználónév",
+      "password": "Jelszó",
+      "validation": {
+        "usernameRequired": "Felhasználónév kötelező.",
+        "passwordRequired": "Jelszó megadása kötelező",
+        "usernameFormat": "A felhasználónév kizárólag kisbetűket, számokat, pontokat és aláhúzójeleket tartalmazhat."
+      }
+    },
+    "RegisterForm": {
+      "title": "Új fiók létrehozása",
+      "description": "Regisztrálj egy Új TripTales-fiókot",
+      "username": "Felhasználónév",
+      "password": "Jelszó",
+      "confirmPassword": "Jelszó megerősítése",
+      "email": "E-mail",
+      "displayName": "Megjelenítési név",
+      "createAccount": "Új fiók létrehozása",
+      "validation": {
+        "usernameMinLength": "A felhasználónévnek legalább 4 karakterből kell állnia.",
+        "passwordMinLength": "A jelszón legalább 8 karakterből kell állnia.",
+        "passwordFormat": "A jelszónak tartalmaznia kell legalább egy kis- és nagybetűt, egy számot és egy speciális karaktert.",
+        "confirmPasswordRequired": "Kérjük, erősitse meg a jelszavát.",
+        "passwordsDoNotMatch": "A jelszók nem egyeznek.",
+        "emailInvalid": "Kérjük, adjon meg egy érvényes e-mail-címet",
+        "displayNameRequired": "Kerjük, adjon meg egy megjelenítési nevet.",
+        "usernameFormat": "A felhasználónév kizárolag kisbetűket, számokat, pontokat és aláhúzójeleket tartalmazhat."
+      },
+      "success": "A fiók létrehozása sikeresen megtörtént"
+    },
+    "NewPostForm": {
+      "title": "Cím",
+      "description": "Leírás / Tartalom",
+      "validation": {
+        "titleRequired": "Cím megadása kötelező",
+        "descriptionRequired": "Leírás megadása kötelező",
+        "dateRangeRequired": "Kérjük, válasszon egy kezdő- és záró dátumot.",
+        "daysOutsideRange": "Legalább egy nap kívül esik az utazási időszakon."
+      },
+      "success": "A bejegyzés sikeresen létre lett hozva",
+      "error": "A bejegyzés létrehozása nem sikerült!",
+      "pictureError": "A bejegyzés létrejött, de néhány képet nem sikerült feltölteni.",
+      "day": {
+        "add": "Új nap hozzáadása",
+        "addDescription": "Hozzáadsz egy új, részletes napot a bejegyzésedhez",
+        "edit": "{day} Nap szerkesztése",
+        "editDescription": "Egy napot fogsz szerkeszteni a bejegyzésedben"
+      },
+      "dateRange": "Utazási időszak",
+      "upload": {
+        "creating": "A bejegyzésed létrehozása...",
+        "uploading": "{current} kép feltöltése {total} közül…",
+        "processing": "{current} kép feldolgozása {total} közül…",
+        "done": "Kész! A bejegyzésed megjelent.",
+        "failed": "{count, plural, one {# kép} other {# több kép}} feltöltése nem sikerült",
+        "toPost": "A bejegyzéshez"
+      }
+    },
+    "PictureForm": {
+      "button": "Kép",
+      "add": "Kép hozzáadása",
+      "addDescription": "Válasszon egy képet, ha szeretné, vágja meg, majd válassza ki, hova illeszkedik.",
+      "select": "Kép kiválasztása",
+      "original": "Eredeti",
+      "crop": "Kivágás",
+      "belongsTo": "Tartozás",
+      "wholePost": "Teljes bejegyzés"
+    },
+    "DayForm": {
+      "title": "Cím",
+      "description": "Leírás",
+      "date": "Dátum",
+      "validation": {
+        "titleRequired": "Cím kötelező",
+        "descriptionRequired": "Leírás kötelező",
+        "dateRequired": "Válasszon egy dátumot",
+        "dateOutsideRange": "A napnak az utazási időszakon belül kell lennie."
+      }
+    },
+    "UserFlavorForm": {
+      "username": "Felhasználónév",
+      "displayName": "Megjelenítési név",
+      "placeOfResidence": "Lakóhely",
+      "favoriteDestination": "Kedvenc úti cél",
+      "biography": "Bemutatkozás",
+      "validation": {
+        "usernameRequired": "Felhasználónév kötelező.",
+        "displayNameRequired": "Megjelenítési név kötelező.",
+        "usernameFormat": "A felhasználónév kizárolag kisbetűket, számokat, pontokat és aláhúzójeleket tartalmazhat."
+      },
+      "success": "A felhasználo adatai sikeresen frissültek.",
+      "error": "A felhasználo frissítése sikertelen volt."
+    }
+  },
+  "Post": {
+    "timelineOfDays": "Napok idővonala",
+    "postedOn": "Közzététel dátuma",
+    "start": "Kezdés",
+    "end": "Vége",
+    "enlargePicture": "Kép nagyitása {index}",
+    "previousPicture": "Előző kép",
+    "nextPicture": "Következő kép"
+  },
+  "PostControls": {
+    "liked": "kedvelted",
+    "unliked": "visszavontad a kedvelést",
+    "likeSuccess": "Sikeresen {action}",
+    "likeError": "Kedvelés sikertelen. Kérjük, probálja meg később újra.",
+    "quickSettings": "Gyorsbeállítások",
+    "deletePost": "A bejegyzés törlése",
+    "deleteConfirmTitle": "Teljesen biztos benne?",
+    "deleteConfirmDescription": "Ezt az akciót nem lehet visszavonni. Ezzel a bejegyzés véglegesen törlődik, és az ahhoz tartozó adatok is eltávolitásra kerülnek a serverünkről.",
+    "permanentlyDelete": "Véglegesen törölni",
+    "deleteSuccess": "A bejegyzés sikeresen törölve",
+    "deleteError": "A bejegyzés törlése nem sikerült. Kerjük, próbálja meg később újra."
+  },
+  "Comment": {
+    "likeError": "Nem sikerült kedvelni a hozzászólást. Kerjük, próbálja meg később újra.",
+    "loadRepliesError": "A válaszok betöltése nem sikerült. Kerjük, próbálja meg később újra",
+    "postSuccess": "Sikeresen válaszolt!",
+    "postError": "Nem sikerült válaszolni. Kerjük, próbálja meg később",
+    "deleteSuccess": "Sikeresen törölte a hozzászólást!",
+    "deleteError": "Nem sikerült a hozzászólást törölni. Kerjük, próbálja meg később újra."
+  },
+  "UserProfile": {
+    "about": "Rólam",
+    "noBiography": "{displayName}  még nem töltött fel életrajzot",
+    "joined": "Csatlakozott",
+    "placeOfResidence": "Lakóhely",
+    "favoriteDestination": "Kedvenc úti cél",
+    "followSuccess": "{status} követed: {displayName}",
+    "followError": "Hiba történt. Kérjük, próbálja meg később újra",
+    "now": "Mostantol",
+    "noLonger": "Továbbá nem",
+    "verify": "Hitelesítés",
+    "unverify": "Hitelesítés törlése",
+    "verifySuccess": "{displayName} most hitelesített",
+    "unverifySuccess": "{displayName} már nem hitelesített",
+    "verifyError": "A hitelesítés állapot módosítása nem sikerült. Kerjül, próbálja meg később újra."
+  },
+  "Settings": {
+    "title": "Beállítások",
+    "customization": "Személyre szabás",
+    "imagesCustomization": "Képek testreszabása",
+    "selectProfilePicture": "Profilkép választása",
+    "selectBannerImage": "Banner kép választása",
+    "cropProfilePicture": "Profilkép kivágása",
+    "cropBannerImage": "Banner kép kivágása",
+    "uploadImages": "Képek feltöltése",
+    "previewNote": "Ez egy előnézet. Kattints a \"Képek feltöltése\" gombra a módosítások mentéséhez",
+    "selectImageFirst": "Először válasszon ki egy képet.",
+    "uploadSuccess": "Képek feltöltve!",
+    "uploadError": "A feltöltés nem sikerült.",
+    "cropError": "A kép kivágása nem sikerült. Kerjük, próbálja meg újra.",
+    "imageFormatError": "Töltsön fel egy érvényes képet (JPEG, PNG, GIF)",
+    "imageSizeError": "A képnek kisebb kell lennie 25MB-nál"
+  },
+  "Landing": {
+    "welcomeBack": "Üdvözlünk újra!",
+    "chooseOption": "Válasszon, hogy be szeretne jelentkezni, vagy regisztrálni szeretne",
+    "logIn": "Bejelentkezés",
+    "signUp": "Regisztrácio",
+    "backHome": "Vissza a főoldalra"
+  },
+  "Search": {
+    "placeholder": "Felhasználók vagy bejegyzések keresése ...",
+    "users": "Felhasználók",
+    "posts": "Bejegyzések",
+    "noResults": "Nincs találat a következőre: \"{term}\"",
+    "hint": "Írjon egy keresési kifejezést a felhasználók és bejegyzések kereséséhez"
+  },
+  "Pages": {
+    "settings": "Beállitások",
+    "newPost": "Új bejegyzés",
+    "posts": "Bejegyzések"
+  },
+  "Footer": {
+    "about": "Rólam",
+    "privacy": "Adatvédelem",
+    "terms": "Általános Szerződési Feltételek",
+    "contact": "Kapcsolat",
+    "copyright": "© 2025 TripTales. Minden jog fenntartva.",
+    "madeWith": "A TripTales csapat",
+    "byTeam": "készítette",
+    "homepagePictureBy": "A honlap képét készítette:",
+    "on": "on"
+  },
+  "Toasts": {
+    "fetchPostsError": "Nem sikerült letölteni a bejegyzéseket a serverről!",
+    "searchError": "Keresés sikertelen!"
+  }
+}
