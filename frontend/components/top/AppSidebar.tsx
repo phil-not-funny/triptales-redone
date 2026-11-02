@@ -29,13 +29,19 @@ import UserService from "@/lib/services/userService";
 import Avatar from "../low/Avatar";
 import LanguageSwitcher from "../low/LanguageSwitcher";
 
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
+
+type Category = {
+  title: string;
+  items: Item[];
+};
 
 type Item = {
   title: string;
   url: string;
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   onClick?: () => Promise<void>;
+  disabled?: boolean;
 };
 
 export default function AppSidebar() {
@@ -44,7 +50,7 @@ export default function AppSidebar() {
 
   const navItems: Item[] = [
     { title: t("home"), url: "/", icon: Home },
-    { title: t("inbox"), url: "#", icon: Inbox },
+    { title: t("inbox"), url: "#", icon: Inbox, disabled: true },
     { title: t("search"), url: "/search", icon: Search },
   ];
 
@@ -69,6 +75,21 @@ export default function AppSidebar() {
     },
   ];
 
+  const categories: Category[] = [
+    {
+      title: t("navigation"),
+      items: navItems,
+    },
+    {
+      title: t("userOptions"),
+      items: onlyLoggedIn,
+    },
+    {
+      title: t("authentication"),
+      items: loggedIn ? unAuthItems : authItems,
+    },
+  ];
+
   return (
     <Sidebar className="border-r border-gray-100 bg-gray-50 text-gray-700">
       <SidebarHeader className="flex items-center justify-between border-b border-gray-100 px-4 py-6">
@@ -78,7 +99,7 @@ export default function AppSidebar() {
             width={200}
             height={200}
             alt="TripTales Logo"
-            className="h-[40px] w-[40px] transition-transform duration-300 hover:scale-105"
+            className="h-10 w-10 transition-transform duration-300 hover:scale-105"
           />
           <h1 className="text-xl font-semibold tracking-wide text-gray-800 md:text-2xl">
             TripTales
@@ -87,41 +108,19 @@ export default function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent className="py-6">
-        <SidebarGroup>
-          <SidebarGroupLabel className="px-4 text-sm font-medium text-gray-500">
-            {t("navigation")}
-          </SidebarGroupLabel>
-          <SidebarContent>
-            <SidebarMenu>
-              {navItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    variant={"outline"}
-                    className="w-full justify-start text-gray-600 transition-colors duration-200 hover:bg-gray-100"
-                    asChild
-                  >
-                    <Link href={item.url}>
-                      <item.icon className="mr-3 h-5 w-5" />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarContent>
-        </SidebarGroup>
-        {loggedIn && (
-          <SidebarGroup>
+        {categories.map((category) => (
+          <SidebarGroup key={category.title}>
             <SidebarGroupLabel className="px-4 text-sm font-medium text-gray-500">
-              {t("userOptions")}
+              {category.title}
             </SidebarGroupLabel>
             <SidebarContent>
               <SidebarMenu>
-                {onlyLoggedIn.map((item) => (
+                {category.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       variant={"outline"}
                       className="w-full justify-start text-gray-600 transition-colors duration-200 hover:bg-gray-100"
+                      disabled={item.disabled}
                       asChild
                     >
                       <Link href={item.url}>
@@ -134,41 +133,13 @@ export default function AppSidebar() {
               </SidebarMenu>
             </SidebarContent>
           </SidebarGroup>
-        )}
-
-        <SidebarGroup>
-          <SidebarGroupLabel className="px-4 text-sm font-medium text-gray-500">
-            {t("authentication")}
-          </SidebarGroupLabel>
-          <SidebarContent>
-            <SidebarMenu>
-              {(loggedIn ? unAuthItems : authItems).map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    variant={"outline"}
-                    className="w-full justify-start text-gray-600 transition-colors duration-200 hover:bg-gray-100"
-                    asChild
-                    onClick={item.onClick}
-                  >
-                    <Link href={item.url}>
-                      <item.icon className="mr-3 h-5 w-5" />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarContent>
-        </SidebarGroup>
-
+        ))}
         <SidebarGroup>
           <SidebarGroupLabel className="px-4 text-sm font-medium text-gray-500">
             {t("language")}
           </SidebarGroupLabel>
           <SidebarContent>
-            <div className="px-4">
-              <LanguageSwitcher />
-            </div>
+            <LanguageSwitcher asSideBarItem />
           </SidebarContent>
         </SidebarGroup>
       </SidebarContent>

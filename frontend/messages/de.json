@@ -190,7 +190,7 @@
     "deleteError": "Kommentar konnte nicht gelöscht werden. Bitte versuchen Sie es später erneut."
   },
   "UserProfile": {
-    "about": "Über",
+    "about": "Biografie",
     "noBiography": "{displayName} hat noch keine Biografie angegeben.",
     "joined": "Beigetreten",
     "placeOfResidence": "Wohnort",

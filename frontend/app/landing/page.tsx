@@ -1,4 +1,4 @@
-import { AnimatedButton } from "@/components/ui/button";
+import { AnimatedButton, Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { getTranslations } from 'next-intl/server';
+import { getTranslations } from "next-intl/server";
 
 export default async function Landing() {
   const t = await getTranslations("Landing");
@@ -16,8 +16,10 @@ export default async function Landing() {
   return (
     <div className="relative z-20 flex h-full w-full items-center justify-center">
       <div className="absolute top-5 left-5">
-        <Link href={'/'}>
-          <AnimatedButton variant={"outline"}><ArrowLeft /> {t("backHome")}</AnimatedButton>
+        <Link href={"/"}>
+          <Button variant={"outline"}>
+            <ArrowLeft /> {t("backHome")}
+          </Button>
         </Link>
       </div>
 
@@ -30,12 +32,12 @@ export default async function Landing() {
             {t("chooseOption")}
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex items-center flex-col justify-center gap-3">
+        <CardContent className="flex flex-col items-center justify-center gap-3">
           <Link href={"/landing/login"}>
-            <AnimatedButton variant={"default"}>{t("logIn")}</AnimatedButton>
+            <Button variant={"default"}>{t("logIn")}</Button>
           </Link>
           <Link href={"/landing/signup"}>
-            <AnimatedButton variant={"outline"}>{t("signUp")}</AnimatedButton>
+            <Button variant={"outline"}>{t("signUp")}</Button>
           </Link>
         </CardContent>
       </Card>

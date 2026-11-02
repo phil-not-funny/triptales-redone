@@ -237,6 +237,7 @@ export function PictureForm({ targets, onSubmit }: PictureFormProps) {
                   key={x.value}
                   type="button"
                   size="sm"
+                  disabled={targets.length === 1}
                   variant={target === x.value ? "default" : "outline"}
                   onClick={() => setTarget(x.value)}
                 >
