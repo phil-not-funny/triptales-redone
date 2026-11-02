@@ -1,0 +1,259 @@
+{
+  "Sidebar": {
+    "home": "Otthon",
+    "authentication": "Hitelesités",
+    "navigation": "Navigáció",
+    "inbox": "Értesitések",
+    "search": "Keresés",
+    "login": "Bejelentkezés",
+    "signup": "Regisztrácio",
+    "settings": "Beállitások",
+    "newPost": "Új bejegyzés",
+    "logout": "Kijelentkezés",
+    "userOptions": "Felhasználói beállitások",
+    "language": "Nyelv"
+  },
+  "Home": {
+    "title": "Fedezz fel",
+    "subheading": "Fedezz fel történeket a világ minden sarkábol.",
+    "RandomPosts": {
+      "error": "Nem tudtuk lekérni a bejegyzéseket a szerverünkről."
+    }
+  },
+  "Sorry": {
+    "error": "Probálja kesőbb újra, vagy vegye fel a kapcsolatot ügyfélszolgálatunkal.",
+    "postNotFound": "A bejegyzés, amit keresett, nem létezik.",
+    "userNotFound": "Nem tudtuk megtalálni a megadott felhasználót",
+    "pageNotFound": "A keresett oldal nem létezik",
+    "pleaseLogin": "Jelentkezzen be a folytatáshoz"
+  },
+  "Common": {
+    "submit": "Közzététel",
+    "cancel": "Mégse",
+    "back": "Vissza",
+    "delete": "Törlés",
+    "remove": "Eltávolítás",
+    "add": "Hozzáadás",
+    "edit": "Szerkesztés",
+    "save": "Mentés",
+    "finish": "Befejezés",
+    "viewMore": "Többet látni",
+    "toHomepage": "Főoldalra",
+    "postedOn": "Közzétéve",
+    "start": "Kezdet",
+    "end": "Vége",
+    "day": "Nap",
+    "likes": "Kedvelések",
+    "like": "Kedvelés",
+    "comments": "Hozzászolások",
+    "comment": "Hozzászolás",
+    "followers": "Követők",
+    "following": "Követed",
+    "unfollow": "Követés abbahagyása",
+    "follow": "Követni",
+    "message": "Üzenet",
+    "reply": "Válasz",
+    "noCommentsYet": "Még nincsenek hozzászólások",
+    "postComment": "Hozzászólni",
+    "postReply": "Válaszolni",
+    "writeComment": "Hozzászólást írni...",
+    "writeReply": "Választ írni...",
+    "pickDate": "Válasszon egy dátumot",
+    "pickDateRange": "Válasszon dátumtartományt",
+    "daysCount": "{count, plural, one {# Nap} other {# Nap}}"
+  },
+  "Forms": {
+    "LoginForm": {
+      "title": "Bejelentkezés",
+      "description": "Bejelentkezés egy meglévő TripTales-fiókba",
+      "username": "Felhasználónév",
+      "password": "Jelszó",
+      "validation": {
+        "usernameRequired": "Felhasználónév kötelező.",
+        "passwordRequired": "Jelszó megadása kötelező",
+        "usernameFormat": "A felhasználónév kizárólag kisbetűket, számokat, pontokat és aláhúzójeleket tartalmazhat."
+      }
+    },
+    "RegisterForm": {
+      "title": "Új fiók létrehozása",
+      "description": "Regisztrálj egy Új TripTales-fiókot",
+      "username": "Felhasználónév",
+      "password": "Jelszó",
+      "confirmPassword": "Jelszó megerősítése",
+      "email": "E-mail",
+      "displayName": "Megjelenítési név",
+      "createAccount": "Új fiók létrehozása",
+      "validation": {
+        "usernameMinLength": "A felhasználónévnek legalább 4 karakterből kell állnia.",
+        "passwordMinLength": "A jelszón legalább 8 karakterből kell állnia.",
+        "passwordFormat": "A jelszónak tartalmaznia kell legalább egy kis- és nagybetűt, egy számot és egy speciális karaktert.",
+        "confirmPasswordRequired": "Kérjük, erősitse meg a jelszavát.",
+        "passwordsDoNotMatch": "A jelszók nem egyeznek.",
+        "emailInvalid": "Kérjük, adjon meg egy érvényes e-mail-címet",
+        "displayNameRequired": "Kerjük, adjon meg egy megjelenítési nevet.",
+        "usernameFormat": "A felhasználónév kizárolag kisbetűket, számokat, pontokat és aláhúzójeleket tartalmazhat."
+      },
+      "success": "A fiók létrehozása sikeresen megtörtént"
+    },
+    "NewPostForm": {
+      "title": "Cím",
+      "description": "Leírás / Tartalom",
+      "validation": {
+        "titleRequired": "Cím megadása kötelező",
+        "descriptionRequired": "Leírás megadása kötelező",
+        "dateRangeRequired": "Kérjük, válasszon egy kezdő- és záró dátumot.",
+        "daysOutsideRange": "Legalább egy nap kívül esik az utazási időszakon."
+      },
+      "success": "A bejegyzés sikeresen létre lett hozva",
+      "error": "A bejegyzés létrehozása nem sikerült!",
+      "pictureError": "A bejegyzés létrejött, de néhány képet nem sikerült feltölteni.",
+      "day": {
+        "add": "Új nap hozzáadása",
+        "addDescription": "Hozzáadsz egy új, részletes napot a bejegyzésedhez",
+        "edit": "{day} Nap szerkesztése",
+        "editDescription": "Egy napot fogsz szerkeszteni a bejegyzésedben"
+      },
+      "dateRange": "Utazási időszak",
+      "upload": {
+        "creating": "A bejegyzésed létrehozása...",
+        "uploading": "{current} kép feltöltése {total} közül…",
+        "processing": "{current} kép feldolgozása {total} közül…",
+        "done": "Kész! A bejegyzésed megjelent.",
+        "failed": "{count, plural, one {# kép} other {# több kép}} feltöltése nem sikerült",
+        "toPost": "A bejegyzéshez"
+      }
+    },
+    "PictureForm": {
+      "button": "Kép",
+      "add": "Kép hozzáadása",
+      "addDescription": "Válasszon egy képet, ha szeretné, vágja meg, majd válassza ki, hova illeszkedik.",
+      "select": "Kép kiválasztása",
+      "original": "Eredeti",
+      "crop": "Vágás",
+      "belongsTo": "Tartozás",
+      "wholePost": "Teljes bejegyzés"
+    },
+    "DayForm": {
+      "title": "Cím",
+      "description": "Leírás",
+      "date": "Dátum",
+      "validation": {
+        "titleRequired": "Cím kötelező",
+        "descriptionRequired": "Leírás kötelező",
+        "dateRequired": "Válasszon egy dátumot",
+        "dateOutsideRange": "A napnak az utazási időszakon belül kell lennie."
+      }
+    },
+    "UserFlavorForm": {
+      "username": "Felhasználónév",
+      "displayName": "Megjelenítési név",
+      "placeOfResidence": "Lakóhely",
+      "favoriteDestination": "Kedvenc úti cél",
+      "biography": "Bemutatkozás",
+      "validation": {
+        "usernameRequired": "Felhasználónév kötelező.",
+        "displayNameRequired": "Megjelenítési név kötelező.",
+        "usernameFormat": "A felhasználónév kizárolag kisbetűket, számokat, pontokat és aláhúzójeleket tartalmazhat."
+      },
+      "success": "A felhasználo adatai sikeresen frissültek.",
+      "error": "A felhasználo frissítése sikertelen volt."
+    }
+  },
+  "Post": {
+    "timelineOfDays": "Napok idővonala",
+    "postedOn": "Közzététel dátuma",
+    "start": "Kezdés",
+    "end": "Vége",
+    "enlargePicture": "Kép nagyitása {index}",
+    "previousPicture": "Előző kép",
+    "nextPicture": "Következő kép"
+  },
+  "PostControls": {
+    "liked": "Liked",
+    "unliked": "Unliked",
+    "likeSuccess": "{action} the post successfully!",
+    "likeError": "Failed to like the post. Please try again later.",
+    "quickSettings": "Quick Settings",
+    "deletePost": "Delete this Post",
+    "deleteConfirmTitle": "Are you absolutely sure?",
+    "deleteConfirmDescription": "This action cannot be undone. This will permanently delete this post and remove its data from our servers.",
+    "permanentlyDelete": "Permanently Delete",
+    "deleteSuccess": "Post deleted successfully!",
+    "deleteError": "Failed to delete the post. Please try again later."
+  },
+  "Comment": {
+    "likeError": "Failed to like the comment. Please try again later.",
+    "loadRepliesError": "Failed to load replies. Please try again later.",
+    "postSuccess": "Reply posted successfully!",
+    "postError": "Failed to post reply. Please try again later.",
+    "deleteSuccess": "Comment deleted successfully!",
+    "deleteError": "Failed to delete comment. Please try again later."
+  },
+  "UserProfile": {
+    "about": "About",
+    "noBiography": "{displayName} has not provided a biography yet.",
+    "joined": "Joined",
+    "placeOfResidence": "Place of Residence",
+    "favoriteDestination": "Favorite Destination",
+    "followSuccess": "You are {status} following {displayName}",
+    "followError": "Something went wrong. Please try again later.",
+    "now": "now",
+    "noLonger": "no longer",
+    "verify": "Verify",
+    "unverify": "Remove Verification",
+    "verifySuccess": "{displayName} is now verified",
+    "unverifySuccess": "{displayName} is no longer verified",
+    "verifyError": "Failed to change the verified status. Please try again later."
+  },
+  "Settings": {
+    "title": "Settings",
+    "customization": "Customization",
+    "imagesCustomization": "Images Customization",
+    "selectProfilePicture": "Select ProfilePicture",
+    "selectBannerImage": "Select BannerImage",
+    "cropProfilePicture": "Crop ProfilePicture",
+    "cropBannerImage": "Crop BannerImage",
+    "uploadImages": "Upload Images",
+    "previewNote": "This is a preview. Click \"Upload Images\" to save these changes.",
+    "selectImageFirst": "Select an image first.",
+    "uploadSuccess": "Images uploaded!",
+    "uploadError": "Upload failed.",
+    "cropError": "Failed to crop image. Please try again.",
+    "imageFormatError": "Upload a valid image (JPEG, PNG, GIF)",
+    "imageSizeError": "Image must be < 25MB"
+  },
+  "Landing": {
+    "welcomeBack": "Welcome back",
+    "chooseOption": "Choose whether to log in or register",
+    "logIn": "Log In",
+    "signUp": "Sign Up",
+    "backHome": "Back to Home"
+  },
+  "Search": {
+    "placeholder": "Search users or posts …",
+    "users": "Users",
+    "posts": "Posts",
+    "noResults": "No results for \"{term}\".",
+    "hint": "Enter a search term to find users and posts."
+  },
+  "Pages": {
+    "settings": "Settings",
+    "newPost": "New Post",
+    "posts": "Posts"
+  },
+  "Footer": {
+    "about": "About",
+    "privacy": "Privacy",
+    "terms": "Terms and Conditions",
+    "contact": "Contact",
+    "copyright": "© 2025 TripTales. All rights reserved.",
+    "madeWith": "Made with",
+    "byTeam": "by the TripTales Team",
+    "homepagePictureBy": "Homepage Picture by",
+    "on": "on"
+  },
+  "Toasts": {
+    "fetchPostsError": "Failed to Fetch Posts from Server!",
+    "searchError": "Search failed!"
+  }
+}
