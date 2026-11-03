@@ -14,7 +14,7 @@
     "language": "Nyelv"
   },
   "Home": {
-    "title": "Fedezz fel",
+    "title": "Felfedezés",
     "subheading": "Fedezz fel történeket a világ minden sarkábol.",
     "RandomPosts": {
       "error": "Nem tudtuk lekérni a bejegyzéseket a szerverünkről."
@@ -28,7 +28,7 @@
     "pleaseLogin": "Jelentkezzen be a folytatáshoz"
   },
   "Common": {
-    "submit": "Közzététel",
+    "submit": "Megerősités",
     "cancel": "Mégse",
     "back": "Vissza",
     "delete": "Törlés",
@@ -47,7 +47,7 @@
     "like": "Kedvelés",
     "comments": "Hozzászolások",
     "comment": "Hozzászolás",
-    "followers": "Követők",
+    "followers": "Követő",
     "following": "Követed",
     "unfollow": "Követés abbahagyása",
     "follow": "Követni",
@@ -176,7 +176,7 @@
     "quickSettings": "Gyorsbeállítások",
     "deletePost": "A bejegyzés törlése",
     "deleteConfirmTitle": "Teljesen biztos benne?",
-    "deleteConfirmDescription": "Ezt az akciót nem lehet visszavonni. Ezzel a bejegyzés véglegesen törlődik, és az ahhoz tartozó adatok is eltávolitásra kerülnek a serverünkről.",
+    "deleteConfirmDescription": "Ezt az akciót nem lehet visszavonni. Ezzel a bejegyzés véglegesen törlődik, és az ahhoz tartozó adatok is eltávolitásra kerülnek a szerverünkről.",
     "permanentlyDelete": "Véglegesen törölni",
     "deleteSuccess": "A bejegyzés sikeresen törölve",
     "deleteError": "A bejegyzés törlése nem sikerült. Kerjük, próbálja meg később újra."
@@ -186,7 +186,7 @@
     "loadRepliesError": "A válaszok betöltése nem sikerült. Kerjük, próbálja meg később újra",
     "postSuccess": "Sikeresen válaszolt!",
     "postError": "Nem sikerült válaszolni. Kerjük, próbálja meg később",
-    "deleteSuccess": "Sikeresen törölte a hozzászólást!",
+    "deleteSuccess": "Sikeresen törölte a választ!",
     "deleteError": "Nem sikerült a hozzászólást törölni. Kerjük, próbálja meg később újra."
   },
   "UserProfile": {
@@ -242,7 +242,7 @@
     "posts": "Bejegyzések"
   },
   "Footer": {
-    "about": "Rólam",
+    "about": "Rólunk",
     "privacy": "Adatvédelem",
     "terms": "Általános Szerződési Feltételek",
     "contact": "Kapcsolat",
@@ -253,7 +253,7 @@
     "on": "on"
   },
   "Toasts": {
-    "fetchPostsError": "Nem sikerült letölteni a bejegyzéseket a serverről!",
+    "fetchPostsError": "Nem sikerült letölteni a bejegyzéseket a szerverünkről!",
     "searchError": "Keresés sikertelen!"
   }
 }
