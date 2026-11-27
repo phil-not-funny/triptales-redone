@@ -216,6 +216,11 @@ export type CreatePostRequestDay = {
   date: string;
 };
 
+export type UpdatePostRequest = Omit<CreatePostRequest, "days"> & {
+  pictures: string[];
+  days: (CreatePostRequestDay & { pictures: string[] })[];
+};
+
 export type CommentPostRequest = {
   parent?: string;
   post?: string;

@@ -33,7 +33,8 @@ export type PictureTarget = {
 
 export type PictureValues = {
   id: string;
-  file: File;
+  file?: File;
+  path?: string;
   previewUrl: string;
   target: string;
 };

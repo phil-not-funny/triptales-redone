@@ -21,6 +21,7 @@ import {
 import { DialogClose } from "@radix-ui/react-dialog";
 import useUser from "@/hooks/useUser";
 import { useTranslations } from 'next-intl';
+import Link from "next/link";
 
 export const PostControls: React.FC<PostProps> = ({ post, embed }) => {
   const [liked, setLiked] = useState<boolean>(post.userLiked);
@@ -109,6 +110,9 @@ export const PostSettings: React.FC<{
       </PopoverTrigger>
       <PopoverContent className="flex flex-col items-start justify-center gap-2">
         <h3 className="text-base font-semibold uppercase">{t("quickSettings")}</h3>
+        <Button asChild variant={"outline"} size={"sm"}>
+          <Link href={`/post/${post.guid}/edit`}>{t("editPost")}</Link>
+        </Button>
         <Dialog>
           <DialogTrigger asChild>
             <Button variant={"destructive"} size={"sm"}>

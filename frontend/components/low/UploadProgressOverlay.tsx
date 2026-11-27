@@ -6,7 +6,13 @@ import { UploadProgress } from "@/hooks/usePictureUpload";
 import { Button } from "../ui/button";
 
 /** Stages of publishing a post. */
-export type SubmitPhase = "idle" | "creating" | "uploading" | "done" | "failed";
+export type SubmitPhase =
+  | "idle"
+  | "creating"
+  | "saving"
+  | "uploading"
+  | "done"
+  | "failed";
 
 interface UploadProgressOverlayProps {
   phase: SubmitPhase;
@@ -31,10 +37,11 @@ export function UploadProgressOverlay({
   const percent = Math.round(
     (phase === "done" || phase === "failed" ? 1 : progress.fraction) * 100,
   );
-  const showBar = phase !== "creating";
+  const showBar = phase !== "creating" && phase !== "saving";
 
   const message = {
     creating: t("creating"),
+    saving: t("saving"),
     uploading: progress.processing
       ? t("processing", {
           current: progress.completed + 1,

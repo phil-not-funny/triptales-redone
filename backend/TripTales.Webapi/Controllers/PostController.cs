@@ -103,12 +103,18 @@ namespace Triptales.Controllers
             if (!DateOnly.TryParse(cmd.StartDate, out var startDate) || !DateOnly.TryParse(cmd.EndDate, out var endDate))
                 return BadRequest("Update failed! Check if the parameters are correct");
 
-            post!.Title = cmd.Title;
-            post.Description = cmd.Description;
-            post.StartDate = startDate;
-            post.EndDate = endDate;
+            var days = new List<Post.Day>();
+            foreach (var day in cmd.Days)
+            {
+                if (!DateOnly.TryParse(day.Date, out var date))
+                    return BadRequest("Update failed! Check if the parameters are correct");
+                days.Add(new Post.Day(day.Title, day.Description, date) { Pictures = day.Pictures });
+            }
 
+            _repository.RemoveDays(post!);
+            var unused = post!.Update(cmd.Title, cmd.Description, startDate, endDate, cmd.Pictures, days);
             await _repository.SaveChanges();
+            await _repository.DeletePictureFiles(unused);
             return NoContent();
         }
 

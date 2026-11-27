@@ -4,7 +4,7 @@ import { useState } from "react";
 import { CreatePostRequestDay } from "@/types/RequestTypes";
 import { toDateOnlyString } from "@/lib/utils";
 
-type NCreatePostRequestDay = CreatePostRequestDay & {
+export type NCreatePostRequestDay = CreatePostRequestDay & {
   uuid: string;
 };
 
@@ -14,8 +14,8 @@ type DayValues = {
   date: Date;
 };
 
-export function useDays() {
-  const [days, setDays] = useState<NCreatePostRequestDay[]>([]);
+export function useDays(initial: NCreatePostRequestDay[] = []) {
+  const [days, setDays] = useState(initial);
 
   const sortDaysByDate = (
     daysArray: NCreatePostRequestDay[],
