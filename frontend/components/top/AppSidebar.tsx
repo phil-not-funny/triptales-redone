@@ -80,10 +80,7 @@ export default function AppSidebar() {
       title: t("navigation"),
       items: navItems,
     },
-    {
-      title: t("userOptions"),
-      items: onlyLoggedIn,
-    },
+    ...(loggedIn ? [{ title: t("userOptions"), items: onlyLoggedIn }] : []),
     {
       title: t("authentication"),
       items: loggedIn ? unAuthItems : authItems,
