@@ -11,7 +11,8 @@
     "newPost": "Nieuw bericht",
     "logout": "Uitloggen",
     "userOptions": "Gebruikersopties",
-    "language": "Taal"
+    "language": "Taal",
+    "languageUnavailable": "Taal nog niet beschikbaar"
   },
   "Home": {
     "title": "Ontdek berichten",

@@ -11,7 +11,8 @@
     "newPost": "Új bejegyzés",
     "logout": "Kijelentkezés",
     "userOptions": "Felhasználói beállitások",
-    "language": "Nyelv"
+    "language": "Nyelv",
+    "languageUnavailable": "Sidebar.languageUnavailable not translated"
   },
   "Home": {
     "title": "Felfedezés",

@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { toast } from "sonner";
 import { cn, setLocaleCookie } from "@/lib/utils";
 import { SidebarMenuButton } from "../ui/sidebar";
 import { LANGUAGES } from "@/i18n/utils";
@@ -32,6 +33,15 @@ export default function LanguageSwitcher({
       return;
     }
     setIsChanging(true);
+    const available = await import(`@/messages/${locale}.json`).then(
+      () => true,
+      () => false,
+    );
+    if (!available) {
+      toast.error(t("languageUnavailable"));
+      setIsChanging(false);
+      return;
+    }
     setLocaleCookie(locale);
     setOpen(false);
     router.refresh();

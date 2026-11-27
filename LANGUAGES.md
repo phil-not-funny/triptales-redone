@@ -7,7 +7,7 @@ The UI texts live in `frontend/messages/<language>.json` (next-intl). This file 
 | English    | `en.json` | Source, complete    |
 | German     | `de.json` | Complete            |
 | Dutch      | `nl.json` | Complete            |
-| Hungarian  | `hu.json` | 7 keys open, 1 to check |
+| Hungarian  | `hu.json` | 8 keys open, 1 to check |
 
 ## Rules
 
@@ -41,6 +41,7 @@ Not translated yet (English text in `en.json`):
 | `Forms.NewPostForm.edit.error`        | Failed to save post!                                  |
 | `Forms.NewPostForm.edit.pictureError` | Post saved, but some pictures could not be uploaded.  |
 | `Forms.NewPostForm.upload.saving`     | Saving your post …                                    |
+| `Sidebar.languageUnavailable`         | Language not available yet                            |
 
 To check:
 

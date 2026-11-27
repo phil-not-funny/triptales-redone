@@ -11,7 +11,8 @@
     "newPost": "Neuer Beitrag",
     "logout": "Abmelden",
     "userOptions": "Benutzeroptionen",
-    "language": "Sprache"
+    "language": "Sprache",
+    "languageUnavailable": "Sprache noch nicht verfügbar"
   },
   "Home": {
     "title": "Beiträge entdecken",

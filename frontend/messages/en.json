@@ -11,7 +11,8 @@
     "newPost": "New Post",
     "logout": "Logout",
     "userOptions": "User Options",
-    "language": "Language"
+    "language": "Language",
+    "languageUnavailable": "Language not available yet"
   },
   "Home": {
     "title": "Explore Posts",
