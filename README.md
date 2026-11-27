@@ -70,6 +70,10 @@ To use swagger, go to [http://localhost:5001/swagger/index.html](http://localhos
 
 ---
 
+## Languages
+
+The UI is available in English, German, Dutch and Hungarian. What is still missing per language is tracked in [LANGUAGES.md](./LANGUAGES.md).
+
 ## Technologies
 
 - **Frontend**: Next.js / TailwindCSS / shadcn
