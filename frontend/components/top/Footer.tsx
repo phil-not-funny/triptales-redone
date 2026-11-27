@@ -54,7 +54,7 @@ const Footer = async () => {
         {/* Bottom Section */}
         <div className="mt-8 flex flex-col items-center justify-between gap-4 md:flex-row">
           <p className="text-xs text-gray-600 md:text-sm">
-            {t("copyright")}
+            © {new Date().getFullYear()} TripTales. {t("rightsReserved")}
           </p>
           <div className="flex items-center gap-3">
             <p className="text-xs text-gray-600 md:text-sm">

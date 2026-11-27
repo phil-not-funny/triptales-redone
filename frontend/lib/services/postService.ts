@@ -7,6 +7,7 @@ import {
   PostCommentResponse,
   PostResponse,
   PostResponseSmall,
+  UpdatePostRequest,
 } from "@/types/RequestTypes";
 import { HttpStatusCode } from "axios";
 import api from "../api";
@@ -52,6 +53,9 @@ const createPost = async (data: CreatePostRequest): Promise<string | null> => {
     return null;
   }
 };
+
+const updatePost = (guid: string, data: UpdatePostRequest): Promise<boolean> =>
+  succeeds(() => api.put(`/Post/${guid}`, data), HttpStatusCode.NoContent);
 
 const getPost = async (guid: string): Promise<GetPostClientResponse> => {
   const post = await fetchValidated(
@@ -115,6 +119,7 @@ const uploadPicture = (
 const PostService = {
   getRandom,
   createPost,
+  updatePost,
   getPost,
   likePost,
   deletePost,

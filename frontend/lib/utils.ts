@@ -45,10 +45,10 @@ export function toDateOnlyString(date: Date): string {
 
 /**
  * Parses a `YYYY-MM-DD` string into a date at local midnight, the counterpart
- * of {@link toDateOnlyString}.
+ * of {@link toDateOnlyString}. Also accepts `YYYY.MM.DD`, the format the API returns.
  */
 export function parseDateOnlyString(date: string): Date {
-  const [year, month, day] = date.split("-").map(Number);
+  const [year, month, day] = date.split(/[-.]/).map(Number);
   return new Date(year, month - 1, day);
 }
 

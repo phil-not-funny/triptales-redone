@@ -11,7 +11,8 @@
     "newPost": "Nieuw bericht",
     "logout": "Uitloggen",
     "userOptions": "Gebruikersopties",
-    "language": "Taal"
+    "language": "Taal",
+    "languageUnavailable": "Taal nog niet beschikbaar"
   },
   "Home": {
     "title": "Ontdek berichten",
@@ -25,7 +26,8 @@
     "postNotFound": "Het bericht dat u zocht bestaat niet.",
     "userNotFound": "We konden de opgegeven gebruiker niet vinden.",
     "pageNotFound": "De pagina die u zoekt bestaat niet.",
-    "pleaseLogin": "Log in om door te gaan"
+    "pleaseLogin": "Log in om door te gaan",
+    "notAllowed": "Je mag dit bericht niet bewerken."
   },
   "Common": {
     "submit": "Verzenden",
@@ -120,7 +122,13 @@
         "processing": "Foto {current} van {total} wordt verwerkt …",
         "done": "Klaar! Je bericht is gepubliceerd.",
         "failed": "{count, plural, one {# foto kon} other {# foto's konden}} niet worden geüpload.",
-        "toPost": "Naar bericht"
+        "toPost": "Naar bericht",
+        "saving": "Je bericht wordt opgeslagen …"
+      },
+      "edit": {
+        "success": "Bericht succesvol opgeslagen!",
+        "error": "Bericht opslaan mislukt!",
+        "pictureError": "Bericht opgeslagen, maar sommige foto's konden niet worden geüpload."
       }
     },
     "PictureForm": {
@@ -179,7 +187,8 @@
     "deleteConfirmDescription": "Deze actie kan niet ongedaan worden gemaakt. Dit zal dit bericht permanent verwijderen en de gegevens van onze servers verwijderen.",
     "permanentlyDelete": "Permanent verwijderen",
     "deleteSuccess": "Bericht succesvol verwijderd!",
-    "deleteError": "Bericht kon niet worden verwijderd. Probeer het later opnieuw."
+    "deleteError": "Bericht kon niet worden verwijderd. Probeer het later opnieuw.",
+    "editPost": "Dit bericht bewerken"
   },
   "Comment": {
     "likeError": "Reactie kon niet worden geliked. Probeer het later opnieuw.",
@@ -239,14 +248,15 @@
   "Pages": {
     "settings": "Instellingen",
     "newPost": "Nieuw bericht",
-    "posts": "Berichten"
+    "posts": "Berichten",
+    "editPost": "Bericht bewerken"
   },
   "Footer": {
     "about": "Over ons",
     "privacy": "Privacy",
     "terms": "Algemene voorwaarden",
     "contact": "Contact",
-    "copyright": "© 2025 TripTales. Alle rechten voorbehouden.",
+    "rightsReserved": "Alle rechten voorbehouden.",
     "madeWith": "Gemaakt met",
     "byTeam": "door het TripTales Team",
     "homepagePictureBy": "Startpagina foto van",

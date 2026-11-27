@@ -11,9 +11,14 @@ import { useState } from "react";
 import { Loader2, PenBox } from "lucide-react";
 import PostService from "@/lib/services/postService";
 import { DayForm } from "./DayForm";
-import { PictureForm, PictureTarget, POST_TARGET } from "./PictureForm";
+import {
+  PictureForm,
+  PictureTarget,
+  PictureValues,
+  POST_TARGET,
+} from "./PictureForm";
 import { PictureList } from "./PictureList";
-import { useDays } from "@/hooks/useDays";
+import { NCreatePostRequestDay, useDays } from "@/hooks/useDays";
 import { usePictures } from "@/hooks/usePictures";
 import { usePictureUpload, UploadJob } from "@/hooks/usePictureUpload";
 import { FormInput } from "../low/FormInput";
@@ -27,18 +32,51 @@ import {
   toDateOnlyString,
 } from "@/lib/utils";
 import { useTranslations } from "next-intl";
+import { v4 as uuidv4 } from "uuid";
+import { PostResponse } from "@/types/RequestTypes";
+import { IMAGE_URL } from "@/lib/config";
 
-/** How long the finished state stays visible before leaving for the new post. */
+/** How long the finished state stays visible before leaving for the post. */
 const DONE_DISPLAY_MS = 900;
 
-export function NewPostForm() {
+type PostFormProps = { mode: "create" } | { mode: "edit"; post: PostResponse };
+
+function fromPost(post: PostResponse | null) {
+  if (!post) return { days: [], pictures: [] };
+
+  const days: NCreatePostRequestDay[] = post.days.map((day) => ({
+    title: day.title,
+    description: day.description,
+    date: toDateOnlyString(parseDateOnlyString(day.date)),
+    uuid: uuidv4(),
+  }));
+  const stored = (path: string, target: string): PictureValues => ({
+    id: uuidv4(),
+    path,
+    previewUrl: `${IMAGE_URL}/${path}`,
+    target,
+  });
+  const pictures = [
+    ...post.pictures.map((path) => stored(path, POST_TARGET)),
+    ...post.days.flatMap((day, idx) =>
+      day.pictures.map((path) => stored(path, days[idx].uuid)),
+    ),
+  ];
+  return { days, pictures };
+}
+
+export function PostForm(props: PostFormProps) {
+  const editPost = props.mode === "edit" ? props.post : null;
   const router = useRouter();
+  const [initial] = useState(() => fromPost(editPost));
   const [phase, setPhase] = useState<SubmitPhase>("idle");
-  const [createdGuid, setCreatedGuid] = useState<string | null>(null);
+  const [savedGuid, setSavedGuid] = useState<string | null>(null);
   const { pictures, addPictures, removePicture, removePicturesOfTarget } =
-    usePictures();
+    usePictures(initial.pictures);
   const { progress, upload } = usePictureUpload();
-  const { days, addDay, editDay, removeDay, getDaysForApi } = useDays();
+  const { days, addDay, editDay, removeDay, getDaysForApi } = useDays(
+    initial.days,
+  );
   const t = useTranslations("Forms.NewPostForm");
   const tCommon = useTranslations("Common");
   const tDay = useTranslations("Forms.NewPostForm.day");
@@ -50,7 +88,6 @@ export function NewPostForm() {
     description: z
       .string()
       .min(1, { message: t("validation.descriptionRequired") }),
-    // The calendar reports a half-chosen range while only the start is picked.
     dateRange: z.custom<{ from: Date; to: Date }>(
       (value) => {
         const range = value as Partial<{ from: Date; to: Date }> | undefined;
@@ -64,17 +101,23 @@ export function NewPostForm() {
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: { title: "", description: "" },
+    defaultValues: editPost
+      ? {
+          title: editPost.title,
+          description: editPost.description,
+          dateRange: {
+            from: parseDateOnlyString(editPost.startDate),
+            to: parseDateOnlyString(editPost.endDate),
+          },
+        }
+      : { title: "", description: "" },
   });
 
-  // Days may only lie within the trip, so they are unlocked by choosing the range.
   const range = useWatch({ control: form.control, name: "dateRange" });
   const minDate = range?.from;
   const maxDate = range?.to;
   const hasRange = !!minDate && !!maxDate;
 
-  // Pictures belong to the whole post or to a day. Days are identified by their
-  // uuid, so a picture follows its day when the days get re-sorted by date.
   const pictureTargets: PictureTarget[] = [
     { value: POST_TARGET, label: tPicture("wholePost") },
     ...days.map((day, idx) => ({
@@ -89,14 +132,22 @@ export function NewPostForm() {
   };
 
   const toUploadJobs = (): UploadJob[] =>
-    pictures.map((picture) => ({
-      file: picture.file,
-      // days are sent to the API in exactly this order, so the index matches the backend
-      dayIndex:
-        picture.target === POST_TARGET
-          ? undefined
-          : days.findIndex((d) => d.uuid === picture.target),
-    }));
+    pictures.flatMap((picture) =>
+      picture.file
+        ? [
+            {
+              file: picture.file,
+              dayIndex:
+                picture.target === POST_TARGET
+                  ? undefined
+                  : days.findIndex((d) => d.uuid === picture.target),
+            },
+          ]
+        : [],
+    );
+
+  const storedPicturesOf = (target: string) =>
+    pictures.flatMap((p) => (p.path && p.target === target ? [p.path] : []));
 
   const handleSubmit = form.handleSubmit(async (values) => {
     const outsideRange = days.some(
@@ -106,16 +157,25 @@ export function NewPostForm() {
     );
     if (outsideRange) return toast.error(t("validation.daysOutsideRange"));
 
-    setPhase("creating");
-    const guid = await PostService.createPost({
+    const content = {
       title: values.title,
       description: values.description,
       startDate: toDateOnlyString(values.dateRange.from),
       endDate: toDateOnlyString(values.dateRange.to),
-      days: getDaysForApi(),
-    });
+    };
+    setPhase(editPost ? "saving" : "creating");
+    const guid = editPost
+      ? (await PostService.updatePost(editPost.guid, {
+          ...content,
+          pictures: storedPicturesOf(POST_TARGET),
+          days: getDaysForApi().map((day, idx) => ({
+            ...day,
+            pictures: storedPicturesOf(days[idx].uuid),
+          })),
+        })) && editPost.guid
+      : await PostService.createPost({ ...content, days: getDaysForApi() });
     if (!guid) {
-      toast.error(t("error"));
+      toast.error(t(editPost ? "edit.error" : "error"));
       return setPhase("idle");
     }
 
@@ -124,12 +184,12 @@ export function NewPostForm() {
     const failed = jobs.length > 0 ? await upload(guid, jobs) : 0;
 
     if (failed > 0) {
-      toast.error(t("pictureError"));
-      setCreatedGuid(guid);
+      toast.error(t(editPost ? "edit.pictureError" : "pictureError"));
+      setSavedGuid(guid);
       return setPhase("failed");
     }
 
-    toast.success(t("success"));
+    toast.success(t(editPost ? "edit.success" : "success"));
     setPhase("done");
     if (jobs.length > 0)
       await new Promise((resolve) => setTimeout(resolve, DONE_DISPLAY_MS));
@@ -141,7 +201,7 @@ export function NewPostForm() {
       <UploadProgressOverlay
         phase={phase}
         progress={progress}
-        onContinue={() => router.push(`/post/${createdGuid}`)}
+        onContinue={() => router.push(`/post/${savedGuid}`)}
       />
       <Form {...form}>
         <form onSubmit={handleSubmit} className="w-full space-y-3">
@@ -212,7 +272,7 @@ export function NewPostForm() {
             {phase !== "idle" && (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             )}
-            {tCommon("submit")}
+            {tCommon(editPost ? "save" : "submit")}
           </Button>
         </form>
       </Form>

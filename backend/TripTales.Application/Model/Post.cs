@@ -35,8 +35,26 @@ namespace Triptales.Application.Model
         public List<Day> Days { get; } = new();
         public List<Comment> Comments { get; } = new();
 
-        /// <summary>Whether the user with the given guid liked this post; anonymous users never did.</summary>
         public bool IsLikedBy(Guid? userGuid) => userGuid is not null && Likes.Any(u => u.Guid == userGuid);
+
+        public List<string> Update(string title, string description, DateOnly startDate, DateOnly endDate, List<string> pictures, List<Day> days)
+        {
+            var owned = AllPictures().ToHashSet();
+
+            Title = title;
+            Description = description;
+            StartDate = startDate;
+            EndDate = endDate;
+            Pictures = pictures.Where(owned.Contains).ToList();
+            foreach (var day in days)
+                day.Pictures = day.Pictures.Where(owned.Contains).ToList();
+            Days.Clear();
+            Days.AddRange(days);
+
+            return owned.Except(AllPictures()).ToList();
+        }
+
+        private IEnumerable<string> AllPictures() => Pictures.Concat(Days.SelectMany(d => d.Pictures));
 
         public class Day(string title, string description, DateOnly date)
         {

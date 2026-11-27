@@ -32,7 +32,7 @@ export type Post = {
 export type PostDay = {
   title: string;
   description: string;
-  date: Date;
+  date: string;
   pictures: string[];
 };
 

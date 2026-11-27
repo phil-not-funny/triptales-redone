@@ -1,8 +1,12 @@
 import Page from "@/components/pages/SettingsPage/SettingsPage";
 import PageHead from "@/components/top/PageHead";
 import { getTranslations } from 'next-intl/server';
+import LoginRequired from "@/components/low/LoginRequired";
+import UserService from "@/lib/services/userService";
 
 export default async function SettingsPage() {
+  if (!(await UserService.me())) return <LoginRequired />;
+
   const t = await getTranslations("Settings");
 
   return (

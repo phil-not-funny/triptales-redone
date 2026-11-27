@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Xunit;
 using Triptales.Application.Model;
 
@@ -39,6 +40,25 @@ namespace Triptales.Application.Tests
 
             Assert.Single(sut.Likes);
             Assert.Contains(liker, sut.Likes);
+        }
+
+        [Fact]
+        public void Update_WhenPicturesChange_ShouldKeepOnlyOwnedAndReturnUnused()
+        {
+            var author = new User("author", "author@example.com", "P@ssword1", "Author");
+            var start = DateOnly.FromDateTime(DateTime.UtcNow);
+            var sut = new Post("Old", "Old", author, start, start.AddDays(2),
+                new() { new Post.Day("Day", "Day", start) { Pictures = new() { "Images/day.jpg", "Images/gone.jpg" } } });
+            sut.Pictures.Add("Images/post.jpg");
+
+            var newDay = new Post.Day("New day", "New", start.AddDays(1)) { Pictures = new() { "Images/day.jpg", "Images/foreign.jpg" } };
+            var unused = sut.Update("New", "New", start, start.AddDays(3), new() { "Images/foreign.jpg" }, new() { newDay });
+
+            Assert.Equal("New", sut.Title);
+            Assert.Equal(start.AddDays(3), sut.EndDate);
+            Assert.Empty(sut.Pictures);
+            Assert.Equal(new[] { "Images/day.jpg" }, Assert.Single(sut.Days).Pictures);
+            Assert.Equal(new[] { "Images/gone.jpg", "Images/post.jpg" }, unused.OrderBy(p => p));
         }
     }
 }

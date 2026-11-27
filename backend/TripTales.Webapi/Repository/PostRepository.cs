@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Triptales.Application.Cmd;
@@ -102,23 +103,14 @@ namespace Triptales.Repository
             return true;
         }
 
-        /// <summary>
-        /// Persists changes already applied to a tracked post.
-        /// </summary>
         public Task SaveChanges() => _db.SaveChangesAsync();
 
-        /// <summary>
-        /// Adds <paramref name="user"/> to the likes of <paramref name="post"/>, or removes the like if it exists.
-        /// </summary>
         public async Task ToggleLike(Post post, User user)
         {
             post.Likes.Toggle(user);
             await _db.SaveChangesAsync();
         }
 
-        /// <summary>
-        /// Stores an uploaded picture and appends it to the pictures of the post.
-        /// </summary>
         public async Task<bool> UploadImage(Post post, UploadPostPictureCmd cmd)
         {
             var path = await StorePicture(cmd, $"{post.Guid}-post");
@@ -129,9 +121,6 @@ namespace Triptales.Repository
             return true;
         }
 
-        /// <summary>
-        /// Stores an uploaded picture and appends it to the pictures of the day at <paramref name="index"/>.
-        /// </summary>
         public async Task<bool> UploadDayImage(Post post, int index, UploadPostPictureCmd cmd)
         {
             var path = await StorePicture(cmd, $"{post.Guid}-day-{index}");
@@ -142,12 +131,18 @@ namespace Triptales.Repository
             return true;
         }
 
-        /// <returns>The public path of the stored file, or <c>null</c> if it could not be stored.</returns>
+        public void RemoveDays(Post post) => _db.RemoveRange(post.Days.ToList());
+
+        public async Task DeletePictureFiles(IEnumerable<string> paths)
+        {
+            foreach (var path in paths)
+                await _fileService.DeleteFile(Path.GetFileName(path));
+        }
+
         private async Task<string?> StorePicture(UploadPostPictureCmd cmd, string namePrefix)
         {
             if (cmd.Picture is null) return null;
 
-            // A post can hold any number of pictures, so every file needs its own name.
             var filename = $"{namePrefix}-{Guid.NewGuid():N}.jpg";
             return await _fileService.UploadFile(cmd.Picture, filename) ? $"Images/{filename}" : null;
         }

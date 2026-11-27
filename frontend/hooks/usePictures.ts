@@ -5,8 +5,8 @@ import { PictureValues } from "@/components/forms/PictureForm";
  * Keeps the pictures a user selected while composing a post. Any number of
  * pictures can belong to the same target (the whole post, or a day).
  */
-export function usePictures() {
-  const [pictures, setPictures] = useState<PictureValues[]>([]);
+export function usePictures(initial: PictureValues[] = []) {
+  const [pictures, setPictures] = useState(initial);
 
   const addPictures = (added: PictureValues[]) =>
     setPictures((prev) => [...prev, ...added]);

@@ -11,7 +11,8 @@
     "newPost": "Neuer Beitrag",
     "logout": "Abmelden",
     "userOptions": "Benutzeroptionen",
-    "language": "Sprache"
+    "language": "Sprache",
+    "languageUnavailable": "Sprache noch nicht verfügbar"
   },
   "Home": {
     "title": "Beiträge entdecken",
@@ -25,7 +26,8 @@
     "postNotFound": "Der gesuchte Beitrag existiert nicht.",
     "userNotFound": "Wir konnten den angegebenen Benutzer nicht finden.",
     "pageNotFound": "Die gesuchte Seite existiert nicht.",
-    "pleaseLogin": "Bitte melden Sie sich an, um fortzufahren"
+    "pleaseLogin": "Bitte melden Sie sich an, um fortzufahren",
+    "notAllowed": "Du darfst diesen Beitrag nicht bearbeiten."
   },
   "Common": {
     "submit": "Absenden",
@@ -120,7 +122,13 @@
         "processing": "Bild {current} von {total} wird verarbeitet …",
         "done": "Fertig! Dein Beitrag ist veröffentlicht.",
         "failed": "{count, plural, one {# Bild konnte} other {# Bilder konnten}} nicht hochgeladen werden.",
-        "toPost": "Zum Beitrag"
+        "toPost": "Zum Beitrag",
+        "saving": "Dein Beitrag wird gespeichert …"
+      },
+      "edit": {
+        "success": "Beitrag erfolgreich gespeichert!",
+        "error": "Beitrag konnte nicht gespeichert werden!",
+        "pictureError": "Beitrag gespeichert, aber einige Bilder konnten nicht hochgeladen werden."
       }
     },
     "PictureForm": {
@@ -179,7 +187,8 @@
     "deleteConfirmDescription": "Diese Aktion kann nicht rückgängig gemacht werden. Dies wird diesen Beitrag dauerhaft löschen und seine Daten von unseren Servern entfernen.",
     "permanentlyDelete": "Dauerhaft löschen",
     "deleteSuccess": "Beitrag erfolgreich gelöscht!",
-    "deleteError": "Beitrag konnte nicht gelöscht werden. Bitte versuchen Sie es später erneut."
+    "deleteError": "Beitrag konnte nicht gelöscht werden. Bitte versuchen Sie es später erneut.",
+    "editPost": "Beitrag bearbeiten"
   },
   "Comment": {
     "likeError": "Kommentar konnte nicht bewertet werden. Bitte versuchen Sie es später erneut.",
@@ -239,14 +248,15 @@
   "Pages": {
     "settings": "Einstellungen",
     "newPost": "Neuer Beitrag",
-    "posts": "Beiträge"
+    "posts": "Beiträge",
+    "editPost": "Beitrag bearbeiten"
   },
   "Footer": {
     "about": "Über uns",
     "privacy": "Datenschutz",
     "terms": "Allgemeine Geschäftsbedingungen",
     "contact": "Kontakt",
-    "copyright": "© 2025 TripTales. Alle Rechte vorbehalten.",
+    "rightsReserved": "Alle Rechte vorbehalten.",
     "madeWith": "Gemacht mit",
     "byTeam": "vom TripTales Team",
     "homepagePictureBy": "Startseitenbild von",

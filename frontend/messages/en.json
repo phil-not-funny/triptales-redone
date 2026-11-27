@@ -11,7 +11,8 @@
     "newPost": "New Post",
     "logout": "Logout",
     "userOptions": "User Options",
-    "language": "Language"
+    "language": "Language",
+    "languageUnavailable": "Language not available yet"
   },
   "Home": {
     "title": "Explore Posts",
@@ -25,7 +26,8 @@
     "postNotFound": "The post you were looking for doesn't exist.",
     "userNotFound": "We were unable to find the user you provided.",
     "pageNotFound": "The page you are looking for does not exist.",
-    "pleaseLogin": "Please Log In to Continue"
+    "pleaseLogin": "Please Log In to Continue",
+    "notAllowed": "You are not allowed to edit this post."
   },
   "Common": {
     "submit": "Submit",
@@ -120,7 +122,13 @@
         "processing": "Processing picture {current} of {total} …",
         "done": "Done! Your post is published.",
         "failed": "{count, plural, one {# picture} other {# pictures}} could not be uploaded.",
-        "toPost": "Go to post"
+        "toPost": "Go to post",
+        "saving": "Saving your post …"
+      },
+      "edit": {
+        "success": "Post saved successfully!",
+        "error": "Failed to save post!",
+        "pictureError": "Post saved, but some pictures could not be uploaded."
       }
     },
     "PictureForm": {
@@ -179,7 +187,8 @@
     "deleteConfirmDescription": "This action cannot be undone. This will permanently delete this post and remove its data from our servers.",
     "permanentlyDelete": "Permanently Delete",
     "deleteSuccess": "Post deleted successfully!",
-    "deleteError": "Failed to delete the post. Please try again later."
+    "deleteError": "Failed to delete the post. Please try again later.",
+    "editPost": "Edit this Post"
   },
   "Comment": {
     "likeError": "Failed to like the comment. Please try again later.",
@@ -239,14 +248,15 @@
   "Pages": {
     "settings": "Settings",
     "newPost": "New Post",
-    "posts": "Posts"
+    "posts": "Posts",
+    "editPost": "Edit Post"
   },
   "Footer": {
     "about": "About",
     "privacy": "Privacy",
     "terms": "Terms and Conditions",
     "contact": "Contact",
-    "copyright": "© 2025 TripTales. All rights reserved.",
+    "rightsReserved": "All rights reserved.",
     "madeWith": "Made with",
     "byTeam": "by the TripTales Team",
     "homepagePictureBy": "Homepage Picture by",
