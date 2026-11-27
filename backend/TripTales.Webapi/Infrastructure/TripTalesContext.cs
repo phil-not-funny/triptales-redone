@@ -179,6 +179,21 @@ namespace Triptales.Webapi.Infrastructure
                 .Generate(10)
                 .ToList();
             Posts.AddRange(posts);
+
+            // Fixed post of the admin, so editing/deleting can be tried right after logging in as admin. Easier for testing
+            var adminStart = DateOnly.FromDateTime(DateTime.Now).AddDays(-10);
+            Posts.Add(new Post(
+                title: "Test trip to Salzburg",
+                description: "A **test post** of the admin account. Feel free to edit or delete it.",
+                author: admin,
+                startDate: adminStart,
+                endDate: adminStart.AddDays(2),
+                days: new List<Post.Day>
+                {
+                    new("Arrival", "Train from Vienna, walk through the old town.", adminStart),
+                    new("Fortress", "Hohensalzburg in the morning, Mirabell gardens in the afternoon.", adminStart.AddDays(1)),
+                    new("Return", "Short hike on the Kapuzinerberg, then back home.", adminStart.AddDays(2)),
+                }));
             SaveChanges();
         }
     }
