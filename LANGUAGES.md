@@ -11,12 +11,9 @@ The UI texts live in `frontend/messages/<language>.json` (next-intl). This file 
 
 ## Rules
 
-- `en.json` is the source. Every key must exist in every language file, otherwise next-intl shows an error instead of the text.
-- A key that is not translated yet gets the value `"<key path> not translated"`, e.g. `"Sorry.notAllowed not translated"`. It stands out in the UI and can be found with:
-  ```
-  grep -rn "not translated" frontend/messages
-  ```
-- After translating a key, replace the placeholder and remove the key from the list below.
+- `en.json` is the source. A key missing in another language file falls back to the English text (`frontend/i18n/request.ts`).
+- New keys go into `en.json` and into the languages being actively translated. For every other language, leave the key out of its file (no placeholder) and list it below with its English text.
+- After translating a key, add it to the language file and remove it from the list below.
 
 ## Open work
 
@@ -30,7 +27,7 @@ Nothing open.
 
 ### Hungarian (`hu.json`)
 
-Not translated yet (English text in `en.json`):
+Missing in `hu.json` (shown in English until translated):
 
 | Key                                   | English                                               |
 | ------------------------------------- | ----------------------------------------------------- |
@@ -45,4 +42,4 @@ Not translated yet (English text in `en.json`):
 
 To check:
 
-- `Footer.on` is still the English `"on"` (in "Homepage Picture by NEOM **on** Unsplash"). It has no placeholder because it sits in the middle of the footer sentence. Check whether the Hungarian sentence needs a different word or word order.
+- `Footer.on` is still the English `"on"` (in "Homepage Picture by NEOM **on** Unsplash"). Check whether the Hungarian sentence needs a different word or word order.
