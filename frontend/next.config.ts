@@ -4,7 +4,8 @@ import createNextIntlPlugin from 'next-intl/plugin';
 const nextConfig: NextConfig = {
   devIndicators: {
     position: "top-right"
-  }
+  },
+  agentRules: false
 };
 
 const withNextIntl = createNextIntlPlugin();
