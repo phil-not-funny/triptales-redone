@@ -9,11 +9,33 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Start backend
+        working-directory: backend
+        run: |
+          dotnet dev-certs https
+          nohup dotnet run --project TripTales.Webapi > backend.log 2>&1 &
+          timeout 300 bash -c 'until curl -ksf https://localhost:5001/swagger/index.html > /dev/null; do sleep 2; done'
       # Install npm dependencies, cache them correctly
       # and run all Cypress tests
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          start: npm run test
+          start: npm run dev
+          wait-on: http://localhost:3000
+          browser: electron
           install-command: npm i --force
           working-directory: frontend
+      - name: Upload screenshots of failed tests
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: frontend/cypress/screenshots
+          if-no-files-found: ignore
+      - name: Backend log
+        if: failure()
+        run: cat backend/backend.log
