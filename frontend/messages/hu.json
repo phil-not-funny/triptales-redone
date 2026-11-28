@@ -11,8 +11,7 @@
     "newPost": "Új bejegyzés",
     "logout": "Kijelentkezés",
     "userOptions": "Felhasználói beállitások",
-    "language": "Nyelv",
-    "languageUnavailable": "Sidebar.languageUnavailable not translated"
+    "language": "Nyelv"
   },
   "Home": {
     "title": "Felfedezés",
@@ -26,8 +25,7 @@
     "postNotFound": "A bejegyzés, amit keresett, nem létezik.",
     "userNotFound": "Nem tudtuk megtalálni a megadott felhasználót",
     "pageNotFound": "A keresett oldal nem létezik",
-    "pleaseLogin": "Jelentkezzen be a folytatáshoz",
-    "notAllowed": "Sorry.notAllowed not translated"
+    "pleaseLogin": "Jelentkezzen be a folytatáshoz"
   },
   "Common": {
     "submit": "Megerősités",
@@ -122,13 +120,7 @@
         "processing": "{current} kép feldolgozása {total} közül…",
         "done": "Kész! A bejegyzésed megjelent.",
         "failed": "{count, plural, one {# kép} other {# több kép}} feltöltése nem sikerült",
-        "toPost": "A bejegyzéshez",
-        "saving": "Forms.NewPostForm.upload.saving not translated"
-      },
-      "edit": {
-        "success": "Forms.NewPostForm.edit.success not translated",
-        "error": "Forms.NewPostForm.edit.error not translated",
-        "pictureError": "Forms.NewPostForm.edit.pictureError not translated"
+        "toPost": "A bejegyzéshez"
       }
     },
     "PictureForm": {
@@ -187,8 +179,7 @@
     "deleteConfirmDescription": "Ezt az akciót nem lehet visszavonni. Ezzel a bejegyzés véglegesen törlődik, és az ahhoz tartozó adatok is eltávolitásra kerülnek a szerverünkről.",
     "permanentlyDelete": "Véglegesen törölni",
     "deleteSuccess": "A bejegyzés sikeresen törölve",
-    "deleteError": "A bejegyzés törlése nem sikerült. Kerjük, próbálja meg később újra.",
-    "editPost": "PostControls.editPost not translated"
+    "deleteError": "A bejegyzés törlése nem sikerült. Kerjük, próbálja meg később újra."
   },
   "Comment": {
     "likeError": "Nem sikerült kedvelni a hozzászólást. Kerjük, próbálja meg később újra.",
@@ -248,8 +239,7 @@
   "Pages": {
     "settings": "Beállitások",
     "newPost": "Új bejegyzés",
-    "posts": "Bejegyzések",
-    "editPost": "Pages.editPost not translated"
+    "posts": "Bejegyzések"
   },
   "Footer": {
     "about": "Rólunk",

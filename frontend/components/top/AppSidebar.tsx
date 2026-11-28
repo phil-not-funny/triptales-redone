@@ -120,7 +120,7 @@ export default function AppSidebar() {
                       disabled={item.disabled}
                       asChild
                     >
-                      <Link href={item.url}>
+                      <Link href={item.url} onClick={item.onClick}>
                         <item.icon className="mr-3 h-5 w-5" />
                         <span>{item.title}</span>
                       </Link>
